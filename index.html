@@ -51,7 +51,6 @@
         }
     </script>
     <style>
-        /* Custom Scrollbars & Animations */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
@@ -62,9 +61,7 @@
             70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(22, 163, 74, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
         }
-        .animate-pulse-ring {
-            animation: pulse-ring 2s infinite;
-        }
+        .animate-pulse-ring { animation: pulse-ring 2s infinite; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -72,54 +69,52 @@
 <body class="bg-[#f8faf7] text-slate-900 font-sans antialiased selection:bg-farm-600 selection:text-white">
 
     <!-- TOP NAVIGATION BAR -->
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-emerald-100 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+    <header class="sticky top-0 z-45 bg-white/95 backdrop-blur-md border-b border-emerald-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
             <!-- Brand Identity -->
-            <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('customer')">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-farm-600 to-farm-800 flex items-center justify-center text-white shadow-md shadow-farm-600/20">
-                    <span class="text-xl leading-none">🧺</span>
+            <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchView('customer')">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-farm-600 to-farm-800 flex items-center justify-center text-white shadow-md shadow-farm-600/20 shrink-0">
+                    <span class="text-lg sm:text-xl leading-none">🧺</span>
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
-                        <h1 class="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900">Farm Fresh</h1>
+                        <h1 class="font-extrabold text-base sm:text-xl tracking-tight text-slate-900">Farm Fresh</h1>
                         <span id="store-status-badge" class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Open Now
                         </span>
                     </div>
-                    <p class="text-[11px] text-slate-500 font-medium hidden sm:block">Farm-to-Doorstep Fresh Fruits & Vegetables • Connaught Place</p>
+                    <p class="text-[10px] text-slate-500 font-medium hidden sm:block">Farm-to-Doorstep Fresh Fruits & Vegetables • Connaught Place</p>
                 </div>
             </div>
 
             <!-- Role Switcher Tabs -->
-            <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
-                <button id="nav-customer" onclick="switchView('customer')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-900 shadow-sm">
-                    <i data-lucide="shopping-basket" class="w-4 h-4 text-farm-600"></i>
-                    <span>Storefront</span>
+            <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0">
+                <button id="nav-customer" onclick="switchView('customer')" class="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-sm">
+                    <i data-lucide="shopping-basket" class="w-3.5 h-3.5 text-farm-600"></i>
+                    <span>Store</span>
                 </button>
-                <button id="nav-kitchen" onclick="promptKitchenAccess()" class="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-slate-900">
-                    <i data-lucide="package-check" class="w-4 h-4"></i>
-                    <span class="hidden md:inline">Store Ops KDS</span>
-                    <span class="md:hidden">Ops</span>
+                <button id="nav-kitchen" onclick="promptKitchenAccess()" class="relative flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900">
+                    <i data-lucide="package-check" class="w-3.5 h-3.5"></i>
+                    <span>Ops</span>
                     <span id="kds-badge" class="hidden bg-farm-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">0</span>
                 </button>
-                <button id="nav-rider" onclick="promptRiderAccess()" class="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-slate-900">
-                    <i data-lucide="bike" class="w-4 h-4"></i>
-                    <span class="hidden md:inline">Rider Portal</span>
-                    <span class="md:hidden">Rider</span>
+                <button id="nav-rider" onclick="promptRiderAccess()" class="relative flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900">
+                    <i data-lucide="bike" class="w-3.5 h-3.5"></i>
+                    <span>Rider</span>
                     <span id="rider-badge" class="hidden bg-amber-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">0</span>
                 </button>
             </div>
 
             <!-- Right Actions -->
-            <div class="flex items-center gap-2 sm:gap-3">
-                <button onclick="openMyOrdersModal()" class="relative flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200 transition">
-                    <i data-lucide="map-pin" class="w-4 h-4 text-farm-600"></i>
-                    <span class="hidden sm:inline">My Orders</span>
+            <div class="flex items-center gap-2">
+                <button onclick="openMyOrdersModal()" class="relative flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200 transition">
+                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-farm-600"></i>
+                    <span class="hidden md:inline">Orders</span>
                     <span id="active-orders-count" class="hidden bg-farm-600 text-white text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">0</span>
                 </button>
 
-                <button id="header-cart-btn" onclick="toggleCartDrawer(true)" class="relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-900 text-white hover:bg-slate-800 transition shadow-sm">
-                    <i data-lucide="shopping-bag" class="w-4 h-4 text-harvest-400"></i>
+                <button id="header-cart-btn" onclick="toggleCartDrawer(true)" class="relative flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-900 text-white hover:bg-slate-800 transition shadow-sm">
+                    <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-harvest-400"></i>
                     <span id="header-cart-total">₹0</span>
                     <span id="header-cart-count" class="bg-farm-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">0</span>
                 </button>
@@ -162,7 +157,7 @@
             </button>
         </div>
 
-        <!-- Hero Section with Big Farm Fresh Logo Emblem -->
+        <!-- Hero Section -->
         <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#064e3b] via-[#065f46] to-[#15803d] text-white p-6 sm:p-10 mb-8 shadow-xl">
             <div class="relative z-10 max-w-2xl">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/25 text-harvest-400 text-xs font-bold mb-4">
@@ -179,7 +174,7 @@
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 max-w-lg bg-white/10 p-1.5 rounded-2xl border border-white/20 backdrop-blur-sm">
                     <div class="flex items-center gap-2 px-3 py-2 flex-1">
                         <i data-lucide="navigation" class="w-4 h-4 text-harvest-400 shrink-0"></i>
-                        <input id="hero-location-input" type="text" value="Block B, Connaught Place, New Delhi" class="bg-transparent text-white placeholder-emerald-200 text-xs sm:text-sm font-medium focus:outline-none w-full" placeholder="Enter your delivery area...">
+                        <input id="hero-location-input" type="text" value="Block B, Connaught Place, New Delhi" class="bg-transparent text-white placeholder-emerald-200 text-xs sm:text-sm font-medium focus:outline-none w-full" placeholder="Enter delivery area...">
                     </div>
                     <button onclick="captureCustomerGPS('hero')" class="px-4 py-2 rounded-xl bg-harvest-500 hover:bg-harvest-400 text-slate-950 font-extrabold text-xs transition flex items-center justify-center gap-1.5 shrink-0 shadow-sm">
                         <i data-lucide="crosshair" class="w-3.5 h-3.5"></i> Use Live GPS
@@ -187,7 +182,6 @@
                 </div>
             </div>
             
-            <!-- Right Side Big Farm Fresh Logo Emblem -->
             <div class="hidden lg:flex absolute right-6 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-none select-none z-20">
                 <div class="relative w-72 h-72 rounded-3xl bg-white/10 border border-white/25 backdrop-blur-md flex flex-col items-center justify-center shadow-2xl p-4 text-center overflow-hidden">
                     <div class="absolute top-2 right-3 bg-harvest-400 text-slate-950 text-[11px] font-extrabold px-3 py-1 rounded-full shadow-md uppercase tracking-wider z-30">
@@ -255,7 +249,7 @@
                     </span>
                 </div>
                 <h2 class="text-xl sm:text-2xl font-extrabold mt-1.5">Packing Station & Store Control</h2>
-                <p class="text-xs text-slate-400">Manage live orders, catalog items/photos/prices, promo offers, 3km delivery zones & portal PINs.</p>
+                <p class="text-xs text-slate-400">Manage live orders, catalog items, configurable UPI ID, 3km delivery zones & portal PINs.</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-3">
@@ -265,14 +259,14 @@
                 </button>
 
                 <div class="flex flex-wrap bg-slate-800 p-1 rounded-xl border border-slate-700 gap-1">
-                    <button id="kds-tab-orders" onclick="switchKdsTab('orders')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-farm-600 text-white transition">
-                        Live Order Queue
+                    <button id="kds-tab-orders" onclick="switchKdsTab('orders')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-farm-600 text-white transition">
+                        Live Orders
                     </button>
-                    <button id="kds-tab-menu" onclick="switchKdsTab('menu')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition">
-                        Catalog & Inventory
+                    <button id="kds-tab-menu" onclick="switchKdsTab('menu')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition">
+                        Catalog
                     </button>
-                    <button id="kds-tab-settings" onclick="switchKdsTab('settings')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition">
-                        Settings, Offers & 3km Zones
+                    <button id="kds-tab-settings" onclick="switchKdsTab('settings')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition">
+                        Settings & UPI
                     </button>
                 </div>
             </div>
@@ -328,7 +322,7 @@
 
                     <div>
                         <label class="block text-[11px] font-bold text-slate-700 mb-1">Unit / Pack Size *</label>
-                        <input id="new-prod-unit" type="text" required placeholder="e.g. 1 kg, 500 g, 1 Dozen" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
+                        <input id="new-prod-unit" type="text" required placeholder="e.g. 1 kg, 500 g" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
@@ -375,7 +369,7 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                     <div>
                         <h3 class="font-extrabold text-lg text-slate-900">Manage Catalog Rates, Stock Quantities & Photos</h3>
-                        <p class="text-xs text-slate-500">Edit prices (₹), adjust available stock counts, replace product photos, or remove items. Updates sync live to the Storefront.</p>
+                        <p class="text-xs text-slate-500">Edit prices (₹), adjust available stock counts, replace product photos, or remove items.</p>
                     </div>
                     <span id="kds-catalog-count" class="px-3 py-1 rounded-full bg-emerald-50 text-farm-700 font-extrabold text-xs border border-emerald-200 self-start">0 Items</span>
                 </div>
@@ -383,9 +377,37 @@
             </div>
         </div>
 
-        <!-- KDS TAB 3: SETTINGS, OFFERS, 3KM RADIUS & PORTAL PINS -->
+        <!-- KDS TAB 3: SETTINGS, UPI, OFFERS, 3KM RADIUS -->
         <div id="kds-settings-section" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
             
+            <!-- Configurable UPI ID Box -->
+            <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-farm-100 text-farm-700 flex items-center justify-center">
+                        <i data-lucide="qr-code" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-base text-slate-900">Configurable UPI ID & Merchant Gateway</h3>
+                        <p class="text-xs text-slate-500">Set the active merchant VPA/UPI ID for customer QR code payments.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <div>
+                        <label class="block text-[11px] font-extrabold text-slate-700 mb-1">Merchant UPI ID (VPA) *</label>
+                        <input id="cfg-upi-id" type="text" placeholder="e.g. farmfresh@oksbi or 9876543210@paytm" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-mono text-xs font-bold bg-white focus:outline-none focus:border-farm-600">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-extrabold text-slate-700 mb-1">Merchant Display Name *</label>
+                        <input id="cfg-upi-name" type="text" placeholder="e.g. Farm Fresh Produce" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-bold bg-white focus:outline-none focus:border-farm-600">
+                    </div>
+                </div>
+
+                <button onclick="saveUpiConfig()" class="w-full py-2.5 rounded-xl bg-farm-600 hover:bg-farm-700 text-white font-extrabold text-xs transition">
+                    Save UPI ID Configuration
+                </button>
+            </div>
+
             <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center">
@@ -401,51 +423,15 @@
                     <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
                         <label class="block text-[11px] font-extrabold text-slate-700 mb-1">Store Ops KDS PIN</label>
                         <input id="cfg-kds-pin" type="text" maxlength="4" pattern="\d{4}" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono text-base font-extrabold tracking-widest text-center bg-white focus:outline-none focus:border-farm-600">
-                        <span class="text-[10px] text-slate-400 block mt-1">Default: 1234</span>
                     </div>
                     <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
                         <label class="block text-[11px] font-extrabold text-slate-700 mb-1">Rider Portal PIN</label>
-                        <input id="cfg-rider-pin" type="text" maxlength="4" pattern="\d{4}" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono text-base font-extrabold tracking-widest text-center bg-white focus:outline-none focus:border-farm-600">
-                        <span class="text-[10px] text-slate-400 block mt-1">Default: 5678</span>
+                        <input id="cfg-rider-pin" type="text" maxlength="4" pattern="\d{4}" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono text-base font-extrabold tracking-widest text-center bg-white focus:outline-none focus:border-amber-600">
                     </div>
                 </div>
 
                 <button onclick="savePortalPinsConfig()" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs transition">
                     Save Portal PINs
-                </button>
-            </div>
-
-            <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
-                <div class="flex items-center justify-between gap-3">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
-                            <i data-lucide="percent" class="w-5 h-5"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-extrabold text-base text-slate-900">Promo Discount Code Control</h3>
-                            <p class="text-xs text-slate-500">Toggle storewide promo code ON/OFF & set discount %.</p>
-                        </div>
-                    </div>
-
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input id="cfg-promo-enabled" type="checkbox" onchange="savePromoConfig()" class="sr-only peer">
-                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-farm-600"></div>
-                    </label>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 pt-2">
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Promo Code String</label>
-                        <input id="cfg-promo-code" type="text" placeholder="FRESH15" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono text-xs font-extrabold uppercase focus:outline-none focus:border-farm-600">
-                    </div>
-                    <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Discount Percentage (%)</label>
-                        <input id="cfg-promo-percent" type="number" min="1" max="90" placeholder="15" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono text-xs font-extrabold focus:outline-none focus:border-farm-600">
-                    </div>
-                </div>
-
-                <button onclick="savePromoConfig()" class="w-full py-2.5 rounded-xl bg-farm-600 hover:bg-farm-700 text-white font-extrabold text-xs transition">
-                    Update Discount Settings
                 </button>
             </div>
 
@@ -457,7 +443,7 @@
                         </div>
                         <div>
                             <h3 class="font-extrabold text-base text-slate-900">Base Store Location & 3 km Delivery Radius Controls</h3>
-                            <p class="text-xs text-slate-500">Independently toggle delivery within 3 km and beyond 3 km from your base store hub, and customize zone fees.</p>
+                            <p class="text-xs text-slate-500">Configure store hub GPS and delivery fees for within 3 km and beyond 3 km zones.</p>
                         </div>
                     </div>
                 </div>
@@ -485,14 +471,13 @@
                                     <input id="cfg-store-lng" type="number" step="0.0001" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 font-mono text-xs bg-white">
                                 </div>
                             </div>
-                            <p class="text-[10px] text-slate-500">Tip: Click anywhere on the map to relocate the Base Store Hub.</p>
                         </div>
 
                         <div class="p-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50/40 space-y-2.5">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <span class="font-extrabold text-xs text-slate-900 block">Zone A: Within 3 km Radius</span>
-                                    <span class="text-[10px] text-slate-500">Hyperlocal express zone (&le; 3.0 km)</span>
+                                    <span class="text-[10px] text-slate-500">Hyperlocal express zone</span>
                                 </div>
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input id="cfg-within-3km-enabled" type="checkbox" onchange="saveDeliveryZoneConfig()" class="sr-only peer">
@@ -500,25 +485,8 @@
                                 </label>
                             </div>
                             <div class="flex items-center justify-between gap-2 pt-1">
-                                <label class="text-[11px] font-bold text-slate-700">Zone Delivery Fee (₹):</label>
+                                <label class="text-[11px] font-bold text-slate-700">Delivery Fee (₹):</label>
                                 <input id="cfg-within-3km-fee" type="number" min="0" class="w-24 px-2.5 py-1 rounded-lg border border-slate-300 font-mono text-xs font-bold text-right bg-white">
-                            </div>
-                        </div>
-
-                        <div class="p-4 rounded-2xl border-2 border-amber-200 bg-amber-50/40 space-y-2.5">
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <span class="font-extrabold text-xs text-slate-900 block">Zone B: Beyond 3 km Radius</span>
-                                    <span class="text-[10px] text-slate-500">Extended city delivery (&gt; 3.0 km)</span>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input id="cfg-beyond-3km-enabled" type="checkbox" onchange="saveDeliveryZoneConfig()" class="sr-only peer">
-                                    <div class="w-11 h-6 bg-slate-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
-                                </label>
-                            </div>
-                            <div class="flex items-center justify-between gap-2 pt-1">
-                                <label class="text-[11px] font-bold text-slate-700">Extended Delivery Fee (₹):</label>
-                                <input id="cfg-beyond-3km-fee" type="number" min="0" class="w-24 px-2.5 py-1 rounded-lg border border-slate-300 font-mono text-xs font-bold text-right bg-white">
                             </div>
                         </div>
 
@@ -550,13 +518,35 @@
                     <p class="text-xs text-slate-300 mt-0.5">Rider: <strong class="text-white">Vikram Singh</strong> • ID: #RDR-104 • Connaught Place Hub</p>
                 </div>
             </div>
-            <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-right">
-                <span class="text-[11px] text-slate-300 block">Completed Deliveries</span>
-                <span id="rider-completed-count" class="text-xl font-extrabold text-amber-400">0</span>
+            <div class="flex items-center gap-3">
+                <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-right">
+                    <span class="text-[11px] text-slate-300 block">Completed Deliveries</span>
+                    <span id="rider-completed-count" class="text-xl font-extrabold text-amber-400">0</span>
+                </div>
             </div>
         </div>
 
-        <div id="rider-orders-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        <!-- Rider Module Tabs / Filter Switcher -->
+        <div class="flex items-center gap-2 mb-6 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm w-fit">
+            <button id="rider-tab-active" onclick="switchRiderTab('active')" class="px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 text-white transition shadow-sm">
+                Active Deliveries
+            </button>
+            <button id="rider-tab-log" onclick="switchRiderTab('log')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 transition">
+                Completed & In-Process Log
+            </button>
+        </div>
+
+        <div id="rider-active-section">
+            <div id="rider-orders-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        </div>
+
+        <div id="rider-log-section" class="hidden space-y-4">
+            <div class="bg-white rounded-3xl border border-slate-200 p-5 shadow-sm">
+                <h3 class="font-extrabold text-base text-slate-900 mb-1">Complete Delivery History & Audit Log</h3>
+                <p class="text-xs text-slate-500 mb-4">Chronological log of all completed, out-for-delivery, and active dispatches assigned to your rider profile.</p>
+                <div id="rider-log-list" class="divide-y divide-slate-100"></div>
+            </div>
+        </div>
     </main>
 
     <!-- SLIDE-OVER CART & CHECKOUT DRAWER -->
@@ -605,23 +595,13 @@
                                     <i data-lucide="crosshair" class="w-3 h-3"></i> Use Live GPS
                                 </button>
                             </div>
-                            <textarea id="cust-address" rows="2" placeholder="Flat/House No., Building, Street, Landmark..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600"></textarea>
+                            <textarea id="cust-address" rows="2" placeholder="Flat/House No., Building, Street..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600"></textarea>
 
                             <div class="mt-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
                                 <div class="flex items-center justify-between gap-1">
                                     <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Pin Drop Location on Map</span>
-                                    <div class="flex items-center gap-1">
-                                        <button type="button" onclick="setDemoCustomerPreset('within')" class="px-2 py-0.5 rounded bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold transition" title="Test pin inside 3km">
-                                            Test &lt;3km Pin
-                                        </button>
-                                        <button type="button" onclick="setDemoCustomerPreset('beyond')" class="px-2 py-0.5 rounded bg-amber-100 hover:bg-amber-200 text-amber-800 text-[10px] font-bold transition" title="Test pin beyond 3km">
-                                            Test &gt;3km Pin
-                                        </button>
-                                    </div>
                                 </div>
-
                                 <div id="checkout-leaflet-map" class="w-full h-36 rounded-xl border border-slate-200 z-10"></div>
-
                                 <div id="delivery-distance-status" class="flex items-center justify-between text-[11px] font-bold px-2.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200">
                                     <span id="distance-km-label">1.2 km from store (Within 3 km Zone)</span>
                                     <span id="distance-zone-badge" class="uppercase text-[10px] font-extrabold">Serviceable</span>
@@ -630,8 +610,8 @@
                         </div>
 
                         <div>
-                            <label class="block text-[11px] font-bold text-slate-700 mb-1">Packing / Handling Instructions (Optional)</label>
-                            <input id="cust-notes" type="text" placeholder="e.g. Semi-ripe bananas, ring doorbell twice..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">Packing Instructions (Optional)</label>
+                            <input id="cust-notes" type="text" placeholder="e.g. Semi-ripe bananas, ring bell..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
                         </div>
                     </div>
                 </div>
@@ -639,10 +619,8 @@
                 <div id="checkout-promo-box">
                     <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-2">2. Promo / Harvest Discount Code</h4>
                     <div class="flex gap-2">
-                        <input id="checkout-promo-input" type="text" placeholder="Enter code e.g. FRESH15" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 font-mono text-xs font-extrabold uppercase focus:outline-none focus:border-farm-600">
-                        <button type="button" onclick="applyPromoCodeInCheckout()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition">
-                            Apply
-                        </button>
+                        <input id="checkout-promo-input" type="text" placeholder="FRESH15" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 font-mono text-xs font-extrabold uppercase focus:outline-none focus:border-farm-600">
+                        <button type="button" onclick="applyPromoCodeInCheckout()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition">Apply</button>
                     </div>
                     <p id="checkout-promo-feedback" class="text-[11px] font-semibold mt-1 hidden"></p>
                 </div>
@@ -651,7 +629,7 @@
                     <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-3">3. Payment Method</h4>
                     <div class="grid grid-cols-2 gap-2.5">
                         <label class="cursor-pointer">
-                            <input type="radio" name="payment-method" value="UPI" checked onchange="togglePaymentMethodUI()" class="peer sr-only">
+                            <input type="radio" name="payment-method" value="UPI" checked class="peer sr-only">
                             <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-farm-600 peer-checked:bg-emerald-50/50 transition text-center">
                                 <i data-lucide="qr-code" class="w-5 h-5 mx-auto mb-1 text-farm-600"></i>
                                 <span class="block text-xs font-extrabold text-slate-900">Instant UPI QR</span>
@@ -659,7 +637,7 @@
                             </div>
                         </label>
                         <label class="cursor-pointer">
-                            <input type="radio" name="payment-method" value="COD" onchange="togglePaymentMethodUI()" class="peer sr-only">
+                            <input type="radio" name="payment-method" value="COD" class="peer sr-only">
                             <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-farm-600 peer-checked:bg-emerald-50/50 transition text-center">
                                 <i data-lucide="banknote" class="w-5 h-5 mx-auto mb-1 text-emerald-600"></i>
                                 <span class="block text-xs font-extrabold text-slate-900">Cash on Delivery</span>
@@ -675,7 +653,7 @@
                         <span id="bill-subtotal" class="font-bold text-slate-900">₹0</span>
                     </div>
                     <div id="bill-discount-row" class="hidden flex justify-between text-emerald-700 font-bold">
-                        <span id="bill-discount-label">Promo Discount (15%)</span>
+                        <span id="bill-discount-label">Promo Discount</span>
                         <span id="bill-discount-amount">-₹0</span>
                     </div>
                     <div class="flex justify-between text-slate-600">
@@ -704,7 +682,7 @@
 
     <!-- MODAL 1: DYNAMIC UPI QR PAYMENT GATEWAY -->
     <div id="upi-payment-modal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-100">
             <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-5 flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
                     <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
@@ -712,7 +690,7 @@
                     </div>
                     <div>
                         <h3 class="font-extrabold text-sm">Scan & Pay via UPI</h3>
-                        <p class="text-[11px] text-slate-300">Merchant: Farm Fresh • farmfresh@upi</p>
+                        <p id="upi-modal-merchant-subtitle" class="text-[11px] text-slate-300">Merchant: Farm Fresh • farmfresh@upi</p>
                     </div>
                 </div>
                 <button onclick="closeUpiModal()" class="p-1.5 rounded-lg hover:bg-white/10 text-slate-300">
@@ -732,14 +710,8 @@
                     Scan with <strong>GPay, PhonePe, Paytm, or BHIM</strong>. Amount is auto-filled.
                 </p>
 
-                <a id="upi-deep-link" href="#" class="sm:hidden w-full mb-3 py-2.5 px-4 rounded-xl bg-blue-600 text-white font-bold text-xs flex items-center justify-center gap-2">
-                    <i data-lucide="smartphone" class="w-4 h-4"></i> Open Installed UPI App
-                </a>
-
                 <div class="text-left bg-slate-50 p-3.5 rounded-2xl border border-slate-200 mb-4">
-                    <label class="block text-[11px] font-extrabold text-slate-700 mb-1">
-                        Enter 12-Digit UPI Ref / UTR No. (Optional for Demo)
-                    </label>
+                    <label class="block text-[11px] font-extrabold text-slate-700 mb-1">Enter 12-Digit UPI Ref / UTR No.</label>
                     <input id="upi-utr-input" type="text" maxlength="12" placeholder="e.g. 429184729104" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono focus:outline-none focus:border-farm-600">
                 </div>
 
@@ -865,14 +837,12 @@
 
     <!-- JAVASCRIPT APPLICATION LOGIC WITH SUPABASE CLOUD SYNC -->
     <script>
-        // Supabase Configuration
         const SUPABASE_URL = 'https://ftqpykrvyjqcmpraxznj.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_PiHFc3QQMhuBURisV-_hDA_NmlY5OG1';
 
         let supabaseClient = null;
         try {
             if (window.supabase) {
-                // Ensure correct client initialization format
                 const cleanUrl = SUPABASE_URL.replace(/\/rest\/v1\/?$/, '');
                 supabaseClient = window.supabase.createClient(cleanUrl, SUPABASE_ANON_KEY);
             }
@@ -996,326 +966,13 @@
                 desc: 'Easy-to-peel, tangy-sweet Nagpur santra bursting with Vitamin C and fresh citrus juice.',
                 image: 'https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=600&q=80',
                 customizable: false
-            },
-            {
-                id: 'ff-7',
-                name: 'Green Broccoli & Bell Pepper Duo',
-                category: 'Vegetables',
-                unit: '650 g Combo',
-                price: 135,
-                stock: 4,
-                badge: 'Organic',
-                veg: true,
-                desc: '1 crisp Ooty broccoli head (350g) paired with 1 red & 1 yellow hydroponic bell pepper.',
-                image: 'https://images.unsplash.com/photo-1584270354949-c26b0d5b4a0c?auto=format&fit=crop&w=600&q=80',
-                customizable: true,
-                variants: [
-                    { name: 'Regular Combo (650 g)', priceAdd: 0 },
-                    { name: 'Large Salad Pack (1.2 kg)', priceAdd: 110 }
-                ],
-                addons: [
-                    { name: 'Floret-Cut & Washed', price: 25 }
-                ]
-            },
-            {
-                id: 'ff-9',
-                name: 'Fresh Coriander & Mint Bunch',
-                category: 'Vegetables',
-                unit: '200 g Bunch',
-                price: 29,
-                stock: 28,
-                badge: 'Daily Herb',
-                veg: true,
-                desc: 'Fragrant desi dhania (100g) and garden-fresh pudina (100g) for chutneys, garnishes, and raitas.',
-                image: 'https://images.unsplash.com/photo-1628556270448-4d4e4148e1b1?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-10',
-                name: 'Robusta Cavendish Bananas',
-                category: 'Fruits',
-                unit: '1 Dozen (12 pcs)',
-                price: 68,
-                stock: 40,
-                badge: 'Farm Pick',
-                veg: true,
-                desc: 'Spotless, energy-rich Yelakki/Robusta bananas harvested at optimal maturity.',
-                image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=80',
-                customizable: true,
-                variants: [
-                    { name: '6 Pcs (Half Dozen)', priceAdd: -32 },
-                    { name: '12 Pcs (1 Dozen)', priceAdd: 0 }
-                ],
-                addons: [
-                    { name: 'Yellow & Ready to Eat', price: 0 },
-                    { name: 'Greenish-Yellow (Lasts 4 days)', price: 0 }
-                ]
-            },
-            {
-                id: 'ff-11',
-                name: 'Hass Avocados (2 Pcs)',
-                category: 'Fruits',
-                unit: '2 Pcs (~400 g)',
-                price: 249,
-                stock: 12,
-                badge: 'Exotic',
-                veg: true,
-                desc: 'Creamy, buttery Hass avocados rich in healthy fats. Ideal for guacamole, toast, and smoothies.',
-                image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-12',
-                name: 'Desi Potatoes (Aloo)',
-                category: 'Vegetables',
-                unit: '1 kg Pack',
-                price: 34,
-                stock: 80,
-                badge: 'Daily Essential',
-                veg: true,
-                desc: 'Fresh starchy new-crop potatoes with clean skin, perfect for frying, boiling, and curries.',
-                image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-13',
-                name: 'Ginger (Adrak) & Garlic (Lahsun) Combo',
-                category: 'Vegetables',
-                unit: '250 g Pack',
-                price: 55,
-                stock: 35,
-                badge: 'Fresh Roots',
-                veg: true,
-                desc: 'Fibrous aromatic ginger and plump garlic cloves essential for daily Indian cooking bases.',
-                image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-14',
-                name: 'Green Chillies (Hari Mirch)',
-                category: 'Vegetables',
-                unit: '200 g Pack',
-                price: 22,
-                stock: 50,
-                badge: 'Spicy Fresh',
-                veg: true,
-                desc: 'Shiny, firm, and hot farm-picked green chillies sorted without stems.',
-                image: 'https://images.unsplash.com/photo-1588258219512-69ebfcdc9318?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-15',
-                name: 'Cauliflower (Phool Gobhi)',
-                category: 'Vegetables',
-                unit: '1 Pc (~600 g)',
-                price: 45,
-                stock: 25,
-                badge: 'Farm Pick',
-                veg: true,
-                desc: 'Snow-white, tight-curled cauliflower head packed fresh without outer leaves.',
-                image: 'https://images.unsplash.com/photo-1568584715575-94bcbe05e456?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-16',
-                name: 'Fresh Carrots (Gajar)',
-                category: 'Vegetables',
-                unit: '500 g Pack',
-                price: 38,
-                stock: 40,
-                badge: 'Seasonal',
-                veg: true,
-                desc: 'Sweet, crisp orange carrots rich in beta-carotene. Great for salads, juices, and halwa.',
-                image: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-17',
-                name: 'Fresh Cucumber (Kheera)',
-                category: 'Vegetables',
-                unit: '500 g Pack',
-                price: 30,
-                stock: 45,
-                badge: 'Salad Special',
-                veg: true,
-                desc: 'Juicy, crisp green salad cucumbers picked at peak hydration.',
-                image: 'https://images.unsplash.com/photo-1604977042046-52cff39ef349?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-18',
-                name: 'Fresh Lemon (Nimbu)',
-                category: 'Vegetables',
-                unit: '250 g (6-8 pcs)',
-                price: 35,
-                stock: 55,
-                badge: 'Juicy',
-                veg: true,
-                desc: 'Thin-skinned, fragrant yellow lemons packed with zesty citrus juice.',
-                image: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-19',
-                name: 'Capsicum (Shimla Mirch)',
-                category: 'Vegetables',
-                unit: '500 g Pack',
-                price: 48,
-                stock: 30,
-                badge: 'Farm Pick',
-                veg: true,
-                desc: 'Glossy, crisp green bell peppers ideal for stir-fries, pizzas, and sabzis.',
-                image: 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-20',
-                name: 'Fresh Lady Finger (Bhindi)',
-                category: 'Vegetables',
-                unit: '500 g Pack',
-                price: 42,
-                stock: 35,
-                badge: 'Tender',
-                veg: true,
-                desc: 'Tender finger-length green okra pods sorted for zero fiber hardness.',
-                image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-21',
-                name: 'Fresh Green Peas (Matar)',
-                category: 'Vegetables',
-                unit: '500 g Pack',
-                price: 65,
-                stock: 22,
-                badge: 'Sweet & Tender',
-                veg: true,
-                desc: 'Plump pods filled with sweet, tender green peas.',
-                image: 'https://images.unsplash.com/photo-1590779035999-810a9c9b5427?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-22',
-                name: 'Fresh Papaya (Medium)',
-                category: 'Fruits',
-                unit: '1 Pc (~1.2 kg)',
-                price: 75,
-                stock: 15,
-                badge: 'Orchard Fresh',
-                veg: true,
-                desc: 'Tree-ripened sweet yellow papaya rich in papain enzymes and antioxidants.',
-                image: 'https://images.unsplash.com/photo-1517282054209-a78b5e28a512?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-23',
-                name: 'Fresh Pomegranate (Anar)',
-                category: 'Fruits',
-                unit: '1 kg (3–4 pcs)',
-                price: 210,
-                stock: 18,
-                badge: 'Ruby Gems',
-                veg: true,
-                desc: 'Deep ruby-red pomegranate arils bursting with sweet-tart juice and iron.',
-                image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-24',
-                name: 'Sweet Pineapple (Ananas)',
-                category: 'Fruits',
-                unit: '1 Pc (~900 g)',
-                price: 95,
-                stock: 14,
-                badge: 'Tropical',
-                veg: true,
-                desc: 'Golden ripe Queen pineapple with sweet aromatic flesh and zero woody core.',
-                image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-25',
-                name: 'Fresh Watermelon (Tarbuj)',
-                category: 'Fruits',
-                unit: '1 Pc (~2.5 kg)',
-                price: 130,
-                stock: 10,
-                badge: 'Summer Chill',
-                veg: true,
-                desc: 'Juicy, sugar-red striped watermelon chilled and ready for slicing.',
-                image: 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-26',
-                name: 'Fresh Muskmelon (Kharbooja)',
-                category: 'Fruits',
-                unit: '1 Pc (~1 kg)',
-                price: 85,
-                stock: 16,
-                badge: 'Sweet Aroma',
-                veg: true,
-                desc: 'Fragrant, net-skinned orange-flesh cantaloupe with high natural sweetness.',
-                image: 'https://images.unsplash.com/photo-1526318896980-cf78c088247c?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-27',
-                name: 'Fresh Black Grapes (Kali Draksh)',
-                category: 'Fruits',
-                unit: '500 g Punnet',
-                price: 120,
-                stock: 20,
-                badge: 'Seedless',
-                veg: true,
-                desc: 'Plump, crisp, and seedless sweet black grapes washed and ready to snack.',
-                image: 'https://images.unsplash.com/photo-1537640538966-79f365143fce?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-28',
-                name: 'Fresh Green Grapes (Sonaka)',
-                category: 'Fruits',
-                unit: '500 g Punnet',
-                price: 105,
-                stock: 22,
-                badge: 'Export Quality',
-                veg: true,
-                desc: 'Long, elongated seedless green grapes with a refreshing sweet-tart crunch.',
-                image: 'https://images.unsplash.com/photo-1596363505789-4e613c72d6a5?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-29',
-                name: 'Fresh Kiwi (Zespri SunGold/Green)',
-                category: 'Fruits',
-                unit: '3 Pcs Pack',
-                price: 145,
-                stock: 15,
-                badge: 'Imported',
-                veg: true,
-                desc: 'Vitamin C powerhouse kiwis with tangy emerald flesh and edible fuzzy skin.',
-                image: 'https://images.unsplash.com/photo-1585059895050-66c5b4f0b727?auto=format&fit=crop&w=600&q=80',
-                customizable: false
-            },
-            {
-                id: 'ff-30',
-                name: 'Fresh Dragon Fruit (Pitaya)',
-                category: 'Fruits',
-                unit: '1 Pc (~350 g)',
-                price: 110,
-                stock: 12,
-                badge: 'Exotic',
-                veg: true,
-                desc: 'Vibrant pink skin with sweet white flesh studded with edible black seeds.',
-                image: 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=600&q=80',
-                customizable: false
             }
         ];
 
         let state = {
             currentView: 'customer',
             kdsTab: 'orders',
+            riderTab: 'active',
             selectedCategory: 'All',
             vegOnly: false,
             storeOpen: true,
@@ -1327,6 +984,8 @@
             appliedPromoCode: '',
             newProductPhotoBase64: '',
             config: {
+                upiId: 'farmfresh@upi',
+                upiName: 'Farm Fresh Produce',
                 kdsPin: '1234',
                 riderPin: '5678',
                 promoEnabled: true,
@@ -1378,7 +1037,6 @@
                 }
                 if (savedStoreOpen !== null) state.storeOpen = JSON.parse(savedStoreOpen);
 
-                // Fetch orders from Supabase if client is configured
                 if (supabaseClient) {
                     await fetchOrdersFromCloud();
                 } else {
@@ -1457,7 +1115,6 @@
 
             if (error) {
                 console.error('Error saving order to Supabase:', error.message);
-                showToast('Cloud sync warning: Order stored locally.', 'warning');
             }
         }
 
@@ -1467,14 +1124,7 @@
             if (cancelReason) updatePayload.cancel_reason = cancelReason;
             if (refundStatus) updatePayload.refund_status = refundStatus;
 
-            const { error } = await supabaseClient
-                .from('orders')
-                .update(updatePayload)
-                .eq('id', orderId);
-
-            if (error) {
-                console.error('Error updating order status in Supabase:', error.message);
-            }
+            await supabaseClient.from('orders').update(updatePayload).eq('id', orderId);
         }
 
         function saveState() {
@@ -1489,25 +1139,16 @@
             }
         }
 
-        window.addEventListener('storage', (e) => {
-            if (e.key && e.key.startsWith('ff_')) {
-                loadState();
-                refreshAllUI();
-            }
-        });
-
         window.addEventListener('DOMContentLoaded', async () => {
             await loadState();
             renderCategories();
             refreshAllUI();
             lucide.createIcons();
 
-            // Initialize Supabase Realtime Subscription if client is ready
             if (supabaseClient) {
                 supabaseClient
                     .channel('public:orders')
-                    .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, payload => {
-                        console.log('Realtime order sync update received:', payload);
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => {
                         fetchOrdersFromCloud();
                     })
                     .subscribe();
@@ -1538,9 +1179,9 @@
             };
             Object.entries(tabs).forEach(([key, el]) => {
                 if (key === viewName) {
-                    el.className = 'relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-900 shadow-sm';
+                    el.className = 'relative flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-white text-slate-900 shadow-sm';
                 } else {
-                    el.className = 'relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-slate-900';
+                    el.className = 'relative flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900';
                 }
             });
 
@@ -1550,18 +1191,13 @@
         }
 
         function promptKitchenAccess() {
-            if (state.kitchenUnlocked) {
-                switchView('kitchen');
-                return;
-            }
+            if (state.kitchenUnlocked) { switchView('kitchen'); return; }
             document.getElementById('kds-pin-input').value = '';
             document.getElementById('pin-modal').classList.remove('hidden');
             setTimeout(() => document.getElementById('kds-pin-input').focus(), 50);
         }
 
-        function closePinModal() {
-            document.getElementById('pin-modal').classList.add('hidden');
-        }
+        function closePinModal() { document.getElementById('pin-modal').classList.add('hidden'); }
 
         function verifyKitchenPin() {
             const pin = document.getElementById('kds-pin-input').value.trim();
@@ -1569,25 +1205,20 @@
                 state.kitchenUnlocked = true;
                 closePinModal();
                 switchView('kitchen');
-                showToast('Store Ops & Packing KDS Unlocked', 'success');
+                showToast('Store Ops KDS Unlocked', 'success');
             } else {
                 showToast('Invalid Store Ops PIN!', 'error');
             }
         }
 
         function promptRiderAccess() {
-            if (state.riderUnlocked) {
-                switchView('rider');
-                return;
-            }
+            if (state.riderUnlocked) { switchView('rider'); return; }
             document.getElementById('rider-pin-input').value = '';
             document.getElementById('rider-pin-modal').classList.remove('hidden');
             setTimeout(() => document.getElementById('rider-pin-input').focus(), 50);
         }
 
-        function closeRiderPinModal() {
-            document.getElementById('rider-pin-modal').classList.add('hidden');
-        }
+        function closeRiderPinModal() { document.getElementById('rider-pin-modal').classList.add('hidden'); }
 
         function verifyRiderPin() {
             const pin = document.getElementById('rider-pin-input').value.trim();
@@ -1623,7 +1254,7 @@
                     kdsText.textContent = 'Store: OPEN (Accepting Orders)';
                 }
             } else {
-                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Store Closed for Today`;
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Store Closed`;
                 badge.className = 'hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-red-50 text-red-700 border border-red-200';
                 banner.classList.remove('hidden');
                 if (kdsBtn) {
@@ -1655,20 +1286,20 @@
             document.getElementById('checkout-promo-input').value = state.config.promoCode;
             updateCartUI();
             toggleCartDrawer(true);
-            showToast(`Promo code ${state.config.promoCode} (${state.config.promoPercent}% OFF) applied!`, 'success');
+            showToast(`Promo code ${state.config.promoCode} applied!`, 'success');
         }
 
         function renderCategories() {
             const tabs = [
                 { id: 'All', label: 'All Produce', icon: 'layout-grid' },
-                { id: 'Vegetables', label: 'Fresh Vegetables', icon: 'carrot' },
-                { id: 'Fruits', label: 'Orchard Fruits', icon: 'apple' }
+                { id: 'Vegetables', label: 'Vegetables', icon: 'carrot' },
+                { id: 'Fruits', label: 'Fruits', icon: 'apple' }
             ];
             const container = document.getElementById('category-tabs');
             container.innerHTML = tabs.map(t => {
                 const active = state.selectedCategory === t.id;
                 return `
-                    <button onclick="selectCategory('${t.id}')" class="px-4 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition flex items-center gap-1.5 ${
+                    <button onclick="selectCategory('${t.id}')" class="px-3.5 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition flex items-center gap-1.5 ${
                         active 
                         ? 'bg-farm-600 text-white shadow-md shadow-farm-600/20' 
                         : 'bg-white text-slate-600 hover:bg-emerald-50 border border-slate-200'
@@ -1701,13 +1332,11 @@
             const stockQty = Number(item.stock ?? 0);
             const inStock = stockQty > 0;
             const lowStock = inStock && stockQty <= 5;
-            const cartQty = state.cart
-                .filter(c => c.itemId === item.id)
-                .reduce((sum, c) => sum + c.qty, 0);
+            const cartQty = state.cart.filter(c => c.itemId === item.id).reduce((sum, c) => sum + c.qty, 0);
 
             return `
                 <div class="bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col ${!inStock ? 'opacity-75' : ''}">
-                    <div class="relative h-48 bg-slate-100 overflow-hidden">
+                    <div class="relative h-44 sm:h-48 bg-slate-100 overflow-hidden">
                         <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover ${!inStock ? 'grayscale' : ''}" onerror="this.src='https://placehold.co/600x400/15803d/ffffff?text=Farm+Fresh+Produce'">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                         
@@ -1717,35 +1346,34 @@
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
                                 </span>
                             </span>
-                            ${item.badge ? `<span class="px-2.5 py-0.5 rounded-md bg-harvest-400 text-slate-950 text-[10px] font-extrabold uppercase tracking-wider shadow-sm">${item.badge}</span>` : ''}
-                            ${lowStock ? `<span class="px-2 py-0.5 rounded-md bg-amber-600 text-white text-[10px] font-extrabold shadow-sm">Only ${stockQty} left</span>` : ''}
+                            ${item.badge ? `<span class="px-2 py-0.5 rounded-md bg-harvest-400 text-slate-950 text-[10px] font-extrabold uppercase tracking-wider shadow-sm">${item.badge}</span>` : ''}
                         </div>
 
                         ${!inStock ? `
                             <div class="absolute inset-0 bg-slate-900/65 flex items-center justify-center">
-                                <span class="px-3.5 py-1.5 rounded-xl bg-red-600 text-white font-extrabold text-xs uppercase tracking-wider shadow-lg">Out of Stock</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-red-600 text-white font-extrabold text-xs uppercase tracking-wider shadow-lg">Out of Stock</span>
                             </div>
                         ` : ''}
 
                         <div class="absolute bottom-3 left-3 right-3 flex items-end justify-between text-white">
-                            <span class="text-xs font-bold bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-lg">${item.unit || '1 Pack'}</span>
-                            <span class="text-lg font-extrabold font-mono bg-farm-700/95 px-2.5 py-0.5 rounded-lg shadow">₹${item.price}</span>
+                            <span class="text-xs font-bold bg-black/50 backdrop-blur-sm px-2 py-1 rounded-lg">${item.unit || '1 Pack'}</span>
+                            <span class="text-base sm:text-lg font-extrabold font-mono bg-farm-700/95 px-2.5 py-0.5 rounded-lg shadow">₹${item.price}</span>
                         </div>
                     </div>
 
-                    <div class="p-5 flex-1 flex flex-col justify-between">
+                    <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between">
                         <div>
-                            <h3 class="font-extrabold text-base text-slate-900 leading-snug">${item.name}</h3>
-                            <p class="text-xs text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">${item.desc || 'Freshly harvested daily from partner farms.'}</p>
+                            <h3 class="font-extrabold text-sm sm:text-base text-slate-900 leading-snug">${item.name}</h3>
+                            <p class="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">${item.desc || 'Freshly harvested daily.'}</p>
                         </div>
 
                         <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
                             <span class="text-[11px] font-semibold ${lowStock ? 'text-amber-600' : 'text-slate-400'}">
-                                ${!inStock ? 'Restocking soon' : `${stockQty} packs in stock`}
+                                ${!inStock ? 'Restocking soon' : `${stockQty} in stock`}
                             </span>
 
                             ${!inStock ? `
-                                <button disabled class="px-4 py-2 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs cursor-not-allowed">Sold Out</button>
+                                <button disabled class="px-3.5 py-2 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs cursor-not-allowed">Sold Out</button>
                             ` : cartQty > 0 ? `
                                 <div class="flex items-center gap-2 bg-farm-600 text-white rounded-xl p-1 shadow-md shadow-farm-600/20">
                                     <button onclick="decrementItemFromMenu('${item.id}')" class="w-7 h-7 rounded-lg hover:bg-black/20 flex items-center justify-center font-extrabold transition">-</button>
@@ -1805,7 +1433,7 @@
                             </div>
                             <span class="px-3 py-1 rounded-full bg-emerald-50 text-farm-700 text-xs font-extrabold border border-emerald-200">${veggies.length} Items</span>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
                             ${veggies.map(renderProductCardHTML).join('')}
                         </div>
                     </section>
@@ -1822,12 +1450,12 @@
                                 </div>
                                 <div>
                                     <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">Orchard Fruits</h2>
-                                    <p class="text-xs text-slate-500">Naturally ripened seasonal fruits, citrus & exotics</p>
+                                    <p class="text-xs text-slate-500">Naturally ripened seasonal fruits & citrus</p>
                                 </div>
                             </div>
                             <span class="px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-extrabold border border-amber-200">${fruits.length} Items</span>
                         </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
                             ${fruits.map(renderProductCardHTML).join('')}
                         </div>
                     </section>
@@ -1845,12 +1473,6 @@
             }
             const item = state.products.find(m => m.id === itemId);
             if (!item || Number(item.stock) <= 0) return;
-
-            const currentInCart = state.cart.filter(c => c.itemId === itemId).reduce((s, c) => s + c.qty, 0);
-            if (currentInCart >= Number(item.stock)) {
-                showToast(`Maximum available stock (${item.stock}) reached for ${item.name}`, 'warning');
-                return;
-            }
 
             if (item.customizable && item.variants && item.variants.length > 0) {
                 openCustomizerModal(item);
@@ -1877,7 +1499,7 @@
                         <input type="radio" name="cust-variant" value="${idx}" ${idx === 0 ? 'checked' : ''} onchange="updateCustomizerTotal()" class="accent-farm-600 w-4 h-4">
                         <span class="text-xs font-bold text-slate-800">${v.name}</span>
                     </div>
-                    <span class="text-xs font-mono font-bold text-slate-600">${v.priceAdd === 0 ? 'Included' : (v.priceAdd > 0 ? '+₹' + v.priceAdd : '-₹' + Math.abs(v.priceAdd))}</span>
+                    <span class="text-xs font-mono font-bold text-slate-600">${v.priceAdd === 0 ? 'Included' : '+₹' + v.priceAdd}</span>
                 </label>
             `).join('');
 
@@ -1904,16 +1526,11 @@
         function updateCustomizerTotal() {
             const item = state.activeCustomizingItem;
             if (!item) return;
-
             let total = item.price;
             const vRadio = document.querySelector('input[name="cust-variant"]:checked');
-            if (vRadio && item.variants[vRadio.value]) {
-                total += item.variants[vRadio.value].priceAdd;
-            }
+            if (vRadio && item.variants[vRadio.value]) total += item.variants[vRadio.value].priceAdd;
             document.querySelectorAll('input[name="cust-addon"]:checked').forEach(cb => {
-                if (item.addons[cb.value]) {
-                    total += item.addons[cb.value].price;
-                }
+                if (item.addons[cb.value]) total += item.addons[cb.value].price;
             });
             document.getElementById('cust-modal-price').textContent = `₹${total}`;
         }
@@ -1921,41 +1538,31 @@
         function confirmCustomizedItem() {
             const item = state.activeCustomizingItem;
             if (!item) return;
-
             let unitPrice = item.price;
             let notes = [];
 
             const vRadio = document.querySelector('input[name="cust-variant"]:checked');
             if (vRadio && item.variants[vRadio.value]) {
-                const v = item.variants[vRadio.value];
-                unitPrice += v.priceAdd;
-                notes.push(v.name);
+                unitPrice += item.variants[vRadio.value].priceAdd;
+                notes.push(item.variants[vRadio.value].name);
             }
 
             const selectedAddons = [];
             document.querySelectorAll('input[name="cust-addon"]:checked').forEach(cb => {
                 const a = item.addons[cb.value];
-                if (a) {
-                    unitPrice += a.price;
-                    selectedAddons.push(a.name);
-                }
+                if (a) { unitPrice += a.price; selectedAddons.push(a.name); }
             });
-            if (selectedAddons.length > 0) {
-                notes.push(selectedAddons.join(', '));
-            }
+            if (selectedAddons.length > 0) notes.push(selectedAddons.join(', '));
 
             const customizationText = notes.join(' • ');
-            const cartKey = `${item.id}::${customizationText}`;
-
             addItemToCart({
-                cartKey,
+                cartKey: `${item.id}::${customizationText}`,
                 itemId: item.id,
                 name: item.name,
                 unitPrice,
                 customizationText,
                 qty: 1
             });
-
             closeCustomizerModal();
         }
 
@@ -1970,11 +1577,7 @@
             }
 
             const existing = state.cart.find(c => c.cartKey === newEntry.cartKey);
-            if (existing) {
-                existing.qty += 1;
-            } else {
-                state.cart.push(newEntry);
-            }
+            if (existing) { existing.qty += 1; } else { state.cart.push(newEntry); }
             saveState();
             refreshAllUI();
             showToast(`Added ${newEntry.name} to basket`, 'success');
@@ -1992,21 +1595,8 @@
         function updateCartItemQty(cartKey, delta) {
             const idx = state.cart.findIndex(c => c.cartKey === cartKey);
             if (idx === -1) return;
-
-            if (delta > 0) {
-                const product = state.products.find(p => p.id === state.cart[idx].itemId);
-                const maxStock = product ? Number(product.stock) : 99;
-                const totalInCart = state.cart.filter(c => c.itemId === state.cart[idx].itemId).reduce((s, c) => s + c.qty, 0);
-                if (totalInCart + delta > maxStock) {
-                    showToast(`Only ${maxStock} packs in stock!`, 'warning');
-                    return;
-                }
-            }
-
             state.cart[idx].qty += delta;
-            if (state.cart[idx].qty <= 0) {
-                state.cart.splice(idx, 1);
-            }
+            if (state.cart[idx].qty <= 0) state.cart.splice(idx, 1);
             saveState();
             refreshAllUI();
         }
@@ -2018,34 +1608,19 @@
             const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                       Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                       Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         }
 
         function evaluateDeliveryZone() {
-            const distKm = calculateHaversineKm(
-                Number(state.config.storeLat),
-                Number(state.config.storeLng),
-                Number(state.customerLocation.lat),
-                Number(state.customerLocation.lng)
-            );
+            const distKm = calculateHaversineKm(Number(state.config.storeLat), Number(state.config.storeLng), Number(state.customerLocation.lat), Number(state.customerLocation.lng));
             const isWithin3km = distKm <= 3.0;
             const serviceable = isWithin3km ? state.config.within3kmEnabled : state.config.beyond3kmEnabled;
             const fee = isWithin3km ? Number(state.config.within3kmFee) : Number(state.config.beyond3kmFee);
-
-            return {
-                distanceKm: Number(distKm.toFixed(2)),
-                isWithin3km,
-                serviceable,
-                fee
-            };
+            return { distanceKm: Number(distKm.toFixed(2)), isWithin3km, serviceable, fee };
         }
 
         function applyPromoCodeInCheckout() {
-            if (!state.config.promoEnabled) {
-                showToast('Promotional offers are currently disabled.', 'warning');
-                return;
-            }
+            if (!state.config.promoEnabled) return;
             const entered = document.getElementById('checkout-promo-input').value.trim().toUpperCase();
             const feedback = document.getElementById('checkout-promo-feedback');
             feedback.classList.remove('hidden');
@@ -2054,11 +1629,11 @@
                 state.appliedPromoCode = state.config.promoCode.toUpperCase();
                 feedback.className = 'text-[11px] font-bold mt-1 text-emerald-700';
                 feedback.textContent = `✓ Code ${state.appliedPromoCode} applied! (${state.config.promoPercent}% OFF)`;
-                showToast(`Discount code ${state.appliedPromoCode} applied!`, 'success');
+                showToast(`Discount code applied!`, 'success');
             } else {
                 state.appliedPromoCode = '';
                 feedback.className = 'text-[11px] font-bold mt-1 text-red-600';
-                feedback.textContent = `✕ Invalid code. Try ${state.config.promoCode}`;
+                feedback.textContent = `✕ Invalid code`;
             }
             updateCartUI();
         }
@@ -2103,9 +1678,7 @@
             drawerFooter.classList.remove('hidden');
 
             const custAddr = document.getElementById('cust-address');
-            if (!custAddr.value.trim()) {
-                custAddr.value = state.customerLocation.address;
-            }
+            if (!custAddr.value.trim()) custAddr.value = state.customerLocation.address;
 
             itemsContainer.innerHTML = state.cart.map(item => `
                 <div class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200/70">
@@ -2128,8 +1701,7 @@
             const ctaBtn = document.getElementById('place-order-cta-btn');
             const ctaText = document.getElementById('place-order-cta-text');
 
-            const zoneText = zone.isWithin3km ? 'Within 3 km Zone' : 'Beyond 3 km Zone';
-            distKmLabel.textContent = `${zone.distanceKm} km from store (${zoneText})`;
+            distKmLabel.textContent = `${zone.distanceKm} km from store (${zone.isWithin3km ? 'Within 3 km' : 'Beyond 3 km'})`;
 
             if (zone.serviceable) {
                 distStatusEl.className = 'flex items-center justify-between text-[11px] font-bold px-2.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200';
@@ -2139,16 +1711,16 @@
                 ctaText.textContent = 'Proceed to Place Order';
             } else {
                 distStatusEl.className = 'flex items-center justify-between text-[11px] font-bold px-2.5 py-1.5 rounded-xl bg-red-50 text-red-700 border border-red-200';
-                distBadge.textContent = zone.isWithin3km ? 'LOCAL <3KM PAUSED' : 'BEYOND 3KM PAUSED';
+                distBadge.textContent = 'PAUSED';
                 ctaBtn.disabled = true;
                 ctaBtn.className = 'w-full py-3.5 px-5 rounded-2xl bg-red-600/90 text-white font-extrabold text-xs flex items-center justify-between cursor-not-allowed opacity-90';
-                ctaText.textContent = zone.isWithin3km ? 'Delivery Within 3 km Currently Paused' : 'Delivery Beyond 3 km Currently Paused';
+                ctaText.textContent = 'Delivery Zone Currently Paused';
             }
 
             const discountRow = document.getElementById('bill-discount-row');
             if (discountAmount > 0) {
                 discountRow.classList.remove('hidden');
-                document.getElementById('bill-discount-label').textContent = `Promo (${state.appliedPromoCode} - ${state.config.promoPercent}% OFF)`;
+                document.getElementById('bill-discount-label').textContent = `Promo Discount (${state.config.promoPercent}%)`;
                 document.getElementById('bill-discount-amount').textContent = `-₹${discountAmount}`;
             } else {
                 discountRow.classList.add('hidden');
@@ -2156,7 +1728,7 @@
 
             document.getElementById('bill-subtotal').textContent = `₹${subtotal}`;
             document.getElementById('bill-gst').textContent = `₹${gst}`;
-            document.getElementById('bill-delivery-label').textContent = `Delivery Fee (${zone.distanceKm} km)`;
+            document.getElementById('bill-delivery-label').textContent = `Delivery Fee`;
             document.getElementById('bill-delivery').textContent = delivery === 0 ? 'FREE' : `₹${delivery}`;
             document.getElementById('bill-total').textContent = `₹${total}`;
             document.getElementById('footer-cta-amount').textContent = `₹${total}`;
@@ -2188,24 +1760,13 @@
 
             if (!checkoutMap) {
                 checkoutMap = L.map('checkout-leaflet-map').setView([cLat, cLng], 12);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; OpenStreetMap'
-                }).addTo(checkoutMap);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(checkoutMap);
 
-                checkoutStoreMarker = L.marker([sLat, sLng]).addTo(checkoutMap).bindPopup('Farm Fresh Base Store');
-                checkoutRadiusCircle = L.circle([sLat, sLng], {
-                    radius: 3000,
-                    color: '#16a34a',
-                    fillColor: '#22c55e',
-                    fillOpacity: 0.12,
-                    weight: 2
-                }).addTo(checkoutMap);
+                checkoutStoreMarker = L.marker([sLat, sLng]).addTo(checkoutMap).bindPopup('Store Hub');
+                checkoutRadiusCircle = L.circle([sLat, sLng], { radius: 3000, color: '#16a34a', fillColor: '#22c55e', fillOpacity: 0.12, weight: 2 }).addTo(checkoutMap);
+                checkoutCustomerMarker = L.marker([cLat, cLng], { draggable: true }).addTo(checkoutMap).bindPopup('Delivery Pin');
 
-                checkoutCustomerMarker = L.marker([cLat, cLng], { draggable: true }).addTo(checkoutMap).bindPopup('Your Delivery Pin (Drag or Click Map)');
-
-                checkoutMap.on('click', (e) => {
-                    updateCustomerMapCoordinates(e.latlng.lat, e.latlng.lng);
-                });
+                checkoutMap.on('click', (e) => updateCustomerMapCoordinates(e.latlng.lat, e.latlng.lng));
                 checkoutCustomerMarker.on('dragend', () => {
                     const pos = checkoutCustomerMarker.getLatLng();
                     updateCustomerMapCoordinates(pos.lat, pos.lng);
@@ -2215,108 +1776,56 @@
                 checkoutRadiusCircle.setLatLng([sLat, sLng]);
                 checkoutCustomerMarker.setLatLng([cLat, cLng]);
                 checkoutMap.invalidateSize();
-                checkoutMap.panTo([cLat, cLng]);
             }
         }
 
         function updateCustomerMapCoordinates(lat, lng, customAddressLabel) {
             state.customerLocation.lat = Number(lat.toFixed(5));
             state.customerLocation.lng = Number(lng.toFixed(5));
-            state.customerLocation.gpsVerified = true;
-
             if (customAddressLabel) {
                 state.customerLocation.address = customAddressLabel;
                 const addrInput = document.getElementById('cust-address');
                 if (addrInput) addrInput.value = customAddressLabel;
             }
-            if (checkoutCustomerMarker) {
-                checkoutCustomerMarker.setLatLng([state.customerLocation.lat, state.customerLocation.lng]);
-            }
-            if (checkoutMap) {
-                checkoutMap.panTo([state.customerLocation.lat, state.customerLocation.lng]);
-            }
+            if (checkoutCustomerMarker) checkoutCustomerMarker.setLatLng([state.customerLocation.lat, state.customerLocation.lng]);
             updateCartUI();
         }
 
-        function setDemoCustomerPreset(type) {
-            const sLat = Number(state.config.storeLat);
-            const sLng = Number(state.config.storeLng);
-            if (type === 'within') {
-                updateCustomerMapCoordinates(sLat + 0.010, sLng + 0.008, 'Janpath Lane, Near Base Store (< 3 km)');
-                showToast('Pinned location inside 3 km delivery zone', 'info');
-            } else {
-                updateCustomerMapCoordinates(sLat + 0.038, sLng + 0.030, 'South Extension Part II (> 3 km Extended Zone)');
-                showToast('Pinned location beyond 3 km delivery zone', 'info');
-            }
-        }
-
-        function togglePaymentMethodUI() {}
-
         function captureCustomerGPS(source) {
             if (!navigator.geolocation) {
-                showToast('Geolocation is not supported by your browser. Using default hub.', 'warning');
-                setDemoCustomerPreset('within');
+                showToast('Geolocation not supported.', 'warning');
                 return;
             }
-            showToast('Capturing your live GPS coordinates & resolving address...', 'info');
-            
-            const geoOptions = {
-                timeout: 10000,
-                maximumAge: 0,
-                enableHighAccuracy: true
-            };
-
-            navigator.geolocation.getCurrentPosition(
-                async (pos) => {
-                    const lat = pos.coords.latitude;
-                    const lng = pos.coords.longitude;
-                    
-                    let addressLabel = `Live GPS (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
-                    try {
-                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1`);
-                        if (res.ok) {
-                            const data = await res.json();
-                            if (data && data.display_name) {
-                                const parts = data.display_name.split(',');
-                                addressLabel = parts.slice(0, 3).join(',').trim();
-                            }
-                        }
-                    } catch (e) {
-                        console.warn('Reverse geocoding lookup failed:', e);
+            showToast('Capturing live GPS & resolving address...', 'info');
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                let addressLabel = `Live GPS (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+                try {
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && data.display_name) addressLabel = data.display_name.split(',').slice(0, 3).join(',').trim();
                     }
+                } catch (e) {}
 
-                    updateCustomerMapCoordinates(lat, lng, addressLabel);
-                    if (source === 'hero') {
-                        const heroInput = document.getElementById('hero-location-input');
-                        if (heroInput) heroInput.value = addressLabel;
-                    }
-                    const checkoutAddrInput = document.getElementById('cust-address');
-                    if (checkoutAddrInput) checkoutAddrInput.value = addressLabel;
-
-                    showToast('Live GPS Pin captured & address resolved!', 'success');
-                },
-                (err) => {
-                    console.warn('Geolocation error:', err.message);
-                    showToast('GPS capture failed or timed out. Using default store area.', 'warning');
-                    setDemoCustomerPreset('within');
-                },
-                geoOptions
-            );
+                updateCustomerMapCoordinates(lat, lng, addressLabel);
+                if (source === 'hero') {
+                    const heroInput = document.getElementById('hero-location-input');
+                    if (heroInput) heroInput.value = addressLabel;
+                }
+                showToast('GPS Pin captured!', 'success');
+            }, () => showToast('GPS capture failed.', 'warning'), { timeout: 8000, enableHighAccuracy: true });
         }
 
         function initiateOrderPlacement() {
             if (!state.storeOpen) {
-                showToast('Sorry, the store just closed for new orders!', 'error');
+                showToast('Store is closed for new orders!', 'error');
                 return;
             }
             const totals = calculateCartTotals();
             if (!totals.zone.serviceable) {
-                showToast(
-                    totals.zone.isWithin3km
-                        ? 'Delivery within 3 km is currently paused by the store.'
-                        : 'Extended delivery beyond 3 km is currently paused by the store.',
-                    'error'
-                );
+                showToast('Delivery zone currently paused.', 'error');
                 return;
             }
 
@@ -2332,19 +1841,10 @@
             }
 
             const orderId = 'FF-' + Math.floor(1000 + Math.random() * 9000);
-
             const draft = {
                 id: orderId,
                 createdAt: new Date().toISOString(),
-                customer: {
-                    name,
-                    phone,
-                    address,
-                    notes,
-                    lat: state.customerLocation.lat,
-                    lng: state.customerLocation.lng,
-                    distanceKm: totals.zone.distanceKm
-                },
+                customer: { name, phone, address, notes, lat: state.customerLocation.lat, lng: state.customerLocation.lng, distanceKm: totals.zone.distanceKm },
                 items: JSON.parse(JSON.stringify(state.cart)),
                 totals,
                 promoApplied: totals.discountAmount > 0 ? `${state.appliedPromoCode} (${state.config.promoPercent}%)` : '',
@@ -2357,7 +1857,6 @@
             };
 
             state.pendingOrderDraft = draft;
-
             if (paymentMethod === 'UPI') {
                 openUpiModal(draft);
             } else {
@@ -2367,11 +1866,14 @@
 
         function openUpiModal(draft) {
             const amount = draft.totals.total;
+            const upiId = state.config.upiId || 'farmfresh@upi';
+            const upiName = state.config.upiName || 'Farm Fresh';
+
             document.getElementById('upi-modal-amount').textContent = `₹${amount}`;
+            document.getElementById('upi-modal-merchant-subtitle').textContent = `Merchant: ${upiName} • ${upiId}`;
             document.getElementById('upi-utr-input').value = '';
 
-            const upiUri = `upi://pay?pa=farmfresh@upi&pn=Farm%20Fresh&am=${amount}&cu=INR&tn=Order%20${draft.id}`;
-            document.getElementById('upi-deep-link').href = upiUri;
+            const upiUri = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(upiName)}&am=${amount}&cu=INR&tn=Order%20${draft.id}`;
 
             const qrContainer = document.getElementById('upi-qrcode-canvas');
             qrContainer.innerHTML = '';
@@ -2387,9 +1889,7 @@
             document.getElementById('upi-payment-modal').classList.remove('hidden');
         }
 
-        function closeUpiModal() {
-            document.getElementById('upi-payment-modal').classList.add('hidden');
-        }
+        function closeUpiModal() { document.getElementById('upi-payment-modal').classList.add('hidden'); }
 
         function confirmUpiPayment() {
             if (!state.pendingOrderDraft) return;
@@ -2403,9 +1903,7 @@
         async function finalizeOrder(orderObj) {
             orderObj.items.forEach(ordered => {
                 const prod = state.products.find(p => p.id === ordered.itemId);
-                if (prod) {
-                    prod.stock = Math.max(0, Number(prod.stock) - Number(ordered.qty));
-                }
+                if (prod) prod.stock = Math.max(0, Number(prod.stock) - Number(ordered.qty));
             });
 
             state.orders.unshift(orderObj);
@@ -2413,7 +1911,6 @@
             state.pendingOrderDraft = null;
             saveState();
 
-            // Sync with Supabase cloud
             await saveOrderToCloud(orderObj);
 
             toggleCartDrawer(false);
@@ -2473,9 +1970,7 @@
             lucide.createIcons();
         }
 
-        function closeMyOrdersModal() {
-            document.getElementById('my-orders-modal').classList.add('hidden');
-        }
+        function closeMyOrdersModal() { document.getElementById('my-orders-modal').classList.add('hidden'); }
 
         function renderMyOrdersList() {
             const container = document.getElementById('my-orders-list');
@@ -2484,7 +1979,6 @@
                     <div class="text-center py-12">
                         <i data-lucide="shopping-bag" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
                         <h4 class="font-bold text-slate-800">No orders placed yet</h4>
-                        <p class="text-xs text-slate-500 mt-1">Order farm-fresh fruits & vegetables to track them live right here.</p>
                     </div>
                 `;
                 return;
@@ -2501,13 +1995,11 @@
                             <div>
                                 <div class="flex items-center gap-2">
                                     <span class="font-mono font-extrabold text-sm text-slate-900">#${order.id}</span>
-                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold ${
-                                        order.paymentStatus === 'PAID_UPI' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-800'
-                                    }">
-                                        ${order.paymentStatus === 'PAID_UPI' ? 'PAID VIA UPI' : 'CASH ON DELIVERY'}
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold ${order.paymentStatus === 'PAID_UPI' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-800'}">
+                                        ${order.paymentStatus === 'PAID_UPI' ? 'PAID VIA UPI' : 'COD'}
                                     </span>
                                 </div>
-                                <span class="text-[11px] text-slate-400">${new Date(order.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} • ${order.items.length} Produce Item(s)</span>
+                                <span class="text-[11px] text-slate-400">${new Date(order.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                             </div>
                             <div class="text-right">
                                 <span class="font-mono font-extrabold text-base text-slate-900">₹${order.totals.total}</span>
@@ -2517,22 +2009,16 @@
                         ${isCancelled ? `
                             <div class="my-3 p-3 rounded-xl bg-red-100/80 border border-red-200 text-xs text-red-800">
                                 <strong>Order Cancelled:</strong> ${order.cancelReason}
-                                ${order.refundStatus ? `<span class="block mt-1 font-mono text-[11px] text-emerald-800 font-bold">✓ ${order.refundStatus}</span>` : ''}
                             </div>
                         ` : `
                             <div class="my-4">
                                 <div class="grid grid-cols-4 gap-1 text-center">
-                                    ${[
-                                        { label: 'Sorting', icon: 'scale' },
-                                        { label: 'Packed', icon: 'package-check' },
-                                        { label: 'On Way', icon: 'bike' },
-                                        { label: 'Delivered', icon: 'home' }
-                                    ].map((st, idx) => {
+                                    ${[{ label: 'Sorting', icon: 'scale' }, { label: 'Packed', icon: 'package-check' }, { label: 'On Way', icon: 'bike' }, { label: 'Delivered', icon: 'home' }].map((st, idx) => {
                                         const done = idx <= currentIdx;
                                         return `
                                             <div class="flex flex-col items-center">
-                                                <div class="w-8 h-8 rounded-full flex items-center justify-center mb-1 ${done ? 'bg-farm-600 text-white shadow-sm' : 'bg-slate-100 text-slate-400'}">
-                                                    <i data-lucide="${st.icon}" class="w-4 h-4"></i>
+                                                <div class="w-7 h-7 rounded-full flex items-center justify-center mb-1 ${done ? 'bg-farm-600 text-white' : 'bg-slate-100 text-slate-400'}">
+                                                    <i data-lucide="${st.icon}" class="w-3.5 h-3.5"></i>
                                                 </div>
                                                 <span class="text-[10px] font-bold ${done ? 'text-slate-900' : 'text-slate-400'}">${st.label}</span>
                                             </div>
@@ -2542,24 +2028,12 @@
                             </div>
                         `}
 
-                        <div class="text-xs text-slate-600 space-y-1 mb-4 bg-slate-50 p-3 rounded-xl">
-                            ${order.items.map(i => `
-                                <div class="flex justify-between">
-                                    <span><strong>${i.qty}x</strong> ${i.name} ${i.customizationText ? `<em class="text-slate-400">(${i.customizationText})</em>` : ''}</span>
-                                    <span class="font-mono font-semibold">₹${i.unitPrice * i.qty}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-
-                        <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-slate-100">
                             <button onclick="downloadOrderPDF('${order.id}')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition">
-                                <i data-lucide="download" class="w-3.5 h-3.5 text-harvest-400"></i> Download PDF Invoice
+                                <i data-lucide="download" class="w-3.5 h-3.5 text-harvest-400"></i> PDF Invoice
                             </button>
-
                             ${order.status === 'PREPARING' ? `
-                                <button onclick="openCancelModal('${order.id}')" class="px-3.5 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold text-xs transition">
-                                    Cancel Order
-                                </button>
+                                <button onclick="openCancelModal('${order.id}')" class="px-3 py-2 rounded-xl bg-red-50 text-red-600 border border-red-200 font-bold text-xs">Cancel Order</button>
                             ` : ''}
                         </div>
                     </div>
@@ -2573,33 +2047,27 @@
             document.getElementById('cancel-modal').classList.remove('hidden');
         }
 
-        function closeCancelModal() {
-            state.cancelingOrderId = null;
-            document.getElementById('cancel-modal').classList.add('hidden');
-        }
+        function closeCancelModal() { document.getElementById('cancel-modal').classList.add('hidden'); }
 
         async function confirmOrderCancellation() {
             const order = state.orders.find(o => o.id === state.cancelingOrderId);
             if (!order) return;
-
             const reason = document.getElementById('cancel-reason-select').value;
             order.status = 'CANCELLED';
             order.cancelReason = reason;
 
             let refundRef = '';
             if (order.paymentStatus === 'PAID_UPI') {
-                const refId = 'RFND-' + Math.floor(100000 + Math.random() * 900000);
-                order.refundStatus = `Instant UPI Refund Initiated (Ref: ${refId})`;
-                refundRef = order.refundStatus;
+                refundRef = `Instant UPI Refund (Ref: RFND-${Math.floor(100000 + Math.random() * 900000)})`;
+                order.refundStatus = refundRef;
             }
 
             saveState();
             await updateOrderStatusInCloud(order.id, 'CANCELLED', reason, refundRef);
-
             closeCancelModal();
             refreshAllUI();
-            renderMyOrdersList();
-            showToast(`Order #${order.id} cancelled.`, 'warning');
+            openMyOrdersModal();
+            showToast('Order cancelled.', 'warning');
         }
 
         function switchKdsTab(tab) {
@@ -2608,17 +2076,10 @@
             document.getElementById('kds-menu-section').classList.toggle('hidden', tab !== 'menu');
             document.getElementById('kds-settings-section').classList.toggle('hidden', tab !== 'settings');
 
-            const tabButtons = {
-                orders: document.getElementById('kds-tab-orders'),
-                menu: document.getElementById('kds-tab-menu'),
-                settings: document.getElementById('kds-tab-settings')
-            };
+            const tabButtons = { orders: document.getElementById('kds-tab-orders'), menu: document.getElementById('kds-tab-menu'), settings: document.getElementById('kds-tab-settings') };
             Object.entries(tabButtons).forEach(([key, btn]) => {
-                btn.className = key === tab
-                    ? 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-farm-600 text-white transition'
-                    : 'px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition';
+                btn.className = key === tab ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-farm-600 text-white transition' : 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition';
             });
-
             renderKDS();
         }
 
@@ -2626,96 +2087,47 @@
             const newCount = state.orders.filter(o => o.status === 'PREPARING').length;
             const readyCount = state.orders.filter(o => o.status === 'READY').length;
             const delivCount = state.orders.filter(o => o.status === 'OUT_FOR_DELIVERY').length;
-            const revenue = state.orders
-                .filter(o => o.status !== 'CANCELLED')
-                .reduce((sum, o) => sum + o.totals.total, 0);
+            const revenue = state.orders.filter(o => o.status !== 'CANCELLED').reduce((sum, o) => sum + o.totals.total, 0);
 
             document.getElementById('stat-new-orders').textContent = newCount;
             document.getElementById('stat-ready-orders').textContent = readyCount;
             document.getElementById('stat-delivery-orders').textContent = delivCount;
             document.getElementById('stat-revenue').textContent = `₹${revenue}`;
 
-            if (state.kdsTab === 'orders') {
-                renderKdsOrdersGrid();
-            } else if (state.kdsTab === 'menu') {
-                renderKdsStockManager();
-            } else if (state.kdsTab === 'settings') {
-                populateKdsSettingsForm();
-            }
+            if (state.kdsTab === 'orders') renderKdsOrdersGrid();
+            else if (state.kdsTab === 'menu') renderKdsStockManager();
+            else if (state.kdsTab === 'settings') populateKdsSettingsForm();
             lucide.createIcons();
         }
 
         function renderKdsOrdersGrid() {
             const grid = document.getElementById('kds-orders-grid');
             if (state.orders.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-16 bg-white rounded-3xl border border-slate-200">
-                        <i data-lucide="package-open" class="w-12 h-12 text-slate-300 mx-auto mb-2"></i>
-                        <h3 class="font-bold text-slate-800">No Packing Tickets Yet</h3>
-                        <p class="text-xs text-slate-500 mt-1">Place a fresh produce order from the Storefront tab to watch it appear here live!</p>
-                    </div>
-                `;
+                grid.innerHTML = `<div class="col-span-full text-center py-16 bg-white rounded-3xl border border-slate-200"><h3 class="font-bold text-slate-800">No Packing Tickets Yet</h3></div>`;
                 return;
             }
 
-            grid.innerHTML = state.orders.map(order => {
-                const statusBadge = {
-                    'PREPARING': 'bg-emerald-100 text-farm-700 border-emerald-200',
-                    'READY': 'bg-amber-100 text-amber-800 border-amber-200',
-                    'OUT_FOR_DELIVERY': 'bg-blue-100 text-blue-700 border-blue-200',
-                    'DELIVERED': 'bg-emerald-100 text-emerald-700 border-emerald-200',
-                    'CANCELLED': 'bg-red-100 text-red-700 border-red-200'
-                }[order.status] || 'bg-slate-100 text-slate-700';
-
-                const statusLabel = {
-                    'PREPARING': 'SORTING & PACKING',
-                    'READY': 'PACKED & SEALED',
-                    'OUT_FOR_DELIVERY': 'OUT FOR DELIVERY',
-                    'DELIVERED': 'DELIVERED',
-                    'CANCELLED': 'CANCELLED'
-                }[order.status] || order.status;
-
-                return `
-                    <div class="bg-white rounded-3xl border-2 ${order.status === 'PREPARING' ? 'border-farm-500 shadow-lg shadow-farm-500/10' : 'border-slate-200'} p-5 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100">
-                                <span class="font-mono font-extrabold text-base text-slate-900">#${order.id}</span>
-                                <span class="px-2.5 py-1 rounded-lg border text-[10px] font-extrabold uppercase ${statusBadge}">${statusLabel}</span>
-                            </div>
-
-                            <div class="my-3 text-xs">
-                                <p class="font-bold text-slate-900">${order.customer.name} • <span class="font-mono text-slate-600">${order.customer.phone}</span></p>
-                                <p class="text-slate-500 mt-0.5 line-clamp-1">${order.customer.address}</p>
-                                ${order.customer.distanceKm !== undefined ? `<span class="inline-block mt-1 px-2 py-0.5 rounded bg-emerald-50 text-farm-700 font-mono text-[10px] font-bold border border-emerald-200">${order.customer.distanceKm} km from store</span>` : ''}
-                                ${order.customer.notes ? `<p class="mt-1.5 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 font-semibold border border-amber-200">Note: ${order.customer.notes}</p>` : ''}
-                            </div>
-
-                            <div class="space-y-1.5 my-3 bg-slate-50 p-3 rounded-2xl border border-slate-100 max-h-40 overflow-y-auto text-xs">
-                                ${order.items.map(i => `
-                                    <div class="flex items-center justify-between">
-                                        <span><strong>${i.qty}x</strong> ${i.name} ${i.customizationText ? `<em class="text-slate-400">(${i.customizationText})</em>` : ''}</span>
-                                        <span class="font-mono font-bold">₹${i.unitPrice * i.qty}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
+            grid.innerHTML = state.orders.map(order => `
+                <div class="bg-white rounded-3xl border-2 ${order.status === 'PREPARING' ? 'border-farm-500 shadow-lg' : 'border-slate-200'} p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                            <span class="font-mono font-extrabold text-base text-slate-900">#${order.id}</span>
+                            <span class="px-2.5 py-1 rounded-lg border text-[10px] font-extrabold uppercase bg-emerald-50 text-farm-700">${order.status}</span>
                         </div>
-
-                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                            <span class="font-mono font-extrabold text-sm text-slate-900">Total: ₹${order.totals.total}</span>
-                            
-                            ${order.status === 'PREPARING' ? `
-                                <button onclick="updateOrderStatus('${order.id}', 'READY')" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs flex items-center gap-1.5 transition shadow-sm">
-                                    <i data-lucide="package-check" class="w-3.5 h-3.5"></i> Mark Packed & Ready
-                                </button>
-                            ` : order.status === 'READY' ? `
-                                <span class="text-xs font-bold text-amber-700 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">Waiting for Rider Pickup</span>
-                            ` : `
-                                <span class="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200">Out with Rider</span>
-                            `}
+                        <div class="my-3 text-xs">
+                            <p class="font-bold text-slate-900">${order.customer.name} • ${order.customer.phone}</p>
+                            <p class="text-slate-500 mt-0.5">${order.customer.address}</p>
+                        </div>
+                        <div class="space-y-1 my-3 bg-slate-50 p-3 rounded-2xl text-xs max-h-36 overflow-y-auto">
+                            ${order.items.map(i => `<div class="flex justify-between"><span>${i.qty}x ${i.name}</span><span class="font-mono font-bold">₹${i.unitPrice * i.qty}</span></div>`).join('')}
                         </div>
                     </div>
-                `;
-            }).join('');
+                    <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <span class="font-mono font-extrabold text-sm">₹${order.totals.total}</span>
+                        ${order.status === 'PREPARING' ? `<button onclick="updateOrderStatus('${order.id}', 'READY')" class="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs">Mark Packed</button>` : `<span class="text-xs font-bold text-slate-500">${order.status}</span>`}
+                    </div>
+                </div>
+            `).join('');
             lucide.createIcons();
         }
 
@@ -2738,276 +2150,104 @@
             const price = Number(document.getElementById('new-prod-price').value);
             const stock = Number(document.getElementById('new-prod-stock').value);
             const badge = document.getElementById('new-prod-badge').value.trim() || 'Fresh';
-            const desc = document.getElementById('new-prod-desc').value.trim() || `Farm-fresh ${name} (${unit}) harvested daily.`;
-            const urlInput = document.getElementById('new-prod-image-url').value.trim();
+            const desc = document.getElementById('new-prod-desc').value.trim() || `Fresh ${name}.`;
+            const finalImage = state.newProductPhotoBase64 || document.getElementById('new-prod-image-url').value.trim() || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80';
 
-            const finalImage = state.newProductPhotoBase64 || urlInput || (
-                category === 'Fruits'
-                    ? 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=600&q=80'
-                    : 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80'
-            );
-
-            const newItem = {
-                id: 'ff-' + Date.now(),
-                name,
-                category,
-                unit,
-                price,
-                stock,
-                badge,
-                veg: true,
-                desc,
-                image: finalImage,
-                customizable: false
-            };
-
-            state.products.unshift(newItem);
+            state.products.unshift({ id: 'ff-' + Date.now(), name, category, unit, price, stock, badge, veg: true, desc, image: finalImage });
             state.newProductPhotoBase64 = '';
             document.getElementById('add-product-form').reset();
-            document.getElementById('new-prod-preview').src = 'https://placehold.co/100x100/15803d/ffffff?text=Preview';
-
             saveState();
             refreshAllUI();
-            showToast(`Added "${name}" to ${category} catalog!`, 'success');
+            showToast(`Added "${name}"!`, 'success');
         }
 
         function renderKdsStockManager() {
             const list = document.getElementById('kds-stock-list');
-            document.getElementById('kds-catalog-count').textContent = `${state.products.length} Total Products`;
-
-            list.innerHTML = state.products.map(item => {
-                const stockQty = Number(item.stock ?? 0);
-                return `
-                    <div class="py-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                        <div class="flex items-center gap-3.5 min-w-0 flex-1">
-                            <div class="relative group shrink-0">
-                                <img src="${item.image}" class="w-14 h-14 rounded-2xl object-cover border border-slate-200" onerror="this.src='https://placehold.co/100x100/15803d/ffffff?text=Produce'">
-                                <label class="absolute inset-0 bg-black/50 text-white text-[9px] font-extrabold rounded-2xl opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition text-center px-1">
-                                    Change Photo
-                                    <input type="file" accept="image/*" class="hidden" onchange="updateExistingProductPhoto('${item.id}', event)">
-                                </label>
-                            </div>
-                            <div class="min-w-0">
-                                <div class="flex items-center gap-2">
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${item.category === 'Fruits' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-farm-700'}">
-                                        ${item.category}
-                                    </span>
-                                    <span class="text-[11px] font-semibold text-slate-400">${item.unit || ''}</span>
-                                </div>
-                                <h4 class="font-extrabold text-sm text-slate-900 truncate mt-0.5">${item.name}</h4>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-wrap items-center gap-3">
-                            <div class="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-xl border border-slate-200">
-                                <span class="text-[11px] font-bold text-slate-500">Rate ₹</span>
-                                <input type="number" min="1" value="${item.price}" onchange="updateProductPrice('${item.id}', this.value)" class="w-16 font-mono text-xs font-extrabold text-slate-900 bg-white border border-slate-200 rounded-lg px-2 py-1 text-right focus:outline-none focus:border-farm-600">
-                            </div>
-
-                            <div class="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-xl border border-slate-200">
-                                <span class="text-[11px] font-bold text-slate-500">Stock:</span>
-                                <button type="button" onclick="adjustProductStock('${item.id}', -1)" class="w-6 h-6 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 font-extrabold text-xs">-</button>
-                                <input type="number" min="0" value="${stockQty}" onchange="setProductStock('${item.id}', this.value)" class="w-14 font-mono text-xs font-extrabold text-center bg-white border border-slate-200 rounded-lg py-1 focus:outline-none focus:border-farm-600">
-                                <button type="button" onclick="adjustProductStock('${item.id}', 1)" class="w-6 h-6 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 font-extrabold text-xs">+</button>
-                            </div>
-
-                            <button type="button" onclick="toggleItemStock('${item.id}')" class="px-3 py-2 rounded-xl text-xs font-extrabold transition ${
-                                stockQty > 0
-                                ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' 
-                                : 'bg-red-100 text-red-700 hover:bg-red-200'
-                            }">
-                                ${stockQty > 0 ? '✓ In Stock' : '✕ Sold Out'}
-                            </button>
-
-                            <button type="button" onclick="deleteProductFromCatalog('${item.id}')" class="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition" title="Delete Product">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
+            document.getElementById('kds-catalog-count').textContent = `${state.products.length} Items`;
+            list.innerHTML = state.products.map(item => `
+                <div class="py-3 flex items-center justify-between gap-3 text-xs">
+                    <div class="flex items-center gap-3">
+                        <img src="${item.image}" class="w-10 h-10 rounded-xl object-cover border">
+                        <div>
+                            <h4 class="font-extrabold text-slate-900">${item.name}</h4>
+                            <span class="text-slate-400">₹${item.price} • Stock: ${item.stock}</span>
                         </div>
                     </div>
-                `;
-            }).join('');
-            lucide.createIcons();
-        }
-
-        function updateProductPrice(itemId, newPrice) {
-            const prod = state.products.find(p => p.id === itemId);
-            const val = Number(newPrice);
-            if (!prod || isNaN(val) || val <= 0) return;
-            prod.price = val;
-            saveState();
-            refreshAllUI();
-            showToast(`Updated ${prod.name} rate to ₹${val}`, 'success');
-        }
-
-        function adjustProductStock(itemId, delta) {
-            const prod = state.products.find(p => p.id === itemId);
-            if (!prod) return;
-            prod.stock = Math.max(0, Number(prod.stock || 0) + delta);
-            saveState();
-            refreshAllUI();
-        }
-
-        function setProductStock(itemId, val) {
-            const prod = state.products.find(p => p.id === itemId);
-            if (!prod) return;
-            prod.stock = Math.max(0, Number(val) || 0);
-            saveState();
-            refreshAllUI();
-            showToast(`Updated ${prod.name} stock to ${prod.stock}`, 'info');
-        }
-
-        function toggleItemStock(itemId) {
-            const prod = state.products.find(p => p.id === itemId);
-            if (!prod) return;
-            prod.stock = Number(prod.stock) > 0 ? 0 : 20;
-            saveState();
-            refreshAllUI();
-            showToast(prod.stock > 0 ? `${prod.name} restocked (20 packs)` : `${prod.name} marked Sold Out`, 'info');
-        }
-
-        function updateExistingProductPhoto(itemId, event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const prod = state.products.find(p => p.id === itemId);
-                if (prod) {
-                    prod.image = e.target.result;
-                    saveState();
-                    refreshAllUI();
-                    showToast(`Updated photo for ${prod.name}`, 'success');
-                }
-            };
-            reader.readAsDataURL(file);
+                    <button onclick="deleteProductFromCatalog('${item.id}')" class="text-red-600 p-2 font-bold hover:bg-red-50 rounded-xl">Remove</button>
+                </div>
+            `).join('');
         }
 
         function deleteProductFromCatalog(itemId) {
             state.products = state.products.filter(p => p.id !== itemId);
-            state.cart = state.cart.filter(c => c.itemId !== itemId);
             saveState();
             refreshAllUI();
-            showToast('Product removed from catalog', 'warning');
+            showToast('Product removed', 'warning');
         }
 
         function populateKdsSettingsForm() {
+            document.getElementById('cfg-upi-id').value = state.config.upiId || 'farmfresh@upi';
+            document.getElementById('cfg-upi-name').value = state.config.upiName || 'Farm Fresh Produce';
             document.getElementById('cfg-kds-pin').value = state.config.kdsPin;
             document.getElementById('cfg-rider-pin').value = state.config.riderPin;
-
-            document.getElementById('cfg-promo-enabled').checked = state.config.promoEnabled;
-            document.getElementById('cfg-promo-code').value = state.config.promoCode;
-            document.getElementById('cfg-promo-percent').value = state.config.promoPercent;
-
             document.getElementById('cfg-store-label').value = state.config.storeLabel;
             document.getElementById('cfg-store-lat').value = state.config.storeLat;
             document.getElementById('cfg-store-lng').value = state.config.storeLng;
             document.getElementById('cfg-within-3km-enabled').checked = state.config.within3kmEnabled;
             document.getElementById('cfg-within-3km-fee').value = state.config.within3kmFee;
-            document.getElementById('cfg-beyond-3km-enabled').checked = state.config.beyond3kmEnabled;
-            document.getElementById('cfg-beyond-3km-fee').value = state.config.beyond3kmFee;
-
             setTimeout(() => initOrRefreshKdsStoreMap(), 30);
         }
 
-        function savePortalPinsConfig() {
-            const kdsPin = document.getElementById('cfg-kds-pin').value.trim();
-            const riderPin = document.getElementById('cfg-rider-pin').value.trim();
-            if (!/^\d{4}$/.test(kdsPin) || !/^\d{4}$/.test(riderPin)) {
-                showToast('Both PINs must be exactly 4 numeric digits.', 'error');
+        function saveUpiConfig() {
+            const upiId = document.getElementById('cfg-upi-id').value.trim();
+            const upiName = document.getElementById('cfg-upi-name').value.trim();
+            if (!upiId) {
+                showToast('Please enter a valid UPI ID.', 'error');
                 return;
             }
-            state.config.kdsPin = kdsPin;
-            state.config.riderPin = riderPin;
+            state.config.upiId = upiId;
+            state.config.upiName = upiName || 'Farm Fresh';
             saveState();
-            showToast(`Portal PINs updated (KDS: ${kdsPin}, Rider: ${riderPin})`, 'success');
+            showToast(`UPI ID updated to "${upiId}"`, 'success');
         }
 
-        function savePromoConfig() {
-            const enabled = document.getElementById('cfg-promo-enabled').checked;
-            const code = document.getElementById('cfg-promo-code').value.trim().toUpperCase() || 'FRESH15';
-            const percent = Math.min(90, Math.max(1, Number(document.getElementById('cfg-promo-percent').value) || 15));
-
-            state.config.promoEnabled = enabled;
-            state.config.promoCode = code;
-            state.config.promoPercent = percent;
+        function savePortalPinsConfig() {
+            state.config.kdsPin = document.getElementById('cfg-kds-pin').value.trim();
+            state.config.riderPin = document.getElementById('cfg-rider-pin').value.trim();
             saveState();
-            refreshAllUI();
-            showToast(enabled ? `Promo ${code} (${percent}% OFF) is now ACTIVE!` : 'Promo discount code disabled.', 'success');
+            showToast('Portal PINs saved successfully', 'success');
         }
 
         function saveDeliveryZoneConfig() {
-            state.config.storeLabel = document.getElementById('cfg-store-label').value.trim() || 'Base Store Hub';
-            state.config.storeLat = Number(document.getElementById('cfg-store-lat').value) || 28.6315;
-            state.config.storeLng = Number(document.getElementById('cfg-store-lng').value) || 77.2167;
+            state.config.storeLabel = document.getElementById('cfg-store-label').value.trim();
+            state.config.storeLat = Number(document.getElementById('cfg-store-lat').value);
+            state.config.storeLng = Number(document.getElementById('cfg-store-lng').value);
             state.config.within3kmEnabled = document.getElementById('cfg-within-3km-enabled').checked;
-            state.config.within3kmFee = Math.max(0, Number(document.getElementById('cfg-within-3km-fee').value) || 0);
-            state.config.beyond3kmEnabled = document.getElementById('cfg-beyond-3km-enabled').checked;
-            state.config.beyond3kmFee = Math.max(0, Number(document.getElementById('cfg-beyond-3km-fee').value) || 0);
-
+            state.config.within3kmFee = Number(document.getElementById('cfg-within-3km-fee').value);
             saveState();
-            refreshAllUI();
-            initOrRefreshKdsStoreMap();
-            showToast('3 km Delivery Radius & Store Hub settings saved!', 'success');
+            showToast('Store Hub settings saved', 'success');
         }
 
         function captureStoreHubGPS() {
-            if (!navigator.geolocation) {
-                showToast('Geolocation not supported by browser.', 'error');
-                return;
-            }
-            showToast('Capturing store hub live GPS & resolving address...', 'info');
-            navigator.geolocation.getCurrentPosition(
-                async (pos) => {
-                    const lat = pos.coords.latitude;
-                    const lng = pos.coords.longitude;
-                    document.getElementById('cfg-store-lat').value = lat.toFixed(5);
-                    document.getElementById('cfg-store-lng').value = lng.toFixed(5);
-
-                    try {
-                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1`);
-                        if (res.ok) {
-                            const data = await res.json();
-                            if (data && data.display_name) {
-                                const parts = data.display_name.split(',');
-                                const resolved = parts.slice(0, 2).join(',').trim() + ', New Delhi';
-                                document.getElementById('cfg-store-label').value = resolved;
-                            }
-                        }
-                    } catch (e) {
-                        console.warn('Store hub reverse geocode failed:', e);
-                    }
-
-                    saveDeliveryZoneConfig();
-                    showToast('Store Hub GPS coordinates & address updated!', 'success');
-                },
-                (err) => {
-                    showToast('Failed to capture GPS. Please check browser permissions.', 'error');
-                },
-                { timeout: 10000, enableHighAccuracy: true }
-            );
+            if (!navigator.geolocation) return;
+            navigator.geolocation.getCurrentPosition((pos) => {
+                document.getElementById('cfg-store-lat').value = pos.coords.latitude.toFixed(5);
+                document.getElementById('cfg-store-lng').value = pos.coords.longitude.toFixed(5);
+                saveDeliveryZoneConfig();
+                showToast('Store GPS captured!', 'success');
+            }, () => showToast('GPS error', 'error'), { timeout: 8000 });
         }
 
         function initOrRefreshKdsStoreMap() {
             const mapEl = document.getElementById('kds-store-map');
             if (!mapEl) return;
-
             const sLat = Number(state.config.storeLat);
             const sLng = Number(state.config.storeLng);
-
             if (!kdsStoreMap) {
                 kdsStoreMap = L.map('kds-store-map').setView([sLat, sLng], 12);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; OpenStreetMap'
-                }).addTo(kdsStoreMap);
-
-                kdsStoreMarker = L.marker([sLat, sLng]).addTo(kdsStoreMap).bindPopup('Base Store Hub (3 km Radius Center)');
-                kdsRadiusCircle = L.circle([sLat, sLng], {
-                    radius: 3000,
-                    color: '#15803d',
-                    fillColor: '#22c55e',
-                    fillOpacity: 0.16,
-                    weight: 2
-                }).addTo(kdsStoreMap);
-
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(kdsStoreMap);
+                kdsStoreMarker = L.marker([sLat, sLng]).addTo(kdsStoreMap);
+                kdsRadiusCircle = L.circle([sLat, sLng], { radius: 3000, color: '#15803d', fillColor: '#22c55e', fillOpacity: 0.15 }).addTo(kdsStoreMap);
                 kdsStoreMap.on('click', (e) => {
                     document.getElementById('cfg-store-lat').value = e.latlng.lat.toFixed(5);
                     document.getElementById('cfg-store-lng').value = e.latlng.lng.toFixed(5);
@@ -3017,8 +2257,16 @@
                 kdsStoreMarker.setLatLng([sLat, sLng]);
                 kdsRadiusCircle.setLatLng([sLat, sLng]);
                 kdsStoreMap.invalidateSize();
-                kdsStoreMap.panTo([sLat, sLng]);
             }
+        }
+
+        function switchRiderTab(tab) {
+            state.riderTab = tab;
+            document.getElementById('rider-active-section').classList.toggle('hidden', tab !== 'active');
+            document.getElementById('rider-log-section').classList.toggle('hidden', tab !== 'log');
+            document.getElementById('rider-tab-active').className = tab === 'active' ? 'px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 text-white shadow-sm transition' : 'px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 transition';
+            document.getElementById('rider-tab-log').className = tab === 'log' ? 'px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 text-white shadow-sm transition' : 'px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 transition';
+            renderRiderPortal();
         }
 
         function renderRiderPortal() {
@@ -3029,65 +2277,52 @@
             const grid = document.getElementById('rider-orders-grid');
 
             if (activeDeliveries.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full text-center py-16 bg-white rounded-3xl border border-slate-200">
-                        <i data-lucide="bike" class="w-12 h-12 text-slate-300 mx-auto mb-2"></i>
-                        <h3 class="font-bold text-slate-800">No Active Deliveries</h3>
-                        <p class="text-xs text-slate-500 mt-1">Once Store Ops marks a crate "Packed & Ready", it appears here for rider pickup.</p>
-                    </div>
-                `;
-                lucide.createIcons();
-                return;
-            }
-
-            grid.innerHTML = activeDeliveries.map(order => {
-                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.customer.address)}`;
-                return `
+                grid.innerHTML = `<div class="col-span-full text-center py-12 bg-white rounded-3xl border border-slate-200"><h3 class="font-bold text-slate-800">No Active Deliveries</h3></div>`;
+            } else {
+                grid.innerHTML = activeDeliveries.map(order => `
                     <div class="bg-white rounded-3xl border-2 border-slate-200 p-5 shadow-sm flex flex-col justify-between">
                         <div>
                             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
                                 <span class="font-mono font-extrabold text-base text-slate-900">#${order.id}</span>
-                                <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase ${
-                                    order.status === 'READY' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-700'
-                                }">
-                                    ${order.status === 'READY' ? 'Ready for Pickup at Store' : 'En Route to Customer'}
-                                </span>
+                                <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase bg-amber-100 text-amber-800">${order.status}</span>
                             </div>
-
                             <div class="my-4 space-y-2 text-xs">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-extrabold text-slate-900 text-sm">${order.customer.name}</span>
-                                    <a href="tel:${order.customer.phone}" class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-bold flex items-center gap-1">
-                                        <i data-lucide="phone" class="w-3 h-3"></i> Call
-                                    </a>
-                                </div>
-                                <p class="text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">${order.customer.address}</p>
-                                
-                                <div class="flex items-center justify-between pt-1">
-                                    <span class="font-bold text-slate-500">
-                                        ${order.paymentStatus === 'COD_PENDING' ? `<span class="text-red-600 font-extrabold">COLLECT CASH: ₹${order.totals.total}</span>` : '<span class="text-emerald-600">PREPAID VIA UPI</span>'}
-                                    </span>
-                                    <a href="${mapsUrl}" target="_blank" class="text-blue-600 font-extrabold hover:underline flex items-center gap-1">
-                                        <i data-lucide="navigation" class="w-3.5 h-3.5"></i> Google Maps
-                                    </a>
-                                </div>
+                                <p class="font-extrabold text-slate-900 text-sm">${order.customer.name} (${order.customer.phone})</p>
+                                <p class="text-slate-600 bg-slate-50 p-3 rounded-xl">${order.customer.address}</p>
+                                <p class="font-bold text-slate-700">Amount: ₹${order.totals.total} (${order.paymentStatus})</p>
                             </div>
                         </div>
-
                         <div class="pt-3 border-t border-slate-100">
                             ${order.status === 'READY' ? `
-                                <button onclick="updateOrderStatus('${order.id}', 'OUT_FOR_DELIVERY')" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition shadow-md">
-                                    <i data-lucide="package-check" class="w-4 h-4"></i> Confirm Crate Pickup & Start Trip
-                                </button>
+                                <button onclick="updateOrderStatus('${order.id}', 'OUT_FOR_DELIVERY')" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs">Pickup & Start Trip</button>
                             ` : `
-                                <button onclick="updateOrderStatus('${order.id}', 'DELIVERED')" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition shadow-md">
-                                    <i data-lucide="check-circle" class="w-4 h-4"></i> Mark Order Delivered
-                                </button>
+                                <button onclick="updateOrderStatus('${order.id}', 'DELIVERED')" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs">Mark Delivered</button>
                             `}
                         </div>
                     </div>
-                `;
-            }).join('');
+                `).join('');
+            }
+
+            // Render Rider Log (In-Process and Completed Deliveries)
+            const logList = document.getElementById('rider-log-list');
+            const logOrders = state.orders.filter(o => ['READY', 'OUT_FOR_DELIVERY', 'DELIVERED', 'CANCELLED'].includes(o.status));
+            if (logOrders.length === 0) {
+                logList.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">No delivery logs available.</p>`;
+            } else {
+                logList.innerHTML = logOrders.map(o => `
+                    py-3 flex items-center justify-between text-xs
+                    <div class="py-3 flex items-center justify-between text-xs gap-3">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <span class="font-mono font-bold text-slate-900">#${o.id}</span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${o.status === 'DELIVERED' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'}">${o.status}</span>
+                            </div>
+                            <p class="text-slate-500 mt-0.5">${o.customer.name} • ${o.customer.address}</p>
+                        </div>
+                        <div class="text-right font-mono font-bold">₹${o.totals.total}</div>
+                    </div>
+                `).join('');
+            }
 
             lucide.createIcons();
         }
@@ -3097,128 +2332,36 @@
             if (!order) return;
             order.status = newStatus;
             saveState();
-
             await updateOrderStatusInCloud(orderId, newStatus);
-
             refreshAllUI();
-            showToast(`Order #${orderId} updated to ${newStatus.replace(/_/g, ' ')}`, 'success');
+            showToast(`Order #${orderId} updated to ${newStatus}`, 'success');
         }
 
         function downloadOrderPDF(orderId) {
             const order = state.orders.find(o => o.id === orderId);
             if (!order) return;
-
             showToast('Generating PDF Invoice...', 'info');
-
-            const invoiceHTML = `
-                <div style="font-family: Arial, sans-serif; padding: 32px; color: #0f172a; max-width: 680px; margin: auto;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #15803d; padding-bottom: 16px; margin-bottom: 20px;">
-                        <div>
-                            <h1 style="margin: 0; font-size: 24px; color: #15803d;">FARM FRESH</h1>
-                            <p style="margin: 4px 0 0; font-size: 12px; color: #64748b;">Farm-to-Doorstep Fresh Fruits & Vegetables • Connaught Place</p>
-                            <p style="margin: 2px 0 0; font-size: 11px; color: #64748b;">FSSAI Lic: 10023011009842 • GSTIN: 07AABCF4521M1Z9</p>
-                        </div>
-                        <div style="text-align: right;">
-                            <span style="background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 12px;">TAX INVOICE</span>
-                            <p style="margin: 8px 0 0; font-size: 13px; font-weight: bold;">Order #${order.id}</p>
-                            <p style="margin: 2px 0 0; font-size: 11px; color: #64748b;">${new Date(order.createdAt).toLocaleString()}</p>
-                        </div>
-                    </div>
-
-                    <div style="margin-bottom: 20px; background: #f8faf7; padding: 14px; border-radius: 10px; font-size: 12px; border: 1px solid #dcfce7;">
-                        <strong>Delivered To:</strong> ${order.customer.name} (${order.customer.phone})<br/>
-                        <span style="color: #475569;">${order.customer.address}</span><br/>
-                        <strong>Payment:</strong> ${order.paymentStatus === 'PAID_UPI' ? `Paid Online via UPI (Ref: ${order.utrNumber})` : 'Cash on Delivery'}
-                    </div>
-
-                    <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px;">
-                        <thead>
-                            <tr style="background: #064e3b; color: #ffffff; text-align: left;">
-                                <th style="padding: 10px;">Produce Item</th>
-                                <th style="padding: 10px; text-align: center;">Qty</th>
-                                <th style="padding: 10px; text-align: right;">Rate</th>
-                                <th style="padding: 10px; text-align: right;">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${order.items.map(item => `
-                                <tr style="border-bottom: 1px solid #e2e8f0;">
-                                    <td style="padding: 10px;">
-                                        <strong>${item.name}</strong>
-                                        ${item.customizationText ? `<br/><span style="font-size: 10px; color: #64748b;">${item.customizationText}</span>` : ''}
-                                    </td>
-                                    <td style="padding: 10px; text-align: center;">${item.qty}</td>
-                                    <td style="padding: 10px; text-align: right;">₹${item.unitPrice}</td>
-                                    <td style="padding: 10px; text-align: right; font-weight: bold;">₹${item.unitPrice * item.qty}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-
-                    <div style="width: 260px; margin-left: auto; font-size: 12px;">
-                        <div style="display: flex; justify-content: space-between; padding: 4px 0;">
-                            <span>Produce Subtotal:</span>
-                            <span>₹${order.totals.subtotal}</span>
-                        </div>
-                        ${order.totals.discountAmount > 0 ? `
-                        <div style="display: flex; justify-content: space-between; padding: 4px 0; color: #15803d; font-weight: bold;">
-                            <span>Promo Discount (${order.promoApplied || 'OFFER'}):</span>
-                            <span>-₹${order.totals.discountAmount}</span>
-                        </div>` : ''}
-                        <div style="display: flex; justify-content: space-between; padding: 4px 0;">
-                            <span>Cold-Chain & Packaging (5%):</span>
-                            <span>₹${order.totals.gst}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 4px 0;">
-                            <span>Delivery Fee:</span>
-                            <span>${order.totals.delivery === 0 ? 'FREE' : '₹' + order.totals.delivery}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-top: 2px solid #064e3b; font-weight: bold; font-size: 15px; color: #15803d;">
-                            <span>Grand Total:</span>
-                            <span>₹${order.totals.total}</span>
-                        </div>
-                    </div>
-
-                    <p style="margin-top: 32px; text-align: center; font-size: 11px; color: #94a3b8;">
-                        Thank you for choosing Farm Fresh! Farm-picked fruits & crisp veggies delivered fresh.
-                    </p>
+            const container = document.getElementById('pdf-receipt-template');
+            container.innerHTML = `
+                <div style="font-family: Arial; padding: 24px; max-width: 600px;">
+                    <h2>FARM FRESH INVOICE #${order.id}</h2>
+                    <p>Customer: ${order.customer.name} (${order.customer.phone})</p>
+                    <p>Address: ${order.customer.address}</p>
+                    <hr/>
+                    <p>Total Amount: <strong>₹${order.totals.total}</strong> (${order.paymentStatus})</p>
                 </div>
             `;
-
-            const container = document.getElementById('pdf-receipt-template');
-            container.innerHTML = invoiceHTML;
             container.classList.remove('hidden');
-
-            const opt = {
-                margin: 0.3,
-                filename: `FarmFresh_Receipt_${order.id}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(container).save().then(() => {
-                container.classList.add('hidden');
-            });
+            html2pdf().set({ margin: 0.3, filename: `Receipt_${order.id}.pdf` }).from(container).save().then(() => container.classList.add('hidden'));
         }
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
-            const colors = {
-                success: 'bg-slate-900 text-white border-l-4 border-emerald-500',
-                error: 'bg-red-600 text-white',
-                warning: 'bg-amber-600 text-white',
-                info: 'bg-slate-800 text-white'
-            };
             const toast = document.createElement('div');
-            toast.className = `${colors[type] || colors.info} px-4 py-3 rounded-xl shadow-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 pointer-events-auto`;
+            toast.className = `bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl text-xs font-bold pointer-events-auto`;
             toast.textContent = message;
             container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>
