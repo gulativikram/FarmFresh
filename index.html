@@ -73,8 +73,8 @@
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
             <!-- Brand Identity -->
             <div class="flex items-center gap-2.5 cursor-pointer" onclick="switchView('customer')">
-                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-farm-600 to-farm-800 flex items-center justify-center text-white shadow-md shadow-farm-600/20 shrink-0">
-                    <span class="text-lg sm:text-xl leading-none">🧺</span>
+                <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white border-2 border-farm-600/30 flex items-center justify-center overflow-hidden shadow-md shrink-0">
+                    <img src="Farm Fresh Logo.png" alt="Farm Fresh Logo" class="w-full h-full object-cover scale-125" onerror="this.src='https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Farm%20Fresh%20Logo.png-N8Zq9s3h6v4b2c1x5z7m8l9k0j1h2g.jpeg'">
                 </div>
                 <div>
                     <div class="flex items-center gap-2">
@@ -182,15 +182,75 @@
                 </div>
             </div>
             
-            <div class="hidden lg:flex absolute right-6 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-none select-none z-20">
-                <div class="relative w-72 h-72 rounded-3xl bg-white/10 border border-white/25 backdrop-blur-md flex flex-col items-center justify-center shadow-2xl p-4 text-center overflow-hidden">
-                    <div class="absolute top-2 right-3 bg-harvest-400 text-slate-950 text-[11px] font-extrabold px-3 py-1 rounded-full shadow-md uppercase tracking-wider z-30">
+            <div class="hidden lg:flex absolute right-8 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-none select-none z-20">
+                <div class="relative w-64 h-64 rounded-full bg-[#f7f7f2] border-4 border-white/40 shadow-2xl flex items-center justify-center p-2 overflow-hidden">
+                    <div class="absolute top-3 bg-harvest-400 text-slate-950 text-[10px] font-extrabold px-3 py-0.5 rounded-full shadow-md uppercase tracking-wider z-30">
                         Next-Day Harvest
                     </div>
-                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Farm%20Fresh%20Logo.png-N8Zq9s3h6v4b2c1x5z7m8l9k0j1h2g.jpeg" alt="Farm Fresh Logo Emblem" class="w-full h-full object-contain rounded-2xl opacity-95 transition duration-500 pointer-events-auto" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80'">
+                    <img src="Farm Fresh Logo.png" alt="Farm Fresh Produce Market Logo" class="w-full h-full object-cover scale-125 rounded-full pointer-events-auto" onerror="this.src='https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Farm%20Fresh%20Logo.png-N8Zq9s3h6v4b2c1x5z7m8l9k0j1h2g.jpeg'">
                 </div>
             </div>
         </div>
+
+        <!-- Embedded Brand Advertisement Banner (Mandi Wholesale Rates Video + Logo) -->
+        <section id="brand-advt-section" class="mb-8 rounded-3xl overflow-hidden bg-white border border-emerald-200/80 shadow-lg">
+            <div class="grid grid-cols-1 lg:grid-cols-12 items-center">
+                <!-- Left: Video Player -->
+                <div class="lg:col-span-7 relative bg-slate-950 aspect-video overflow-hidden group">
+                    <video id="farm-fresh-advt-video" src="video_1.mp4" poster="Farm Fresh Logo.png" controls autoplay muted loop playsinline class="w-full h-full object-cover">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="absolute top-3 left-3 pointer-events-none flex items-center gap-2">
+                        <span class="px-2.5 py-1 rounded-full bg-red-600 text-white text-[10px] font-extrabold uppercase tracking-wider shadow-md flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span> Farm Fresh Ad
+                        </span>
+                    </div>
+                    <button type="button" onclick="toggleAdvtMute()" id="advt-mute-btn" class="absolute bottom-12 right-3 px-3 py-1.5 rounded-xl bg-slate-900/80 hover:bg-slate-900 text-white text-xs font-bold backdrop-blur-sm border border-white/20 flex items-center gap-1.5 transition z-20">
+                        <i data-lucide="volume-x" class="w-3.5 h-3.5 text-harvest-400"></i>
+                        <span>Unmute Ad</span>
+                    </button>
+                </div>
+
+                <!-- Right: Logo & Mandi Wholesale Value Proposition -->
+                <div class="lg:col-span-5 p-6 sm:p-8 flex flex-col justify-between bg-gradient-to-br from-emerald-50/70 via-white to-amber-50/50 h-full">
+                    <div>
+                        <div class="flex items-center gap-3.5 mb-4">
+                            <div class="w-16 h-16 rounded-full bg-[#f7f7f2] border-2 border-farm-600/30 shadow-md overflow-hidden shrink-0">
+                                <img src="Farm Fresh Logo.png" alt="Farm Fresh Produce Market" class="w-full h-full object-cover scale-125" onerror="this.src='https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Farm%20Fresh%20Logo.png-N8Zq9s3h6v4b2c1x5z7m8l9k0j1h2g.jpeg'">
+                            </div>
+                            <div>
+                                <span class="inline-block px-2.5 py-0.5 rounded-md bg-emerald-100 text-farm-800 text-[10px] font-extrabold uppercase tracking-wider">Direct Mandi Sourcing</span>
+                                <h3 class="font-extrabold text-lg sm:text-xl text-slate-900 leading-tight mt-0.5">Seedhe Mandi Ke Wholesale Rate!</h3>
+                            </div>
+                        </div>
+
+                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                            Beat rising grocery inflation with <strong>Farm Fresh Produce Market</strong>. We source directly from farms & mandis every dawn so you enjoy true wholesale prices, crisp organic quality, and big monthly savings.
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-2.5 mb-5">
+                            <div class="p-2.5 rounded-2xl bg-white border border-emerald-100 shadow-xs">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase block">Pricing</span>
+                                <span class="text-xs font-extrabold text-farm-700">Mandi Wholesale Rates</span>
+                            </div>
+                            <div class="p-2.5 rounded-2xl bg-white border border-amber-100 shadow-xs">
+                                <span class="text-[10px] font-bold text-slate-400 uppercase block">Quality</span>
+                                <span class="text-xs font-extrabold text-amber-800">Fresh • Local • Organic</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <button type="button" onclick="document.getElementById('menu-sections-container').scrollIntoView({ behavior: 'smooth' })" class="flex-1 py-2.5 px-4 rounded-xl bg-farm-600 hover:bg-farm-700 text-white font-extrabold text-xs shadow-md shadow-farm-600/20 flex items-center justify-center gap-1.5 transition">
+                            <i data-lucide="shopping-basket" class="w-4 h-4"></i> Shop Wholesale Rates
+                        </button>
+                        <button type="button" onclick="copyAndApplyPromoFromBanner()" class="py-2.5 px-3.5 rounded-xl bg-harvest-400 hover:bg-harvest-500 text-slate-950 font-extrabold text-xs transition">
+                            Claim 15% Off
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Live Order Banner -->
         <div id="live-order-tracker-banner" class="hidden mb-8 bg-white rounded-2xl border-2 border-farm-600 p-4 sm:p-5 shadow-lg shadow-farm-600/10 cursor-pointer hover:bg-emerald-50/30 transition" onclick="openMyOrdersModal()">
@@ -3107,6 +3167,20 @@
             `;
             container.classList.remove('hidden');
             html2pdf().set({ margin: 0.3, filename: `Receipt_${order.id}.pdf` }).from(container).save().then(() => container.classList.add('hidden'));
+        }
+
+        function toggleAdvtMute() {
+            const video = document.getElementById('farm-fresh-advt-video');
+            const btn = document.getElementById('advt-mute-btn');
+            if (!video || !btn) return;
+            video.muted = !video.muted;
+            if (!video.muted) {
+                video.play().catch(() => {});
+                btn.innerHTML = `<i data-lucide="volume-2" class="w-3.5 h-3.5 text-emerald-400"></i><span>Mute Ad</span>`;
+            } else {
+                btn.innerHTML = `<i data-lucide="volume-x" class="w-3.5 h-3.5 text-harvest-400"></i><span>Unmute Ad</span>`;
+            }
+            lucide.createIcons();
         }
 
         function showToast(message, type = 'info') {
