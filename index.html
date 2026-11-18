@@ -83,7 +83,7 @@
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Open Now
                         </span>
                     </div>
-                    <p class="text-[10px] text-slate-500 font-medium hidden sm:block">Farm-to-Doorstep Fresh Fruits & Vegetables • Connaught Place</p>
+                    <p class="text-[10px] text-slate-500 font-medium hidden sm:block">Next-Day Farm-to-Doorstep Delivery • Order by 23:59 PM</p>
                 </div>
             </div>
 
@@ -133,7 +133,7 @@
                 </div>
                 <div>
                     <h3 class="font-bold text-base">Store is Currently Closed for New Orders</h3>
-                    <p class="text-xs text-red-100">Our sorting & packing station has closed for the day. Reopens tomorrow at 7:00 AM.</p>
+                    <p class="text-xs text-red-100">Order intake is paused right now. Please check back soon for next-day delivery slots.</p>
                 </div>
             </div>
         </div>
@@ -161,14 +161,14 @@
         <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#064e3b] via-[#065f46] to-[#15803d] text-white p-6 sm:p-10 mb-8 shadow-xl">
             <div class="relative z-10 max-w-2xl">
                 <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/25 text-harvest-400 text-xs font-bold mb-4">
-                    <i data-lucide="sprout" class="w-3.5 h-3.5"></i>
-                    <span>Direct From Farm • Harvested Daily • 100% Freshness Guaranteed</span>
+                    <i data-lucide="calendar-clock" class="w-3.5 h-3.5"></i>
+                    <span>Order till 23:59 PM • Processed & Delivered Next Day (9–12, 12–3, 3–6)</span>
                 </div>
                 <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-3">
-                    Farm-picked fruits & crisp veggies, delivered fresh.
+                    Farm-picked fruits & crisp veggies, harvested for tomorrow.
                 </h2>
                 <p class="text-emerald-100 text-sm sm:text-base mb-6 max-w-xl">
-                    Harvested daily from local farms. Sorted, weighed & packed to order in 30 mins.
+                    Place your order anytime up to <strong>23:59 PM</strong>. We aggregate daily demand, procure fresh at dawn, and deliver in your chosen next-day slot.
                 </p>
                 
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 max-w-lg bg-white/10 p-1.5 rounded-2xl border border-white/20 backdrop-blur-sm">
@@ -185,7 +185,7 @@
             <div class="hidden lg:flex absolute right-6 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-none select-none z-20">
                 <div class="relative w-72 h-72 rounded-3xl bg-white/10 border border-white/25 backdrop-blur-md flex flex-col items-center justify-center shadow-2xl p-4 text-center overflow-hidden">
                     <div class="absolute top-2 right-3 bg-harvest-400 text-slate-950 text-[11px] font-extrabold px-3 py-1 rounded-full shadow-md uppercase tracking-wider z-30">
-                        30 Min Express
+                        Next-Day Harvest
                     </div>
                     <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Farm%20Fresh%20Logo.png-N8Zq9s3h6v4b2c1x5z7m8l9k0j1h2g.jpeg" alt="Farm Fresh Logo Emblem" class="w-full h-full object-contain rounded-2xl opacity-95 transition duration-500 pointer-events-auto" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80'">
                 </div>
@@ -201,16 +201,16 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-2">
-                            <span class="text-xs font-extrabold uppercase tracking-wider text-farm-700">Live Order in Progress</span>
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-farm-700">Scheduled Next-Day Order</span>
                             <span id="banner-order-id" class="text-xs font-mono font-bold bg-slate-100 px-2 py-0.5 rounded text-slate-700">#FF-0000</span>
                         </div>
-                        <h3 id="banner-order-status" class="font-extrabold text-base sm:text-lg text-slate-900 mt-0.5">Order Received • Sorting & Weighing</h3>
-                        <p id="banner-order-sub" class="text-xs text-slate-500">Tap to view live tracking, rider details, or download PDF invoice</p>
+                        <h3 id="banner-order-status" class="font-extrabold text-base sm:text-lg text-slate-900 mt-0.5">Scheduled for Next-Day Processing</h3>
+                        <p id="banner-order-sub" class="text-xs text-slate-500">Tap to view delivery date, slot timing, or download PDF invoice</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 self-end sm:self-center">
                     <span class="px-4 py-2 rounded-xl bg-farm-600 text-white font-bold text-xs flex items-center gap-1.5">
-                        Track Live <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        Track Order <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     </span>
                 </div>
             </div>
@@ -238,18 +238,18 @@
         <div id="menu-sections-container" class="space-y-10"></div>
     </main>
 
-    <!-- VIEW 2: STORE OPS & PACKING DISPLAY SYSTEM (KDS) -->
+    <!-- VIEW 2: STORE OPS, PROCUREMENT, MIS & PACKING DISPLAY SYSTEM -->
     <main id="view-kitchen" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-20">
         <div class="bg-slate-900 text-white rounded-3xl p-5 sm:p-6 mb-6 shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div>
                 <div class="flex items-center gap-2.5">
-                    <span class="px-2.5 py-1 rounded-lg bg-farm-600 text-xs font-extrabold uppercase tracking-wider">Store Ops KDS</span>
+                    <span class="px-2.5 py-1 rounded-lg bg-farm-600 text-xs font-extrabold uppercase tracking-wider">Store Ops Console</span>
                     <span class="text-xs font-mono text-emerald-400 flex items-center gap-1">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Live Supabase Cloud Sync
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Cutoff 23:59 PM • Next-Day Dispatch
                     </span>
                 </div>
-                <h2 class="text-xl sm:text-2xl font-extrabold mt-1.5">Packing Station & Store Control</h2>
-                <p class="text-xs text-slate-400">Manage live orders, catalog items, configurable UPI ID, 3km delivery zones & portal PINs.</p>
+                <h2 class="text-xl sm:text-2xl font-extrabold mt-1.5">Operations, Procurement & Daily MIS</h2>
+                <p class="text-xs text-slate-400">Manage next-day slot orders, aggregate weight procurement lists, daily MIS reports & store configuration.</p>
             </div>
 
             <div class="flex flex-wrap items-center gap-3">
@@ -260,7 +260,13 @@
 
                 <div class="flex flex-wrap bg-slate-800 p-1 rounded-xl border border-slate-700 gap-1">
                     <button id="kds-tab-orders" onclick="switchKdsTab('orders')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-farm-600 text-white transition">
-                        Live Orders
+                        Order Queue
+                    </button>
+                    <button id="kds-tab-procurement" onclick="switchKdsTab('procurement')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition">
+                        Procurement List
+                    </button>
+                    <button id="kds-tab-mis" onclick="switchKdsTab('mis')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition">
+                        Daily MIS
                     </button>
                     <button id="kds-tab-menu" onclick="switchKdsTab('menu')" class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition">
                         Catalog
@@ -272,15 +278,15 @@
             </div>
         </div>
 
-        <!-- KDS TAB 1: LIVE ORDER QUEUE -->
+        <!-- KDS TAB 1: ORDER QUEUE (SLOT & DATE FILTERABLE) -->
         <div id="kds-orders-section">
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
                 <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-                    <span class="text-xs font-bold text-slate-500">New / Sorting</span>
+                    <span class="text-xs font-bold text-slate-500">Scheduled / Sorting</span>
                     <p id="stat-new-orders" class="text-2xl font-extrabold text-farm-600 mt-1">0</p>
                 </div>
                 <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-                    <span class="text-xs font-bold text-slate-500">Ready for Rider</span>
+                    <span class="text-xs font-bold text-slate-500">Packed for Slot</span>
                     <p id="stat-ready-orders" class="text-2xl font-extrabold text-amber-600 mt-1">0</p>
                 </div>
                 <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
@@ -288,15 +294,146 @@
                     <p id="stat-delivery-orders" class="text-2xl font-extrabold text-blue-600 mt-1">0</p>
                 </div>
                 <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-                    <span class="text-xs font-bold text-slate-500">Today's Revenue</span>
+                    <span class="text-xs font-bold text-slate-500">Gross Order Value</span>
                     <p id="stat-revenue" class="text-2xl font-extrabold text-emerald-600 mt-1">₹0</p>
+                </div>
+            </div>
+
+            <!-- Slot Filter Bar -->
+            <div class="bg-white p-3.5 rounded-2xl border border-slate-200 mb-5 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-extrabold text-slate-600 uppercase tracking-wider mr-1">Filter Slot:</span>
+                    <button onclick="setOpsSlotFilter('ALL')" id="ops-slot-ALL" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white transition">All Slots</button>
+                    <button onclick="setOpsSlotFilter('09:00 AM - 12:00 PM')" id="ops-slot-9-12" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-emerald-50 transition">9:00 AM – 12:00 PM</button>
+                    <button onclick="setOpsSlotFilter('12:00 PM - 03:00 PM')" id="ops-slot-12-3" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-emerald-50 transition">12:00 PM – 3:00 PM</button>
+                    <button onclick="setOpsSlotFilter('03:00 PM - 06:00 PM')" id="ops-slot-3-6" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-emerald-50 transition">3:00 PM – 6:00 PM</button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-xs font-bold text-slate-600">Delivery Date:</label>
+                    <input type="date" id="ops-delivery-date-filter" onchange="renderKdsOrdersGrid()" class="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 focus:outline-none focus:border-farm-600">
+                    <button onclick="clearOpsDateFilter()" class="text-xs font-bold text-farm-700 hover:underline">All Dates</button>
                 </div>
             </div>
 
             <div id="kds-orders-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
         </div>
 
-        <!-- KDS TAB 2: CATALOG & INVENTORY MANAGER -->
+        <!-- KDS TAB 2: AGGREGATE PROCUREMENT LIST (SUM OF WEIGHTS) -->
+        <div id="kds-procurement-section" class="hidden space-y-6">
+            <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+                    <div>
+                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-farm-600">Farm & Mandi Sourcing Sheet</span>
+                        <h3 class="font-extrabold text-lg sm:text-xl text-slate-900">Daily Aggregate Procurement List</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Aggregates all non-cancelled orders placed on the selected order date (up to 23:59 PM cutoff) for next-day delivery.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase">Orders Placed Date</label>
+                            <input type="date" id="procurement-order-date" onchange="renderProcurementList()" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-extrabold text-slate-900 bg-slate-50 focus:outline-none focus:border-farm-600">
+                        </div>
+                        <button onclick="exportProcurementCSV()" class="mt-4 sm:mt-3.5 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition">
+                            <i data-lucide="file-spreadsheet" class="w-4 h-4 text-harvest-400"></i> Export CSV
+                        </button>
+                        <button onclick="downloadProcurementPDF()" class="mt-4 sm:mt-3.5 px-4 py-2 rounded-xl bg-farm-600 hover:bg-farm-700 text-white font-bold text-xs flex items-center gap-1.5 transition">
+                            <i data-lucide="printer" class="w-4 h-4"></i> Print / PDF List
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Pills -->
+                <div id="procurement-summary-bar" class="grid grid-cols-2 sm:grid-cols-4 gap-3 my-5"></div>
+
+                <!-- Procurement Table -->
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold uppercase tracking-wider text-slate-600">
+                                <th class="py-3.5 px-4">Produce Item</th>
+                                <th class="py-3.5 px-4">Category</th>
+                                <th class="py-3.5 px-4">Pack Breakdown</th>
+                                <th class="py-3.5 px-4 text-right">Total Packs</th>
+                                <th class="py-3.5 px-4 text-right">Aggregate Weight</th>
+                            </tr>
+                        </thead>
+                        <tbody id="procurement-table-body" class="divide-y divide-slate-100 text-xs"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- KDS TAB 3: DAILY MIS REPORT -->
+        <div id="kds-mis-section" class="hidden space-y-6">
+            <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+                    <div>
+                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-farm-600">Management Information System</span>
+                        <h3 class="font-extrabold text-lg sm:text-xl text-slate-900">Daily Orders & Fulfillment MIS</h3>
+                        <p class="text-xs text-slate-500 mt-0.5">Comprehensive daily order metrics, slot-wise load distribution, payment split, and order ledger.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase">MIS Date Basis</label>
+                            <select id="mis-date-mode" onchange="renderDailyMIS()" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold bg-white focus:outline-none focus:border-farm-600">
+                                <option value="ORDER_DATE">Order Placed Date</option>
+                                <option value="DELIVERY_DATE">Scheduled Delivery Date</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase">Select Date</label>
+                            <input type="date" id="mis-selected-date" onchange="renderDailyMIS()" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-extrabold text-slate-900 bg-slate-50 focus:outline-none focus:border-farm-600">
+                        </div>
+                        <button onclick="exportMisCSV()" class="mt-4 sm:mt-3.5 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition">
+                            <i data-lucide="download" class="w-4 h-4 text-harvest-400"></i> Export MIS CSV
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI Cards -->
+                <div id="mis-kpi-cards" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 my-5"></div>
+
+                <!-- Slot-wise & Payment-wise Breakdown -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-3 flex items-center gap-1.5">
+                            <i data-lucide="clock" class="w-4 h-4 text-farm-600"></i> Delivery Slot Breakdown (Next-Day Windows)
+                        </h4>
+                        <div id="mis-slot-breakdown" class="space-y-2.5 text-xs"></div>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+                        <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-3 flex items-center gap-1.5">
+                            <i data-lucide="wallet" class="w-4 h-4 text-farm-600"></i> Payment Mode & Order Status Split
+                        </h4>
+                        <div id="mis-payment-status-breakdown" class="space-y-2.5 text-xs"></div>
+                    </div>
+                </div>
+
+                <!-- Detailed Daily Order Register -->
+                <div>
+                    <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-700 mb-3">Daily Order Register</h4>
+                    <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-[11px] font-extrabold uppercase tracking-wider text-slate-600">
+                                    <th class="py-3 px-3">Order ID</th>
+                                    <th class="py-3 px-3">Placed Time</th>
+                                    <th class="py-3 px-3">Delivery Date & Slot</th>
+                                    <th class="py-3 px-3">Customer</th>
+                                    <th class="py-3 px-3 text-right">Total Weight</th>
+                                    <th class="py-3 px-3">Payment</th>
+                                    <th class="py-3 px-3 text-right">Amount</th>
+                                    <th class="py-3 px-3">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mis-orders-table-body" class="divide-y divide-slate-100 text-xs"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KDS TAB 4: CATALOG & INVENTORY MANAGER -->
         <div id="kds-menu-section" class="hidden space-y-6">
             <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm">
                 <div class="flex items-center justify-between mb-4">
@@ -321,8 +458,8 @@
                     </div>
 
                     <div>
-                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Unit / Pack Size *</label>
-                        <input id="new-prod-unit" type="text" required placeholder="e.g. 1 kg, 500 g" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Unit / Pack Weight *</label>
+                        <input id="new-prod-unit" type="text" required placeholder="e.g. 1 kg, 500 g, 250 g" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
@@ -377,7 +514,7 @@
             </div>
         </div>
 
-        <!-- KDS TAB 3: SETTINGS, UPI, OFFERS, 3KM RADIUS -->
+        <!-- KDS TAB 5: SETTINGS, UPI, OFFERS, 3KM RADIUS -->
         <div id="kds-settings-section" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
             
             <!-- Configurable UPI ID Box -->
@@ -515,7 +652,7 @@
                         <h2 class="text-xl font-extrabold">Rider Delivery Console</h2>
                         <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-bold border border-emerald-500/30">On Duty</span>
                     </div>
-                    <p class="text-xs text-slate-300 mt-0.5">Rider: <strong class="text-white">Vikram Singh</strong> • ID: #RDR-104 • Connaught Place Hub</p>
+                    <p class="text-xs text-slate-300 mt-0.5">Rider: <strong class="text-white">Vikram Singh</strong> • ID: #RDR-104 • Slot-Based Dispatch</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -574,6 +711,47 @@
             <div id="cart-items-container" class="space-y-3 hidden"></div>
 
             <div id="checkout-form-section" class="hidden space-y-5 pt-4 border-t border-slate-200">
+                <!-- NEXT-DAY DELIVERY SLOT & SCHEDULE BANNER -->
+                <div class="p-3.5 rounded-2xl bg-emerald-50/90 border border-emerald-200 space-y-3">
+                    <div class="flex items-start gap-2.5">
+                        <div class="w-8 h-8 rounded-xl bg-farm-600 text-white flex items-center justify-center shrink-0 mt-0.5">
+                            <i data-lucide="calendar-check" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase tracking-wider text-farm-700 block">Next-Day Processing & Delivery</span>
+                            <h4 id="checkout-next-day-date-label" class="font-extrabold text-xs text-slate-900 mt-0.5">Scheduled Delivery: Tomorrow</h4>
+                            <p class="text-[11px] text-slate-600 mt-0.5">Orders placed till <strong>23:59 PM</strong> today are procured & processed tomorrow morning.</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-extrabold text-slate-800 mb-1.5">Select Tomorrow's Delivery Slot *</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="delivery-slot" value="09:00 AM - 12:00 PM" checked class="peer sr-only">
+                                <div class="p-2 rounded-xl border-2 border-slate-200 bg-white peer-checked:border-farm-600 peer-checked:bg-farm-600 peer-checked:text-white transition text-center">
+                                    <span class="block text-[11px] font-extrabold">9 – 12</span>
+                                    <span class="block text-[9px] opacity-80">Morning</span>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="delivery-slot" value="12:00 PM - 03:00 PM" class="peer sr-only">
+                                <div class="p-2 rounded-xl border-2 border-slate-200 bg-white peer-checked:border-farm-600 peer-checked:bg-farm-600 peer-checked:text-white transition text-center">
+                                    <span class="block text-[11px] font-extrabold">12 – 3</span>
+                                    <span class="block text-[9px] opacity-80">Afternoon</span>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="delivery-slot" value="03:00 PM - 06:00 PM" class="peer sr-only">
+                                <div class="p-2 rounded-xl border-2 border-slate-200 bg-white peer-checked:border-farm-600 peer-checked:bg-farm-600 peer-checked:text-white transition text-center">
+                                    <span class="block text-[11px] font-extrabold">3 – 6</span>
+                                    <span class="block text-[9px] opacity-80">Evening</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <div>
                     <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-3">1. Delivery Details & Live GPS</h4>
                     <div class="space-y-3">
@@ -674,7 +852,7 @@
 
         <div id="cart-drawer-footer" class="hidden p-4 border-t border-slate-200 bg-white">
             <button id="place-order-cta-btn" onclick="initiateOrderPlacement()" class="w-full py-3.5 px-5 rounded-2xl bg-farm-600 hover:bg-farm-700 text-white font-extrabold text-sm shadow-lg shadow-farm-600/25 flex items-center justify-between transition">
-                <span id="place-order-cta-text">Proceed to Place Order</span>
+                <span id="place-order-cta-text">Schedule Next-Day Order</span>
                 <span id="footer-cta-amount" class="bg-black/20 px-2.5 py-1 rounded-lg font-mono">₹0</span>
             </button>
         </div>
@@ -766,7 +944,7 @@
             <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                 <div class="flex items-center gap-2.5">
                     <i data-lucide="receipt" class="w-5 h-5 text-farm-600"></i>
-                    <h3 class="font-extrabold text-lg text-slate-900">My Orders & Live Tracking</h3>
+                    <h3 class="font-extrabold text-lg text-slate-900">My Orders & Scheduled Deliveries</h3>
                 </div>
                 <button onclick="closeMyOrdersModal()" class="p-2 rounded-xl hover:bg-slate-200 text-slate-500">
                     <i data-lucide="x" class="w-5 h-5"></i>
@@ -788,9 +966,9 @@
             
             <select id="cancel-reason-select" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold mb-4 focus:outline-none focus:border-red-500">
                 <option value="Ordered by mistake">Ordered by mistake</option>
-                <option value="Want to change delivery address">Want to change delivery address</option>
+                <option value="Want to change delivery slot or address">Want to change delivery slot or address</option>
                 <option value="Produce out of stock / Store request">Produce out of stock / Store request</option>
-                <option value="Packing time is too long">Packing time is too long</option>
+                <option value="Schedule changed">Schedule changed</option>
             </select>
 
             <div class="flex items-center gap-2.5">
@@ -850,12 +1028,19 @@
             console.warn('Supabase initialization warning:', e);
         }
 
+        const DELIVERY_SLOTS = [
+            '09:00 AM - 12:00 PM',
+            '12:00 PM - 03:00 PM',
+            '03:00 PM - 06:00 PM'
+        ];
+
         const DEFAULT_PRODUCTS = [
             {
                 id: 'ff-1',
                 name: 'Devgad Alphonso Mangoes',
                 category: 'Fruits',
                 unit: '1 kg (4–5 pcs)',
+                weightGrams: 1000,
                 price: 299,
                 stock: 24,
                 badge: 'Farm Pick',
@@ -864,8 +1049,8 @@
                 image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=600&q=80',
                 customizable: true,
                 variants: [
-                    { name: '1 kg Pack (4–5 pcs)', priceAdd: 0 },
-                    { name: '2 kg Family Crate (8–10 pcs)', priceAdd: 280 }
+                    { name: '1 kg Pack (4–5 pcs)', weightGrams: 1000, priceAdd: 0 },
+                    { name: '2 kg Family Crate (8–10 pcs)', weightGrams: 2000, priceAdd: 280 }
                 ],
                 addons: [
                     { name: 'Ready-to-Eat Ripe Selection', price: 0 },
@@ -877,6 +1062,7 @@
                 name: 'Organic Red Onions',
                 category: 'Vegetables',
                 unit: '1 kg Mesh Bag',
+                weightGrams: 1000,
                 price: 48,
                 stock: 60,
                 badge: 'Organic',
@@ -885,8 +1071,8 @@
                 image: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=600&q=80',
                 customizable: true,
                 variants: [
-                    { name: '1 kg Mesh Bag', priceAdd: 0 },
-                    { name: '2 kg Value Pack', priceAdd: 42 }
+                    { name: '1 kg Mesh Bag', weightGrams: 1000, priceAdd: 0 },
+                    { name: '2 kg Value Pack', weightGrams: 2000, priceAdd: 42 }
                 ],
                 addons: [
                     { name: 'Whole & Unpeeled (Standard)', price: 0 },
@@ -898,6 +1084,7 @@
                 name: 'Farm Fresh Hybrid Tomatoes',
                 category: 'Vegetables',
                 unit: '1 kg Pack',
+                weightGrams: 1000,
                 price: 42,
                 stock: 45,
                 badge: 'Farm Pick',
@@ -906,9 +1093,9 @@
                 image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80',
                 customizable: true,
                 variants: [
-                    { name: '500 g Pack', priceAdd: -18 },
-                    { name: '1 kg Standard Pack', priceAdd: 0 },
-                    { name: '2 kg Bulk Pack', priceAdd: 38 }
+                    { name: '500 g Pack', weightGrams: 500, priceAdd: -18 },
+                    { name: '1 kg Standard Pack', weightGrams: 1000, priceAdd: 0 },
+                    { name: '2 kg Bulk Pack', weightGrams: 2000, priceAdd: 38 }
                 ],
                 addons: [
                     { name: 'Ozone-Washed & Air Dried', price: 10 }
@@ -919,6 +1106,7 @@
                 name: 'Himachal Royal Apples',
                 category: 'Fruits',
                 unit: '1 kg (5–6 pcs)',
+                weightGrams: 1000,
                 price: 189,
                 stock: 30,
                 badge: 'Orchard Fresh',
@@ -927,8 +1115,8 @@
                 image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80',
                 customizable: true,
                 variants: [
-                    { name: '1 kg Pack (5–6 pcs)', priceAdd: 0 },
-                    { name: '2 kg Gift Box', priceAdd: 175 }
+                    { name: '1 kg Pack (5–6 pcs)', weightGrams: 1000, priceAdd: 0 },
+                    { name: '2 kg Gift Box', weightGrams: 2000, priceAdd: 175 }
                 ],
                 addons: [
                     { name: 'Ozone-Washed & Ready to Bite', price: 15 }
@@ -939,6 +1127,7 @@
                 name: 'Fresh Baby Spinach (Palak)',
                 category: 'Vegetables',
                 unit: '250 g Bunch',
+                weightGrams: 250,
                 price: 35,
                 stock: 18,
                 badge: 'Organic',
@@ -947,8 +1136,8 @@
                 image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80',
                 customizable: true,
                 variants: [
-                    { name: '250 g Bunch', priceAdd: 0 },
-                    { name: '500 g Family Pack', priceAdd: 30 }
+                    { name: '250 g Bunch', weightGrams: 250, priceAdd: 0 },
+                    { name: '500 g Family Pack', weightGrams: 500, priceAdd: 30 }
                 ],
                 addons: [
                     { name: 'Triple-Washed & Chopped', price: 20 }
@@ -959,6 +1148,7 @@
                 name: 'Nagpur Mandarin Oranges',
                 category: 'Fruits',
                 unit: '1 kg Pack',
+                weightGrams: 1000,
                 price: 110,
                 stock: 35,
                 badge: 'Seasonal',
@@ -973,6 +1163,7 @@
             currentView: 'customer',
             kdsTab: 'orders',
             riderTab: 'active',
+            opsSlotFilter: 'ALL',
             selectedCategory: 'All',
             vegOnly: false,
             storeOpen: true,
@@ -1019,6 +1210,65 @@
         let kdsStoreMarker = null;
         let kdsRadiusCircle = null;
 
+        // --- DATE, CUTOFF (23:59 PM) & WEIGHT PARSING HELPERS ---
+        function toLocalDateStr(dateObj) {
+            const d = new Date(dateObj);
+            const yr = d.getFullYear();
+            const mo = String(d.getMonth() + 1).padStart(2, '0');
+            const da = String(d.getDate()).padStart(2, '0');
+            return `${yr}-${mo}-${da}`;
+        }
+
+        // Any order placed up to 23:59:59 PM on Day D gets processed & delivered on Day D + 1
+        function getNextDaySchedule(orderTimestamp = new Date()) {
+            const orderDate = new Date(orderTimestamp);
+            const nextDay = new Date(orderDate.getFullYear(), orderDate.getMonth(), orderDate.getDate() + 1);
+            return {
+                orderDateStr: toLocalDateStr(orderDate),
+                deliveryDateStr: toLocalDateStr(nextDay),
+                formattedDeliveryDate: nextDay.toLocaleDateString('en-IN', {
+                    weekday: 'short',
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                })
+            };
+        }
+
+        function parseWeightGramsFromText(text) {
+            if (!text) return 0;
+            const str = String(text).toLowerCase();
+            const kgMatch = str.match(/(\d+(?:\.\d+)?)\s*kg\b/);
+            if (kgMatch) return Math.round(parseFloat(kgMatch[1]) * 1000);
+            const gMatch = str.match(/(\d+(?:\.\d+)?)\s*(?:g|gm|gms|gram|grams)\b/);
+            if (gMatch) return Math.round(parseFloat(gMatch[1]));
+            return 0;
+        }
+
+        function formatWeightDisplay(totalGrams) {
+            if (!totalGrams || totalGrams <= 0) return '0 g';
+            if (totalGrams >= 1000) {
+                const kg = totalGrams / 1000;
+                return `${Number.isInteger(kg) ? kg : kg.toFixed(2)} kg`;
+            }
+            return `${totalGrams} g`;
+        }
+
+        function resolveCartItemWeightGrams(itemEntry) {
+            if (itemEntry.unitWeightGrams && Number(itemEntry.unitWeightGrams) > 0) {
+                return Number(itemEntry.unitWeightGrams);
+            }
+            const fromCustom = parseWeightGramsFromText(itemEntry.customizationText);
+            if (fromCustom > 0) return fromCustom;
+            const prod = state.products.find(p => p.id === itemEntry.itemId || p.name === itemEntry.name);
+            if (prod) {
+                if (prod.weightGrams) return Number(prod.weightGrams);
+                const fromUnit = parseWeightGramsFromText(prod.unit);
+                if (fromUnit > 0) return fromUnit;
+            }
+            return 1000; // Default fallback 1 kg if unspecified
+        }
+
         async function loadState() {
             try {
                 const savedCart = localStorage.getItem('ff_cart');
@@ -1049,6 +1299,38 @@
             }
         }
 
+        function normalizeOrderRecord(row) {
+            const createdAt = row.created_at || row.createdAt || new Date().toISOString();
+            const sched = getNextDaySchedule(createdAt);
+            const customerObj = row.customer || {
+                name: row.customer_name,
+                phone: row.customer_phone,
+                address: row.customer_address,
+                notes: row.customer_notes || '',
+                lat: row.customer_lat || state.customerLocation.lat,
+                lng: row.customer_lng || state.customerLocation.lng,
+                distanceKm: row.customer_distance_km || 1.2
+            };
+
+            return {
+                id: row.id,
+                createdAt,
+                orderDate: row.order_date || row.orderDate || sched.orderDateStr,
+                deliveryDate: row.delivery_date || row.deliveryDate || customerObj.deliveryDate || sched.deliveryDateStr,
+                deliverySlot: row.delivery_slot || row.deliverySlot || customerObj.deliverySlot || DELIVERY_SLOTS[0],
+                customer: customerObj,
+                items: row.items || [],
+                totals: row.totals || { subtotal: 0, discountAmount: 0, gst: 0, delivery: 0, total: 0 },
+                promoApplied: row.promo_applied || row.promoApplied || '',
+                paymentMethod: row.payment_method || row.paymentMethod || 'UPI',
+                paymentStatus: row.payment_status || row.paymentStatus || 'PAID_UPI',
+                utrNumber: row.utr_number || row.utrNumber || '',
+                status: row.status || 'PREPARING',
+                cancelReason: row.cancel_reason || row.cancelReason || '',
+                refundStatus: row.refund_status || row.refundStatus || ''
+            };
+        }
+
         async function fetchOrdersFromCloud() {
             if (!supabaseClient) return;
             const { data, error } = await supabaseClient
@@ -1058,32 +1340,13 @@
 
             if (error) {
                 console.error('Error fetching orders from Supabase:', error.message);
+                const savedOrders = localStorage.getItem('ff_orders');
+                if (savedOrders) state.orders = JSON.parse(savedOrders).map(normalizeOrderRecord);
                 return;
             }
 
             if (data) {
-                state.orders = data.map(row => ({
-                    id: row.id,
-                    createdAt: row.created_at,
-                    customer: {
-                        name: row.customer_name,
-                        phone: row.customer_phone,
-                        address: row.customer_address,
-                        notes: row.customer_notes || '',
-                        lat: row.customer_lat || state.customerLocation.lat,
-                        lng: row.customer_lng || state.customerLocation.lng,
-                        distanceKm: row.customer_distance_km || 1.2
-                    },
-                    items: row.items,
-                    totals: row.totals,
-                    promoApplied: row.promo_applied || '',
-                    paymentMethod: row.payment_method,
-                    paymentStatus: row.payment_status,
-                    utrNumber: row.utr_number || '',
-                    status: row.status,
-                    cancelReason: row.cancel_reason || '',
-                    refundStatus: row.refund_status || ''
-                }));
+                state.orders = data.map(normalizeOrderRecord);
             }
             refreshAllUI();
         }
@@ -1141,6 +1404,12 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             await loadState();
+            const todayStr = toLocalDateStr(new Date());
+            const procDateInput = document.getElementById('procurement-order-date');
+            const misDateInput = document.getElementById('mis-selected-date');
+            if (procDateInput) procDateInput.value = todayStr;
+            if (misDateInput) misDateInput.value = todayStr;
+
             renderCategories();
             refreshAllUI();
             lucide.createIcons();
@@ -1205,7 +1474,7 @@
                 state.kitchenUnlocked = true;
                 closePinModal();
                 switchView('kitchen');
-                showToast('Store Ops KDS Unlocked', 'success');
+                showToast('Store Ops Console Unlocked', 'success');
             } else {
                 showToast('Invalid Store Ops PIN!', 'error');
             }
@@ -1236,7 +1505,7 @@
             state.storeOpen = !state.storeOpen;
             saveState();
             refreshAllUI();
-            showToast(state.storeOpen ? 'Store is now OPEN for orders!' : 'Store marked CLOSED for new orders.', state.storeOpen ? 'success' : 'warning');
+            showToast(state.storeOpen ? 'Store is now OPEN for next-day orders!' : 'Store marked CLOSED for new orders.', state.storeOpen ? 'success' : 'warning');
         }
 
         function updateStoreStatusUI() {
@@ -1246,7 +1515,7 @@
             const kdsText = document.getElementById('kds-store-toggle-text');
 
             if (state.storeOpen) {
-                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Open Now`;
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Open till 23:59 PM`;
                 badge.className = 'hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200';
                 banner.classList.add('hidden');
                 if (kdsBtn) {
@@ -1477,11 +1746,14 @@
             if (item.customizable && item.variants && item.variants.length > 0) {
                 openCustomizerModal(item);
             } else {
+                const unitWeightGrams = item.weightGrams || parseWeightGramsFromText(item.unit) || 1000;
                 addItemToCart({
                     cartKey: item.id,
                     itemId: item.id,
                     name: item.name,
+                    category: item.category,
                     unitPrice: Number(item.price),
+                    unitWeightGrams,
                     customizationText: item.unit || '',
                     qty: 1
                 });
@@ -1499,7 +1771,7 @@
                         <input type="radio" name="cust-variant" value="${idx}" ${idx === 0 ? 'checked' : ''} onchange="updateCustomizerTotal()" class="accent-farm-600 w-4 h-4">
                         <span class="text-xs font-bold text-slate-800">${v.name}</span>
                     </div>
-                    <span class="text-xs font-mono font-bold text-slate-600">${v.priceAdd === 0 ? 'Included' : '+₹' + v.priceAdd}</span>
+                    <span class="text-xs font-mono font-bold text-slate-600">${v.priceAdd === 0 ? 'Included' : (v.priceAdd > 0 ? '+₹' + v.priceAdd : '-₹' + Math.abs(v.priceAdd))}</span>
                 </label>
             `).join('');
 
@@ -1539,12 +1811,15 @@
             const item = state.activeCustomizingItem;
             if (!item) return;
             let unitPrice = item.price;
+            let unitWeightGrams = item.weightGrams || parseWeightGramsFromText(item.unit) || 1000;
             let notes = [];
 
             const vRadio = document.querySelector('input[name="cust-variant"]:checked');
             if (vRadio && item.variants[vRadio.value]) {
-                unitPrice += item.variants[vRadio.value].priceAdd;
-                notes.push(item.variants[vRadio.value].name);
+                const variant = item.variants[vRadio.value];
+                unitPrice += variant.priceAdd;
+                unitWeightGrams = variant.weightGrams || parseWeightGramsFromText(variant.name) || unitWeightGrams;
+                notes.push(variant.name);
             }
 
             const selectedAddons = [];
@@ -1559,7 +1834,9 @@
                 cartKey: `${item.id}::${customizationText}`,
                 itemId: item.id,
                 name: item.name,
+                category: item.category,
                 unitPrice,
+                unitWeightGrams,
                 customizationText,
                 qty: 1
             });
@@ -1640,6 +1917,7 @@
 
         function calculateCartTotals() {
             const subtotal = state.cart.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
+            const totalWeightGrams = state.cart.reduce((sum, item) => sum + (resolveCartItemWeightGrams(item) * item.qty), 0);
             let discountAmount = 0;
             if (state.config.promoEnabled && state.appliedPromoCode && state.appliedPromoCode.toUpperCase() === state.config.promoCode.toUpperCase()) {
                 discountAmount = Math.round(subtotal * (Number(state.config.promoPercent) / 100));
@@ -1649,7 +1927,7 @@
             const zone = evaluateDeliveryZone();
             const delivery = subtotal === 0 ? 0 : zone.fee;
             const total = discountedSubtotal + gst + delivery;
-            return { subtotal, discountAmount, gst, delivery, total, zone };
+            return { subtotal, discountAmount, gst, delivery, total, totalWeightGrams, zone };
         }
 
         function updateCartUI() {
@@ -1676,6 +1954,13 @@
             itemsContainer.classList.remove('hidden');
             checkoutSection.classList.remove('hidden');
             drawerFooter.classList.remove('hidden');
+
+            // Update dynamic Next-Day Delivery Date label
+            const sched = getNextDaySchedule(new Date());
+            const dateLabelEl = document.getElementById('checkout-next-day-date-label');
+            if (dateLabelEl) {
+                dateLabelEl.textContent = `Scheduled Delivery: Tomorrow (${sched.formattedDeliveryDate})`;
+            }
 
             const custAddr = document.getElementById('cust-address');
             if (!custAddr.value.trim()) custAddr.value = state.customerLocation.address;
@@ -1708,7 +1993,7 @@
                 distBadge.textContent = delivery === 0 ? 'FREE DELIVERY' : `₹${delivery} FEE`;
                 ctaBtn.disabled = false;
                 ctaBtn.className = 'w-full py-3.5 px-5 rounded-2xl bg-farm-600 hover:bg-farm-700 text-white font-extrabold text-sm shadow-lg shadow-farm-600/25 flex items-center justify-between transition';
-                ctaText.textContent = 'Proceed to Place Order';
+                ctaText.textContent = 'Schedule Next-Day Order';
             } else {
                 distStatusEl.className = 'flex items-center justify-between text-[11px] font-bold px-2.5 py-1.5 rounded-xl bg-red-50 text-red-700 border border-red-200';
                 distBadge.textContent = 'PAUSED';
@@ -1834,18 +2119,41 @@
             const address = document.getElementById('cust-address').value.trim();
             const notes = document.getElementById('cust-notes').value.trim();
             const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+            const slotEl = document.querySelector('input[name="delivery-slot"]:checked');
+            const deliverySlot = slotEl ? slotEl.value : DELIVERY_SLOTS[0];
 
             if (!name || !phone || !address) {
                 showToast('Please fill Name, Mobile Number, and Delivery Address.', 'error');
                 return;
             }
 
+            const now = new Date();
+            const sched = getNextDaySchedule(now);
             const orderId = 'FF-' + Math.floor(1000 + Math.random() * 9000);
+
+            const enrichedItems = state.cart.map(item => ({
+                ...item,
+                unitWeightGrams: resolveCartItemWeightGrams(item)
+            }));
+
             const draft = {
                 id: orderId,
-                createdAt: new Date().toISOString(),
-                customer: { name, phone, address, notes, lat: state.customerLocation.lat, lng: state.customerLocation.lng, distanceKm: totals.zone.distanceKm },
-                items: JSON.parse(JSON.stringify(state.cart)),
+                createdAt: now.toISOString(),
+                orderDate: sched.orderDateStr,
+                deliveryDate: sched.deliveryDateStr,
+                deliverySlot,
+                customer: {
+                    name,
+                    phone,
+                    address,
+                    notes,
+                    lat: state.customerLocation.lat,
+                    lng: state.customerLocation.lng,
+                    distanceKm: totals.zone.distanceKm,
+                    deliveryDate: sched.deliveryDateStr,
+                    deliverySlot
+                },
+                items: enrichedItems,
                 totals,
                 promoApplied: totals.discountAmount > 0 ? `${state.appliedPromoCode} (${state.config.promoPercent}%)` : '',
                 paymentMethod,
@@ -1915,7 +2223,7 @@
 
             toggleCartDrawer(false);
             refreshAllUI();
-            showToast(`Order #${orderObj.id} sent to Store Packing Station!`, 'success');
+            showToast(`Order #${orderObj.id} scheduled for ${orderObj.deliveryDate} (${orderObj.deliverySlot})!`, 'success');
             openMyOrdersModal();
         }
 
@@ -1954,9 +2262,9 @@
                 banner.classList.remove('hidden');
                 document.getElementById('banner-order-id').textContent = `#${latest.id}`;
                 const statusMap = {
-                    'PREPARING': 'Sorting & Weighing • Fresh Produce Being Packed',
-                    'READY': 'Packed & Sealed • Waiting for Rider Pickup',
-                    'OUT_FOR_DELIVERY': 'Out for Delivery • Rider Vikram is on the way!'
+                    'PREPARING': `Scheduled for Next-Day Processing • ${latest.deliveryDate} (${latest.deliverySlot})`,
+                    'READY': `Packed & Ready for Dispatch • ${latest.deliveryDate} (${latest.deliverySlot})`,
+                    'OUT_FOR_DELIVERY': `Out for Delivery (${latest.deliverySlot}) • Rider Vikram is on the way!`
                 };
                 document.getElementById('banner-order-status').textContent = statusMap[latest.status] || latest.status;
             } else {
@@ -1999,11 +2307,21 @@
                                         ${order.paymentStatus === 'PAID_UPI' ? 'PAID VIA UPI' : 'COD'}
                                     </span>
                                 </div>
-                                <span class="text-[11px] text-slate-400">${new Date(order.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                                <span class="text-[11px] text-slate-400">Placed: ${new Date(order.createdAt).toLocaleDateString('en-IN')} ${new Date(order.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
                             </div>
                             <div class="text-right">
                                 <span class="font-mono font-extrabold text-base text-slate-900">₹${order.totals.total}</span>
                             </div>
+                        </div>
+
+                        <div class="mt-3 p-2.5 rounded-xl bg-emerald-50/80 border border-emerald-200/80 flex flex-wrap items-center justify-between gap-2 text-xs">
+                            <span class="font-bold text-emerald-900 flex items-center gap-1.5">
+                                <i data-lucide="calendar-clock" class="w-3.5 h-3.5 text-farm-600"></i>
+                                Delivery: <strong>${order.deliveryDate}</strong>
+                            </span>
+                            <span class="px-2 py-0.5 rounded-lg bg-white border border-emerald-200 font-mono font-extrabold text-[11px] text-farm-700">
+                                Slot: ${order.deliverySlot}
+                            </span>
                         </div>
 
                         ${isCancelled ? `
@@ -2013,7 +2331,7 @@
                         ` : `
                             <div class="my-4">
                                 <div class="grid grid-cols-4 gap-1 text-center">
-                                    ${[{ label: 'Sorting', icon: 'scale' }, { label: 'Packed', icon: 'package-check' }, { label: 'On Way', icon: 'bike' }, { label: 'Delivered', icon: 'home' }].map((st, idx) => {
+                                    ${[{ label: 'Next-Day Queue', icon: 'calendar-check' }, { label: 'Packed', icon: 'package-check' }, { label: 'On Way', icon: 'bike' }, { label: 'Delivered', icon: 'home' }].map((st, idx) => {
                                         const done = idx <= currentIdx;
                                         return `
                                             <div class="flex flex-col items-center">
@@ -2070,17 +2388,53 @@
             showToast('Order cancelled.', 'warning');
         }
 
+        // --- STORE OPS NAVIGATION & TABS ---
         function switchKdsTab(tab) {
             state.kdsTab = tab;
             document.getElementById('kds-orders-section').classList.toggle('hidden', tab !== 'orders');
+            document.getElementById('kds-procurement-section').classList.toggle('hidden', tab !== 'procurement');
+            document.getElementById('kds-mis-section').classList.toggle('hidden', tab !== 'mis');
             document.getElementById('kds-menu-section').classList.toggle('hidden', tab !== 'menu');
             document.getElementById('kds-settings-section').classList.toggle('hidden', tab !== 'settings');
 
-            const tabButtons = { orders: document.getElementById('kds-tab-orders'), menu: document.getElementById('kds-tab-menu'), settings: document.getElementById('kds-tab-settings') };
+            const tabButtons = {
+                orders: document.getElementById('kds-tab-orders'),
+                procurement: document.getElementById('kds-tab-procurement'),
+                mis: document.getElementById('kds-tab-mis'),
+                menu: document.getElementById('kds-tab-menu'),
+                settings: document.getElementById('kds-tab-settings')
+            };
             Object.entries(tabButtons).forEach(([key, btn]) => {
-                btn.className = key === tab ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-farm-600 text-white transition' : 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition';
+                if (!btn) return;
+                btn.className = key === tab
+                    ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-farm-600 text-white transition'
+                    : 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition';
             });
             renderKDS();
+        }
+
+        function setOpsSlotFilter(slot) {
+            state.opsSlotFilter = slot;
+            const map = {
+                'ALL': 'ops-slot-ALL',
+                '09:00 AM - 12:00 PM': 'ops-slot-9-12',
+                '12:00 PM - 03:00 PM': 'ops-slot-12-3',
+                '03:00 PM - 06:00 PM': 'ops-slot-3-6'
+            };
+            Object.entries(map).forEach(([k, id]) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.className = k === slot
+                    ? 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white transition'
+                    : 'px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-emerald-50 transition';
+            });
+            renderKdsOrdersGrid();
+        }
+
+        function clearOpsDateFilter() {
+            const el = document.getElementById('ops-delivery-date-filter');
+            if (el) el.value = '';
+            renderKdsOrdersGrid();
         }
 
         function renderKDS() {
@@ -2095,6 +2449,8 @@
             document.getElementById('stat-revenue').textContent = `₹${revenue}`;
 
             if (state.kdsTab === 'orders') renderKdsOrdersGrid();
+            else if (state.kdsTab === 'procurement') renderProcurementList();
+            else if (state.kdsTab === 'mis') renderDailyMIS();
             else if (state.kdsTab === 'menu') renderKdsStockManager();
             else if (state.kdsTab === 'settings') populateKdsSettingsForm();
             lucide.createIcons();
@@ -2102,24 +2458,36 @@
 
         function renderKdsOrdersGrid() {
             const grid = document.getElementById('kds-orders-grid');
-            if (state.orders.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-16 bg-white rounded-3xl border border-slate-200"><h3 class="font-bold text-slate-800">No Packing Tickets Yet</h3></div>`;
+            const dateFilter = document.getElementById('ops-delivery-date-filter')?.value || '';
+
+            const filteredOrders = state.orders.filter(o => {
+                const slotMatch = state.opsSlotFilter === 'ALL' || o.deliverySlot === state.opsSlotFilter;
+                const dateMatch = !dateFilter || o.deliveryDate === dateFilter;
+                return slotMatch && dateMatch;
+            });
+
+            if (filteredOrders.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-16 bg-white rounded-3xl border border-slate-200"><h3 class="font-bold text-slate-800">No Orders Match Selected Date / Slot</h3></div>`;
                 return;
             }
 
-            grid.innerHTML = state.orders.map(order => `
+            grid.innerHTML = filteredOrders.map(order => `
                 <div class="bg-white rounded-3xl border-2 ${order.status === 'PREPARING' ? 'border-farm-500 shadow-lg' : 'border-slate-200'} p-5 flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100">
                             <span class="font-mono font-extrabold text-base text-slate-900">#${order.id}</span>
                             <span class="px-2.5 py-1 rounded-lg border text-[10px] font-extrabold uppercase bg-emerald-50 text-farm-700">${order.status}</span>
                         </div>
+                        <div class="mt-2.5 px-3 py-2 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-between text-[11px]">
+                            <span class="font-bold text-amber-900">Deliv: ${order.deliveryDate}</span>
+                            <span class="font-mono font-extrabold text-amber-800">${order.deliverySlot}</span>
+                        </div>
                         <div class="my-3 text-xs">
                             <p class="font-bold text-slate-900">${order.customer.name} • ${order.customer.phone}</p>
                             <p class="text-slate-500 mt-0.5">${order.customer.address}</p>
                         </div>
                         <div class="space-y-1 my-3 bg-slate-50 p-3 rounded-2xl text-xs max-h-36 overflow-y-auto">
-                            ${order.items.map(i => `<div class="flex justify-between"><span>${i.qty}x ${i.name}</span><span class="font-mono font-bold">₹${i.unitPrice * i.qty}</span></div>`).join('')}
+                            ${order.items.map(i => `<div class="flex justify-between"><span>${i.qty}x ${i.name} <span class="text-slate-400">(${i.customizationText || ''})</span></span><span class="font-mono font-bold">₹${i.unitPrice * i.qty}</span></div>`).join('')}
                         </div>
                     </div>
                     <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
@@ -2129,6 +2497,387 @@
                 </div>
             `).join('');
             lucide.createIcons();
+        }
+
+        // --- (2) AGGREGATE PROCUREMENT LIST (LIST OF ITEMS, SUM OF WEIGHTS) ---
+        function computeProcurementData(orderDateStr) {
+            const validOrders = state.orders.filter(o => o.status !== 'CANCELLED' && (!orderDateStr || o.orderDate === orderDateStr));
+            const itemMap = new Map();
+
+            validOrders.forEach(order => {
+                (order.items || []).forEach(line => {
+                    const key = line.name.trim();
+                    const unitGrams = resolveCartItemWeightGrams(line);
+                    const qty = Number(line.qty) || 1;
+                    const lineTotalGrams = unitGrams * qty;
+                    const packLabel = formatWeightDisplay(unitGrams);
+
+                    if (!itemMap.has(key)) {
+                        const prod = state.products.find(p => p.id === line.itemId || p.name === line.name);
+                        itemMap.set(key, {
+                            name: key,
+                            category: line.category || (prod ? prod.category : 'Produce'),
+                            totalPacks: 0,
+                            totalWeightGrams: 0,
+                            packBreakdown: {}
+                        });
+                    }
+                    const entry = itemMap.get(key);
+                    entry.totalPacks += qty;
+                    entry.totalWeightGrams += lineTotalGrams;
+                    entry.packBreakdown[packLabel] = (entry.packBreakdown[packLabel] || 0) + qty;
+                });
+            });
+
+            const itemsList = Array.from(itemMap.values()).sort((a, b) => b.totalWeightGrams - a.totalWeightGrams);
+            const grandTotalWeightGrams = itemsList.reduce((s, i) => s + i.totalWeightGrams, 0);
+            const grandTotalPacks = itemsList.reduce((s, i) => s + i.totalPacks, 0);
+
+            return {
+                orderDateStr,
+                nextDayDeliveryStr: orderDateStr ? getNextDaySchedule(orderDateStr + 'T12:00:00').deliveryDateStr : 'All Dates',
+                orderCount: validOrders.length,
+                itemsList,
+                grandTotalWeightGrams,
+                grandTotalPacks
+            };
+        }
+
+        function renderProcurementList() {
+            const dateInput = document.getElementById('procurement-order-date');
+            const selectedDate = dateInput ? dateInput.value : toLocalDateStr(new Date());
+            const data = computeProcurementData(selectedDate);
+
+            const summaryBar = document.getElementById('procurement-summary-bar');
+            summaryBar.innerHTML = `
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                    <span class="text-[11px] font-bold text-slate-500 block">Cutoff Window</span>
+                    <span class="text-sm font-extrabold text-slate-900 mt-0.5 block">${selectedDate || 'All'} (till 23:59 PM)</span>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200">
+                    <span class="text-[11px] font-bold text-emerald-800 block">Target Delivery Date</span>
+                    <span class="text-sm font-extrabold text-farm-700 mt-0.5 block">${data.nextDayDeliveryStr}</span>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                    <span class="text-[11px] font-bold text-slate-500 block">Orders / SKUs to Procure</span>
+                    <span class="text-sm font-extrabold text-slate-900 mt-0.5 block">${data.orderCount} Orders • ${data.itemsList.length} Items</span>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200">
+                    <span class="text-[11px] font-bold text-amber-800 block">Total Net Procurement Weight</span>
+                    <span class="text-base font-mono font-extrabold text-amber-900 mt-0.5 block">${formatWeightDisplay(data.grandTotalWeightGrams)}</span>
+                </div>
+            `;
+
+            const tbody = document.getElementById('procurement-table-body');
+            if (data.itemsList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-10 text-center text-slate-400 font-semibold">No active orders placed on ${selectedDate} to generate procurement list.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = data.itemsList.map(item => {
+                const breakdownStr = Object.entries(item.packBreakdown)
+                    .map(([wt, count]) => `${count} × ${wt}`)
+                    .join(', ');
+
+                return `
+                    <tr class="hover:bg-emerald-50/30 transition">
+                        <td class="py-3.5 px-4 font-extrabold text-slate-900">${item.name}</td>
+                        <td class="py-3.5 px-4">
+                            <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${item.category === 'Fruits' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}">${item.category}</span>
+                        </td>
+                        <td class="py-3.5 px-4 text-slate-600 font-medium">${breakdownStr}</td>
+                        <td class="py-3.5 px-4 text-right font-mono font-bold text-slate-800">${item.totalPacks}</td>
+                        <td class="py-3.5 px-4 text-right font-mono font-extrabold text-sm text-farm-700">${formatWeightDisplay(item.totalWeightGrams)}</td>
+                    </tr>
+                `;
+            }).join('') + `
+                <tr class="bg-slate-900 text-white font-extrabold">
+                    <td colspan="3" class="py-3.5 px-4 uppercase tracking-wider text-xs">Total Aggregate Procurement</td>
+                    <td class="py-3.5 px-4 text-right font-mono">${data.grandTotalPacks} Packs</td>
+                    <td class="py-3.5 px-4 text-right font-mono text-harvest-400 text-sm">${formatWeightDisplay(data.grandTotalWeightGrams)}</td>
+                </tr>
+            `;
+        }
+
+        function exportProcurementCSV() {
+            const selectedDate = document.getElementById('procurement-order-date').value;
+            const data = computeProcurementData(selectedDate);
+            if (data.itemsList.length === 0) {
+                showToast('No procurement items for selected date.', 'warning');
+                return;
+            }
+            const rows = [
+                ['Order Date (Cutoff 23:59)', 'Delivery Date', 'Produce Item', 'Category', 'Pack Breakdown', 'Total Packs', 'Aggregate Weight (Grams)', 'Aggregate Weight (Display)']
+            ];
+            data.itemsList.forEach(item => {
+                const breakdownStr = Object.entries(item.packBreakdown).map(([wt, c]) => `${c}x ${wt}`).join(' | ');
+                rows.push([
+                    data.orderDateStr,
+                    data.nextDayDeliveryStr,
+                    `"${item.name}"`,
+                    item.category,
+                    `"${breakdownStr}"`,
+                    item.totalPacks,
+                    item.totalWeightGrams,
+                    formatWeightDisplay(item.totalWeightGrams)
+                ]);
+            });
+            downloadCSVFile(rows, `Procurement_List_${selectedDate}.csv`);
+            showToast('Procurement CSV exported!', 'success');
+        }
+
+        function downloadProcurementPDF() {
+            const selectedDate = document.getElementById('procurement-order-date').value;
+            const data = computeProcurementData(selectedDate);
+            if (data.itemsList.length === 0) {
+                showToast('No procurement items for selected date.', 'warning');
+                return;
+            }
+            const container = document.getElementById('pdf-receipt-template');
+            container.innerHTML = `
+                <div style="font-family: Arial, sans-serif; padding: 24px; color: #0f172a;">
+                    <h2 style="margin:0 0 4px 0; color:#15803d;">FARM FRESH — DAILY MANDI & FARM PROCUREMENT LIST</h2>
+                    <p style="margin:0 0 16px 0; font-size:12px; color:#475569;">
+                        Orders Placed Date: <strong>${data.orderDateStr} (Cutoff 23:59 PM)</strong> &nbsp;|&nbsp;
+                        Delivery Date: <strong>${data.nextDayDeliveryStr}</strong> &nbsp;|&nbsp;
+                        Total Orders: <strong>${data.orderCount}</strong>
+                    </p>
+                    <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                        <thead>
+                            <tr style="background:#f1f5f9; border-bottom:2px solid #cbd5e1;">
+                                <th style="padding:8px; text-align:left;">Item Name</th>
+                                <th style="padding:8px; text-align:left;">Category</th>
+                                <th style="padding:8px; text-align:left;">Pack Breakdown</th>
+                                <th style="padding:8px; text-align:right;">Packs</th>
+                                <th style="padding:8px; text-align:right;">Total Weight</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.itemsList.map(i => `
+                                <tr style="border-bottom:1px solid #e2e8f0;">
+                                    <td style="padding:8px; font-weight:bold;">${i.name}</td>
+                                    <td style="padding:8px;">${i.category}</td>
+                                    <td style="padding:8px;">${Object.entries(i.packBreakdown).map(([wt, c]) => `${c} × ${wt}`).join(', ')}</td>
+                                    <td style="padding:8px; text-align:right;">${i.totalPacks}</td>
+                                    <td style="padding:8px; text-align:right; font-weight:bold;">${formatWeightDisplay(i.totalWeightGrams)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                        <tfoot>
+                            <tr style="background:#0f172a; color:#fff; font-weight:bold;">
+                                <td colspan="3" style="padding:10px;">TOTAL PROCUREMENT</td>
+                                <td style="padding:10px; text-align:right;">${data.grandTotalPacks}</td>
+                                <td style="padding:10px; text-align:right;">${formatWeightDisplay(data.grandTotalWeightGrams)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            `;
+            container.classList.remove('hidden');
+            html2pdf().set({ margin: 0.3, filename: `Procurement_${selectedDate}.pdf` }).from(container).save().then(() => container.classList.add('hidden'));
+        }
+
+        // --- (3) DAILY MIS IN OPS PORTAL ---
+        function computeDailyMISData(selectedDate, dateMode) {
+            const matchedOrders = state.orders.filter(o => {
+                if (!selectedDate) return true;
+                return dateMode === 'DELIVERY_DATE' ? o.deliveryDate === selectedDate : o.orderDate === selectedDate;
+            });
+
+            const activeOrders = matchedOrders.filter(o => o.status !== 'CANCELLED');
+            const cancelledOrders = matchedOrders.filter(o => o.status === 'CANCELLED');
+            const deliveredOrders = matchedOrders.filter(o => o.status === 'DELIVERED');
+            const pendingOrders = matchedOrders.filter(o => ['PREPARING', 'READY', 'OUT_FOR_DELIVERY'].includes(o.status));
+
+            const grossRevenue = activeOrders.reduce((s, o) => s + (Number(o.totals.total) || 0), 0);
+            const avgOrderValue = activeOrders.length > 0 ? Math.round(grossRevenue / activeOrders.length) : 0;
+            const totalWeightGrams = activeOrders.reduce((s, o) => {
+                const orderWt = (o.items || []).reduce((acc, item) => acc + (resolveCartItemWeightGrams(item) * (Number(item.qty) || 1)), 0);
+                return s + orderWt;
+            }, 0);
+
+            const slotStats = DELIVERY_SLOTS.map(slot => {
+                const slotOrders = activeOrders.filter(o => o.deliverySlot === slot);
+                const slotRevenue = slotOrders.reduce((s, o) => s + (Number(o.totals.total) || 0), 0);
+                const slotWeightGrams = slotOrders.reduce((s, o) => s + (o.items || []).reduce((acc, item) => acc + (resolveCartItemWeightGrams(item) * (Number(item.qty) || 1)), 0), 0);
+                return { slot, count: slotOrders.length, revenue: slotRevenue, weightGrams: slotWeightGrams };
+            });
+
+            const upiOrders = activeOrders.filter(o => o.paymentMethod === 'UPI');
+            const codOrders = activeOrders.filter(o => o.paymentMethod === 'COD');
+            const upiAmount = upiOrders.reduce((s, o) => s + (Number(o.totals.total) || 0), 0);
+            const codAmount = codOrders.reduce((s, o) => s + (Number(o.totals.total) || 0), 0);
+
+            return {
+                selectedDate,
+                dateMode,
+                matchedOrders,
+                totalCount: matchedOrders.length,
+                activeCount: activeOrders.length,
+                deliveredCount: deliveredOrders.length,
+                pendingCount: pendingOrders.length,
+                cancelledCount: cancelledOrders.length,
+                grossRevenue,
+                avgOrderValue,
+                totalWeightGrams,
+                slotStats,
+                upiOrdersCount: upiOrders.length,
+                codOrdersCount: codOrders.length,
+                upiAmount,
+                codAmount
+            };
+        }
+
+        function renderDailyMIS() {
+            const selectedDate = document.getElementById('mis-selected-date')?.value || toLocalDateStr(new Date());
+            const dateMode = document.getElementById('mis-date-mode')?.value || 'ORDER_DATE';
+            const mis = computeDailyMISData(selectedDate, dateMode);
+
+            document.getElementById('mis-kpi-cards').innerHTML = `
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase">Total Orders</span>
+                    <p class="text-xl font-extrabold text-slate-900 mt-1">${mis.totalCount}</p>
+                    <span class="text-[10px] text-slate-500">${mis.activeCount} Active • ${mis.cancelledCount} Canc.</span>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200">
+                    <span class="text-[10px] font-bold text-emerald-800 uppercase">Net Revenue</span>
+                    <p class="text-xl font-mono font-extrabold text-farm-700 mt-1">₹${mis.grossRevenue}</p>
+                    <span class="text-[10px] text-emerald-700">Excl. cancelled</span>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                    <span class="text-[10px] font-bold text-slate-500 uppercase">Avg Order Value</span>
+                    <p class="text-xl font-mono font-extrabold text-slate-900 mt-1">₹${mis.avgOrderValue}</p>
+                    <span class="text-[10px] text-slate-500">Per active basket</span>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200">
+                    <span class="text-[10px] font-bold text-amber-800 uppercase">Total Produce Wt</span>
+                    <p class="text-xl font-mono font-extrabold text-amber-900 mt-1">${formatWeightDisplay(mis.totalWeightGrams)}</p>
+                    <span class="text-[10px] text-amber-800">Dispatch volume</span>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-200">
+                    <span class="text-[10px] font-bold text-blue-800 uppercase">In Pipeline</span>
+                    <p class="text-xl font-extrabold text-blue-700 mt-1">${mis.pendingCount}</p>
+                    <span class="text-[10px] text-blue-700">Scheduled / Packed</span>
+                </div>
+                <div class="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200">
+                    <span class="text-[10px] font-bold text-emerald-800 uppercase">Delivered</span>
+                    <p class="text-xl font-extrabold text-emerald-700 mt-1">${mis.deliveredCount}</p>
+                    <span class="text-[10px] text-emerald-700">Completed drops</span>
+                </div>
+            `;
+
+            document.getElementById('mis-slot-breakdown').innerHTML = mis.slotStats.map(s => `
+                <div class="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <span class="font-mono font-extrabold text-slate-900">${s.slot}</span>
+                        <span class="block text-[11px] text-slate-500 mt-0.5">Weight: <strong>${formatWeightDisplay(s.weightGrams)}</strong></span>
+                    </div>
+                    <div class="text-right">
+                        <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-extrabold text-[11px]">${s.count} Orders</span>
+                        <span class="block font-mono font-bold text-slate-900 mt-0.5">₹${s.revenue}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('mis-payment-status-breakdown').innerHTML = `
+                <div class="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <span class="font-extrabold text-slate-900">Instant UPI Payments</span>
+                        <span class="block text-[11px] text-slate-500">${mis.upiOrdersCount} prepaid orders</span>
+                    </div>
+                    <span class="font-mono font-extrabold text-sm text-farm-700">₹${mis.upiAmount}</span>
+                </div>
+                <div class="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <span class="font-extrabold text-slate-900">Cash on Delivery (COD)</span>
+                        <span class="block text-[11px] text-slate-500">${mis.codOrdersCount} doorstep collection orders</span>
+                    </div>
+                    <span class="font-mono font-extrabold text-sm text-amber-700">₹${mis.codAmount}</span>
+                </div>
+                <div class="p-3 rounded-xl bg-white border border-slate-200 flex items-center justify-between">
+                    <div>
+                        <span class="font-extrabold text-slate-900">Fulfillment Completion Rate</span>
+                        <span class="block text-[11px] text-slate-500">${mis.deliveredCount} of ${mis.activeCount} active orders delivered</span>
+                    </div>
+                    <span class="font-mono font-extrabold text-sm text-slate-900">${mis.activeCount > 0 ? Math.round((mis.deliveredCount / mis.activeCount) * 100) : 0}%</span>
+                </div>
+            `;
+
+            const tbody = document.getElementById('mis-orders-table-body');
+            if (mis.matchedOrders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="py-10 text-center text-slate-400 font-semibold">No orders recorded for ${selectedDate}.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = mis.matchedOrders.map(o => {
+                const wtGrams = (o.items || []).reduce((acc, item) => acc + (resolveCartItemWeightGrams(item) * (Number(item.qty) || 1)), 0);
+                return `
+                    <tr class="hover:bg-slate-50">
+                        <td class="py-3 px-3 font-mono font-extrabold text-slate-900">#${o.id}</td>
+                        <td class="py-3 px-3 text-slate-600">${o.orderDate} ${new Date(o.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+                        <td class="py-3 px-3">
+                            <span class="font-bold text-slate-800 block">${o.deliveryDate}</span>
+                            <span class="text-[10px] font-mono text-farm-700">${o.deliverySlot}</span>
+                        </td>
+                        <td class="py-3 px-3">
+                            <span class="font-bold text-slate-900 block">${o.customer.name}</span>
+                            <span class="text-[10px] text-slate-500">${o.customer.phone}</span>
+                        </td>
+                        <td class="py-3 px-3 text-right font-mono font-bold text-slate-700">${formatWeightDisplay(wtGrams)}</td>
+                        <td class="py-3 px-3">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${o.paymentMethod === 'UPI' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${o.paymentMethod}</span>
+                        </td>
+                        <td class="py-3 px-3 text-right font-mono font-extrabold text-slate-900">₹${o.totals.total}</td>
+                        <td class="py-3 px-3">
+                            <span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${o.status === 'DELIVERED' ? 'bg-emerald-100 text-emerald-800' : o.status === 'CANCELLED' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-800'}">${o.status}</span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function exportMisCSV() {
+            const selectedDate = document.getElementById('mis-selected-date').value;
+            const dateMode = document.getElementById('mis-date-mode').value;
+            const mis = computeDailyMISData(selectedDate, dateMode);
+            if (mis.matchedOrders.length === 0) {
+                showToast('No orders to export for selected MIS date.', 'warning');
+                return;
+            }
+            const rows = [
+                ['Order ID', 'Order Placed Date', 'Order Placed Time', 'Scheduled Delivery Date', 'Delivery Slot', 'Customer Name', 'Phone', 'Address', 'Total Weight (g)', 'Payment Method', 'Payment Status', 'Grand Total (INR)', 'Order Status']
+            ];
+            mis.matchedOrders.forEach(o => {
+                const wtGrams = (o.items || []).reduce((acc, item) => acc + (resolveCartItemWeightGrams(item) * (Number(item.qty) || 1)), 0);
+                rows.push([
+                    o.id,
+                    o.orderDate,
+                    new Date(o.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                    o.deliveryDate,
+                    `"${o.deliverySlot}"`,
+                    `"${o.customer.name}"`,
+                    o.customer.phone,
+                    `"${o.customer.address.replace(/"/g, '""')}"`,
+                    wtGrams,
+                    o.paymentMethod,
+                    o.paymentStatus,
+                    o.totals.total,
+                    o.status
+                ]);
+            });
+            downloadCSVFile(rows, `Daily_MIS_${dateMode}_${selectedDate}.csv`);
+            showToast('Daily MIS CSV exported!', 'success');
+        }
+
+        function downloadCSVFile(rows, filename) {
+            const csvContent = 'data:text/csv;charset=utf-8,' + rows.map(r => r.join(',')).join('\n');
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function handleNewProductPhotoUpload(event) {
@@ -2152,8 +2901,9 @@
             const badge = document.getElementById('new-prod-badge').value.trim() || 'Fresh';
             const desc = document.getElementById('new-prod-desc').value.trim() || `Fresh ${name}.`;
             const finalImage = state.newProductPhotoBase64 || document.getElementById('new-prod-image-url').value.trim() || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80';
+            const weightGrams = parseWeightGramsFromText(unit) || 1000;
 
-            state.products.unshift({ id: 'ff-' + Date.now(), name, category, unit, price, stock, badge, veg: true, desc, image: finalImage });
+            state.products.unshift({ id: 'ff-' + Date.now(), name, category, unit, weightGrams, price, stock, badge, veg: true, desc, image: finalImage });
             state.newProductPhotoBase64 = '';
             document.getElementById('add-product-form').reset();
             saveState();
@@ -2170,7 +2920,7 @@
                         <img src="${item.image}" class="w-10 h-10 rounded-xl object-cover border">
                         <div>
                             <h4 class="font-extrabold text-slate-900">${item.name}</h4>
-                            <span class="text-slate-400">₹${item.price} • Stock: ${item.stock}</span>
+                            <span class="text-slate-400">₹${item.price} (${item.unit}) • Stock: ${item.stock}</span>
                         </div>
                     </div>
                     <button onclick="deleteProductFromCatalog('${item.id}')" class="text-red-600 p-2 font-bold hover:bg-red-50 rounded-xl">Remove</button>
@@ -2286,6 +3036,10 @@
                                 <span class="font-mono font-extrabold text-base text-slate-900">#${order.id}</span>
                                 <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase bg-amber-100 text-amber-800">${order.status}</span>
                             </div>
+                            <div class="mt-2.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-[11px]">
+                                <span class="font-bold text-emerald-900">${order.deliveryDate}</span>
+                                <span class="font-mono font-extrabold text-farm-700">${order.deliverySlot}</span>
+                            </div>
                             <div class="my-4 space-y-2 text-xs">
                                 <p class="font-extrabold text-slate-900 text-sm">${order.customer.name} (${order.customer.phone})</p>
                                 <p class="text-slate-600 bg-slate-50 p-3 rounded-xl">${order.customer.address}</p>
@@ -2303,19 +3057,18 @@
                 `).join('');
             }
 
-            // Render Rider Log (In-Process and Completed Deliveries)
             const logList = document.getElementById('rider-log-list');
             const logOrders = state.orders.filter(o => ['READY', 'OUT_FOR_DELIVERY', 'DELIVERED', 'CANCELLED'].includes(o.status));
             if (logOrders.length === 0) {
                 logList.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">No delivery logs available.</p>`;
             } else {
                 logList.innerHTML = logOrders.map(o => `
-                    py-3 flex items-center justify-between text-xs
                     <div class="py-3 flex items-center justify-between text-xs gap-3">
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="font-mono font-bold text-slate-900">#${o.id}</span>
                                 <span class="px-2 py-0.5 rounded text-[10px] font-extrabold ${o.status === 'DELIVERED' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'}">${o.status}</span>
+                                <span class="text-[10px] font-mono text-slate-500">${o.deliveryDate} • ${o.deliverySlot}</span>
                             </div>
                             <p class="text-slate-500 mt-0.5">${o.customer.name} • ${o.customer.address}</p>
                         </div>
@@ -2345,6 +3098,7 @@
             container.innerHTML = `
                 <div style="font-family: Arial; padding: 24px; max-width: 600px;">
                     <h2>FARM FRESH INVOICE #${order.id}</h2>
+                    <p>Order Placed: ${order.orderDate} | Scheduled Delivery: <strong>${order.deliveryDate} (${order.deliverySlot})</strong></p>
                     <p>Customer: ${order.customer.name} (${order.customer.phone})</p>
                     <p>Address: ${order.customer.address}</p>
                     <hr/>
