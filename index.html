@@ -866,13 +866,15 @@
     <!-- JAVASCRIPT APPLICATION LOGIC WITH SUPABASE CLOUD SYNC -->
     <script>
         // Supabase Configuration
-        const SUPABASE_URL = 'https://YOUR_SUPABASE_PROJECT_URL.supabase.co'; // Replace with your project URL
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your anon/public key
+        const SUPABASE_URL = 'https://vcmprujvfeeqgkxvdqlv.supabase.co/rest/v1/';
+        const SUPABASE_ANON_KEY = 'sb_publishable_jcK_YFu_13A9MO_MOZ0cJQ_AkVdQROJ';
 
         let supabaseClient = null;
         try {
-            if (window.supabase && SUPABASE_URL !== 'https://YOUR_SUPABASE_PROJECT_URL.supabase.co') {
-                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            if (window.supabase) {
+                // Ensure correct client initialization format
+                const cleanUrl = SUPABASE_URL.replace(/\/rest\/v1\/?$/, '');
+                supabaseClient = window.supabase.createClient(cleanUrl, SUPABASE_ANON_KEY);
             }
         } catch (e) {
             console.warn('Supabase initialization warning:', e);
