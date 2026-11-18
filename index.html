@@ -15,6 +15,8 @@
     <!-- Leaflet Maps CSS & JS for Interactive GPS Pinning & 3km Radius Visualization -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     
@@ -249,7 +251,7 @@
                 <div class="flex items-center gap-2.5">
                     <span class="px-2.5 py-1 rounded-lg bg-farm-600 text-xs font-extrabold uppercase tracking-wider">Store Ops KDS</span>
                     <span class="text-xs font-mono text-emerald-400 flex items-center gap-1">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Live Sync Active
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Live Supabase Cloud Sync
                     </span>
                 </div>
                 <h2 class="text-xl sm:text-2xl font-extrabold mt-1.5">Packing Station & Store Control</h2>
@@ -861,8 +863,21 @@
     <div id="pdf-receipt-template" class="hidden"></div>
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <!-- JAVASCRIPT APPLICATION LOGIC WITH SUPABASE CLOUD SYNC -->
     <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://YOUR_SUPABASE_PROJECT_URL.supabase.co'; // Replace with your project URL
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Replace with your anon/public key
+
+        let supabaseClient = null;
+        try {
+            if (window.supabase && SUPABASE_URL !== 'https://YOUR_SUPABASE_PROJECT_URL.supabase.co') {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        } catch (e) {
+            console.warn('Supabase initialization warning:', e);
+        }
+
         const DEFAULT_PRODUCTS = [
             {
                 id: 'ff-1',
@@ -1343,15 +1358,13 @@
         let kdsStoreMarker = null;
         let kdsRadiusCircle = null;
 
-        function loadState() {
+        async function loadState() {
             try {
-                const savedOrders = localStorage.getItem('ff_orders');
                 const savedCart = localStorage.getItem('ff_cart');
                 const savedProducts = localStorage.getItem('ff_products');
                 const savedConfig = localStorage.getItem('ff_config');
                 const savedStoreOpen = localStorage.getItem('ff_store_open');
 
-                if (savedOrders) state.orders = JSON.parse(savedOrders);
                 if (savedCart) state.cart = JSON.parse(savedCart);
                 if (savedProducts) {
                     state.products = JSON.parse(savedProducts);
@@ -1362,9 +1375,103 @@
                     state.config = { ...state.config, ...JSON.parse(savedConfig) };
                 }
                 if (savedStoreOpen !== null) state.storeOpen = JSON.parse(savedStoreOpen);
+
+                // Fetch orders from Supabase if client is configured
+                if (supabaseClient) {
+                    await fetchOrdersFromCloud();
+                } else {
+                    const savedOrders = localStorage.getItem('ff_orders');
+                    if (savedOrders) state.orders = JSON.parse(savedOrders);
+                }
             } catch (e) {
                 console.warn('State load error:', e);
                 state.products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+            }
+        }
+
+        async function fetchOrdersFromCloud() {
+            if (!supabaseClient) return;
+            const { data, error } = await supabaseClient
+                .from('orders')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching orders from Supabase:', error.message);
+                return;
+            }
+
+            if (data) {
+                state.orders = data.map(row => ({
+                    id: row.id,
+                    createdAt: row.created_at,
+                    customer: {
+                        name: row.customer_name,
+                        phone: row.customer_phone,
+                        address: row.customer_address,
+                        notes: row.customer_notes || '',
+                        lat: row.customer_lat || state.customerLocation.lat,
+                        lng: row.customer_lng || state.customerLocation.lng,
+                        distanceKm: row.customer_distance_km || 1.2
+                    },
+                    items: row.items,
+                    totals: row.totals,
+                    promoApplied: row.promo_applied || '',
+                    paymentMethod: row.payment_method,
+                    paymentStatus: row.payment_status,
+                    utrNumber: row.utr_number || '',
+                    status: row.status,
+                    cancelReason: row.cancel_reason || '',
+                    refundStatus: row.refund_status || ''
+                }));
+            }
+            refreshAllUI();
+        }
+
+        async function saveOrderToCloud(orderObj) {
+            if (!supabaseClient) return;
+            const { error } = await supabaseClient
+                .from('orders')
+                .upsert([{
+                    id: orderObj.id,
+                    created_at: orderObj.createdAt,
+                    customer_name: orderObj.customer.name,
+                    customer_phone: orderObj.customer.phone,
+                    customer_address: orderObj.customer.address,
+                    customer_notes: orderObj.customer.notes,
+                    customer_lat: orderObj.customer.lat,
+                    customer_lng: orderObj.customer.lng,
+                    customer_distance_km: orderObj.customer.distanceKm,
+                    items: orderObj.items,
+                    totals: orderObj.totals,
+                    promo_applied: orderObj.promoApplied,
+                    payment_method: orderObj.paymentMethod,
+                    payment_status: orderObj.paymentStatus,
+                    utr_number: orderObj.utrNumber,
+                    status: orderObj.status,
+                    cancel_reason: orderObj.cancelReason,
+                    refund_status: orderObj.refundStatus
+                }]);
+
+            if (error) {
+                console.error('Error saving order to Supabase:', error.message);
+                showToast('Cloud sync warning: Order stored locally.', 'warning');
+            }
+        }
+
+        async function updateOrderStatusInCloud(orderId, newStatus, cancelReason = '', refundStatus = '') {
+            if (!supabaseClient) return;
+            const updatePayload = { status: newStatus };
+            if (cancelReason) updatePayload.cancel_reason = cancelReason;
+            if (refundStatus) updatePayload.refund_status = refundStatus;
+
+            const { error } = await supabaseClient
+                .from('orders')
+                .update(updatePayload)
+                .eq('id', orderId);
+
+            if (error) {
+                console.error('Error updating order status in Supabase:', error.message);
             }
         }
 
@@ -1387,11 +1494,22 @@
             }
         });
 
-        window.addEventListener('DOMContentLoaded', () => {
-            loadState();
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadState();
             renderCategories();
             refreshAllUI();
             lucide.createIcons();
+
+            // Initialize Supabase Realtime Subscription if client is ready
+            if (supabaseClient) {
+                supabaseClient
+                    .channel('public:orders')
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, payload => {
+                        console.log('Realtime order sync update received:', payload);
+                        fetchOrdersFromCloud();
+                    })
+                    .subscribe();
+            }
         });
 
         function refreshAllUI() {
@@ -2280,7 +2398,7 @@
             finalizeOrder(state.pendingOrderDraft);
         }
 
-        function finalizeOrder(orderObj) {
+        async function finalizeOrder(orderObj) {
             orderObj.items.forEach(ordered => {
                 const prod = state.products.find(p => p.id === ordered.itemId);
                 if (prod) {
@@ -2292,6 +2410,9 @@
             state.cart = [];
             state.pendingOrderDraft = null;
             saveState();
+
+            // Sync with Supabase cloud
+            await saveOrderToCloud(orderObj);
 
             toggleCartDrawer(false);
             refreshAllUI();
@@ -2455,7 +2576,7 @@
             document.getElementById('cancel-modal').classList.add('hidden');
         }
 
-        function confirmOrderCancellation() {
+        async function confirmOrderCancellation() {
             const order = state.orders.find(o => o.id === state.cancelingOrderId);
             if (!order) return;
 
@@ -2463,12 +2584,16 @@
             order.status = 'CANCELLED';
             order.cancelReason = reason;
 
+            let refundRef = '';
             if (order.paymentStatus === 'PAID_UPI') {
                 const refId = 'RFND-' + Math.floor(100000 + Math.random() * 900000);
                 order.refundStatus = `Instant UPI Refund Initiated (Ref: ${refId})`;
+                refundRef = order.refundStatus;
             }
 
             saveState();
+            await updateOrderStatusInCloud(order.id, 'CANCELLED', reason, refundRef);
+
             closeCancelModal();
             refreshAllUI();
             renderMyOrdersList();
@@ -2965,11 +3090,14 @@
             lucide.createIcons();
         }
 
-        function updateOrderStatus(orderId, newStatus) {
+        async function updateOrderStatus(orderId, newStatus) {
             const order = state.orders.find(o => o.id === orderId);
             if (!order) return;
             order.status = newStatus;
             saveState();
+
+            await updateOrderStatusInCloud(orderId, newStatus);
+
             refreshAllUI();
             showToast(`Order #${orderId} updated to ${newStatus.replace(/_/g, ' ')}`, 'success');
         }
@@ -3093,4 +3221,3 @@
     </script>
 </body>
 </html>
-```eof
