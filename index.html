@@ -1,0 +1,3096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Fresh | Fresh Produce & Live Store Ops</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- html2pdf for direct PDF receipt download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- QRCode.js for dynamic UPI QR generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Leaflet Maps CSS & JS for Interactive GPS Pinning & 3km Radius Visualization -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        farm: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#065f46',
+                            900: '#064e3b',
+                        },
+                        harvest: {
+                            50: '#fefce8',
+                            100: '#fef9c3',
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbars & Animations */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(22, 163, 74, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(22, 163, 74, 0); }
+        }
+        .animate-pulse-ring {
+            animation: pulse-ring 2s infinite;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-[#f8faf7] text-slate-900 font-sans antialiased selection:bg-farm-600 selection:text-white">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-emerald-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+            <!-- Brand Identity -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('customer')">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-farm-600 to-farm-800 flex items-center justify-center text-white shadow-md shadow-farm-600/20">
+                    <span class="text-xl leading-none">🧺</span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900">Farm Fresh</h1>
+                        <span id="store-status-badge" class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Open Now
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-slate-500 font-medium hidden sm:block">Farm-to-Doorstep Fresh Fruits & Vegetables • Connaught Place</p>
+                </div>
+            </div>
+
+            <!-- Role Switcher Tabs -->
+            <div class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200">
+                <button id="nav-customer" onclick="switchView('customer')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-900 shadow-sm">
+                    <i data-lucide="shopping-basket" class="w-4 h-4 text-farm-600"></i>
+                    <span>Storefront</span>
+                </button>
+                <button id="nav-kitchen" onclick="promptKitchenAccess()" class="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-slate-900">
+                    <i data-lucide="package-check" class="w-4 h-4"></i>
+                    <span class="hidden md:inline">Store Ops KDS</span>
+                    <span class="md:hidden">Ops</span>
+                    <span id="kds-badge" class="hidden bg-farm-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">0</span>
+                </button>
+                <button id="nav-rider" onclick="promptRiderAccess()" class="relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-slate-900">
+                    <i data-lucide="bike" class="w-4 h-4"></i>
+                    <span class="hidden md:inline">Rider Portal</span>
+                    <span class="md:hidden">Rider</span>
+                    <span id="rider-badge" class="hidden bg-amber-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">0</span>
+                </button>
+            </div>
+
+            <!-- Right Actions -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button onclick="openMyOrdersModal()" class="relative flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs sm:text-sm font-bold bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200 transition">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-farm-600"></i>
+                    <span class="hidden sm:inline">My Orders</span>
+                    <span id="active-orders-count" class="hidden bg-farm-600 text-white text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+                </button>
+
+                <button id="header-cart-btn" onclick="toggleCartDrawer(true)" class="relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-900 text-white hover:bg-slate-800 transition shadow-sm">
+                    <i data-lucide="shopping-bag" class="w-4 h-4 text-harvest-400"></i>
+                    <span id="header-cart-total">₹0</span>
+                    <span id="header-cart-count" class="bg-farm-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- VIEW 1: CUSTOMER STOREFRONT -->
+    <main id="view-customer" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28">
+        
+        <!-- Store Closed Banner -->
+        <div id="store-closed-banner" class="hidden mb-6 bg-red-600 text-white rounded-2xl p-4 shadow-lg flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+                    <i data-lucide="clock" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold text-base">Store is Currently Closed for New Orders</h3>
+                    <p class="text-xs text-red-100">Our sorting & packing station has closed for the day. Reopens tomorrow at 7:00 AM.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Promotional Banner -->
+        <div id="promo-hero-banner" class="mb-6 bg-gradient-to-r from-amber-50 via-yellow-50 to-emerald-50 border border-amber-200 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-harvest-400/30 text-amber-800 flex items-center justify-center shrink-0">
+                    <i data-lucide="tag" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 rounded-md bg-amber-500 text-slate-950 text-[10px] font-extrabold uppercase tracking-wider">Harvest Offer</span>
+                        <span id="banner-promo-title" class="font-extrabold text-sm text-slate-900">Get 15% OFF on Fresh Produce!</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-0.5">Apply code <strong id="banner-promo-code" class="font-mono text-farm-700 bg-white px-1.5 py-0.5 rounded border border-emerald-200">FRESH15</strong> at checkout for instant savings.</p>
+                </div>
+            </div>
+            <button onclick="copyAndApplyPromoFromBanner()" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center justify-center gap-1.5 shrink-0 transition">
+                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-harvest-400"></i> Apply in Cart
+            </button>
+        </div>
+
+        <!-- Hero Section with Big Farm Fresh Logo Emblem -->
+        <div class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#064e3b] via-[#065f46] to-[#15803d] text-white p-6 sm:p-10 mb-8 shadow-xl">
+            <div class="relative z-10 max-w-2xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/25 text-harvest-400 text-xs font-bold mb-4">
+                    <i data-lucide="sprout" class="w-3.5 h-3.5"></i>
+                    <span>Direct From Farm • Harvested Daily • 100% Freshness Guaranteed</span>
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight mb-3">
+                    Farm-picked fruits & crisp veggies, delivered fresh.
+                </h2>
+                <p class="text-emerald-100 text-sm sm:text-base mb-6 max-w-xl">
+                    Harvested daily from local farms. Sorted, weighed & packed to order in 30 mins.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 max-w-lg bg-white/10 p-1.5 rounded-2xl border border-white/20 backdrop-blur-sm">
+                    <div class="flex items-center gap-2 px-3 py-2 flex-1">
+                        <i data-lucide="navigation" class="w-4 h-4 text-harvest-400 shrink-0"></i>
+                        <input id="hero-location-input" type="text" value="Block B, Connaught Place, New Delhi" class="bg-transparent text-white placeholder-emerald-200 text-xs sm:text-sm font-medium focus:outline-none w-full" placeholder="Enter your delivery area...">
+                    </div>
+                    <button onclick="captureCustomerGPS('hero')" class="px-4 py-2 rounded-xl bg-harvest-500 hover:bg-harvest-400 text-slate-950 font-extrabold text-xs transition flex items-center justify-center gap-1.5 shrink-0 shadow-sm">
+                        <i data-lucide="crosshair" class="w-3.5 h-3.5"></i> Use Live GPS
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Right Side Big Farm Fresh Logo Emblem -->
+            <div class="hidden lg:flex absolute right-6 top-1/2 -translate-y-1/2 items-center justify-center pointer-events-none select-none z-20">
+                <div class="relative w-72 h-72 rounded-3xl bg-white/10 border border-white/25 backdrop-blur-md flex flex-col items-center justify-center shadow-2xl p-4 text-center overflow-hidden">
+                    <div class="absolute top-2 right-3 bg-harvest-400 text-slate-950 text-[11px] font-extrabold px-3 py-1 rounded-full shadow-md uppercase tracking-wider z-30">
+                        30 Min Express
+                    </div>
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Farm%20Fresh%20Logo.png-N8Zq9s3h6v4b2c1x5z7m8l9k0j1h2g.jpeg" alt="Farm Fresh Logo Emblem" class="w-full h-full object-contain rounded-2xl opacity-95 transition duration-500 pointer-events-auto" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80'">
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Order Banner -->
+        <div id="live-order-tracker-banner" class="hidden mb-8 bg-white rounded-2xl border-2 border-farm-600 p-4 sm:p-5 shadow-lg shadow-farm-600/10 cursor-pointer hover:bg-emerald-50/30 transition" onclick="openMyOrdersModal()">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-12 h-12 rounded-2xl bg-farm-600 text-white flex items-center justify-center animate-pulse-ring shrink-0">
+                        <i data-lucide="package-search" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-farm-700">Live Order in Progress</span>
+                            <span id="banner-order-id" class="text-xs font-mono font-bold bg-slate-100 px-2 py-0.5 rounded text-slate-700">#FF-0000</span>
+                        </div>
+                        <h3 id="banner-order-status" class="font-extrabold text-base sm:text-lg text-slate-900 mt-0.5">Order Received • Sorting & Weighing</h3>
+                        <p id="banner-order-sub" class="text-xs text-slate-500">Tap to view live tracking, rider details, or download PDF invoice</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 self-end sm:self-center">
+                    <span class="px-4 py-2 rounded-xl bg-farm-600 text-white font-bold text-xs flex items-center gap-1.5">
+                        Track Live <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Search & Category Filter Bar -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div id="category-tabs" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1"></div>
+
+            <div class="flex items-center gap-2">
+                <div class="relative flex-1 sm:w-64">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input id="menu-search" type="text" oninput="renderMenu()" placeholder="Search vegetables, fruits..." class="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-sm focus:outline-none focus:border-farm-600">
+                </div>
+                <button id="veg-only-btn" onclick="toggleVegOnly()" class="px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-emerald-50 flex items-center gap-1.5 shrink-0 transition">
+                    <span class="w-3 h-3 rounded-sm border-2 border-emerald-600 flex items-center justify-center">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                    </span>
+                    <span>Organic / Farm Pick</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Produce Sections Container -->
+        <div id="menu-sections-container" class="space-y-10"></div>
+    </main>
+
+    <!-- VIEW 2: STORE OPS & PACKING DISPLAY SYSTEM (KDS) -->
+    <main id="view-kitchen" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-20">
+        <div class="bg-slate-900 text-white rounded-3xl p-5 sm:p-6 mb-6 shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-2.5">
+                    <span class="px-2.5 py-1 rounded-lg bg-farm-600 text-xs font-extrabold uppercase tracking-wider">Store Ops KDS</span>
+                    <span class="text-xs font-mono text-emerald-400 flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Live Sync Active
+                    </span>
+                </div>
+                <h2 class="text-xl sm:text-2xl font-extrabold mt-1.5">Packing Station & Store Control</h2>
+                <p class="text-xs text-slate-400">Manage live orders, catalog items/photos/prices, promo offers, 3km delivery zones & portal PINs.</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+                <button id="kds-store-toggle" onclick="toggleStoreOpen()" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-2 transition">
+                    <i data-lucide="power" class="w-4 h-4"></i>
+                    <span id="kds-store-toggle-text">Store: OPEN (Accepting Orders)</span>
+                </button>
+
+                <div class="flex flex-wrap bg-slate-800 p-1 rounded-xl border border-slate-700 gap-1">
+                    <button id="kds-tab-orders" onclick="switchKdsTab('orders')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-farm-600 text-white transition">
+                        Live Order Queue
+                    </button>
+                    <button id="kds-tab-menu" onclick="switchKdsTab('menu')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition">
+                        Catalog & Inventory
+                    </button>
+                    <button id="kds-tab-settings" onclick="switchKdsTab('settings')" class="px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition">
+                        Settings, Offers & 3km Zones
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- KDS TAB 1: LIVE ORDER QUEUE -->
+        <div id="kds-orders-section">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <span class="text-xs font-bold text-slate-500">New / Sorting</span>
+                    <p id="stat-new-orders" class="text-2xl font-extrabold text-farm-600 mt-1">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <span class="text-xs font-bold text-slate-500">Ready for Rider</span>
+                    <p id="stat-ready-orders" class="text-2xl font-extrabold text-amber-600 mt-1">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <span class="text-xs font-bold text-slate-500">Out for Delivery</span>
+                    <p id="stat-delivery-orders" class="text-2xl font-extrabold text-blue-600 mt-1">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <span class="text-xs font-bold text-slate-500">Today's Revenue</span>
+                    <p id="stat-revenue" class="text-2xl font-extrabold text-emerald-600 mt-1">₹0</p>
+                </div>
+            </div>
+
+            <div id="kds-orders-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+        </div>
+
+        <!-- KDS TAB 2: CATALOG & INVENTORY MANAGER -->
+        <div id="kds-menu-section" class="hidden space-y-6">
+            <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-farm-600">Catalog Builder</span>
+                        <h3 class="font-extrabold text-lg text-slate-900">Add New Fruit or Vegetable to Storefront</h3>
+                    </div>
+                </div>
+
+                <form id="add-product-form" onsubmit="handleAddNewProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Product Name *</label>
+                        <input id="new-prod-name" type="text" required placeholder="e.g. Kashmiri Gala Apples" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Category Section *</label>
+                        <select id="new-prod-category" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold bg-white focus:outline-none focus:border-farm-600">
+                            <option value="Vegetables">Vegetables (Fresh Vegetables)</option>
+                            <option value="Fruits">Fruits (Orchard Fruits)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Unit / Pack Size *</label>
+                        <input id="new-prod-unit" type="text" required placeholder="e.g. 1 kg, 500 g, 1 Dozen" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">Rate / Price (₹) *</label>
+                            <input id="new-prod-price" type="number" min="1" required placeholder="120" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono font-bold focus:outline-none focus:border-farm-600">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">Stock Qty *</label>
+                            <input id="new-prod-stock" type="number" min="0" required value="25" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono font-bold focus:outline-none focus:border-farm-600">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Badge / Tag (Optional)</label>
+                        <input id="new-prod-badge" type="text" placeholder="e.g. Organic, Farm Pick" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Upload Product Photo</label>
+                        <input id="new-prod-photo-file" type="file" accept="image/*" onchange="handleNewProductPhotoUpload(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-farm-700 hover:file:bg-emerald-100">
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Or Image URL</label>
+                        <input id="new-prod-image-url" type="url" placeholder="https://images.unsplash.com/..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
+                    </div>
+
+                    <div class="flex items-end gap-2">
+                        <img id="new-prod-preview" src="https://placehold.co/100x100/15803d/ffffff?text=Preview" class="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0" alt="Preview">
+                        <button type="submit" class="flex-1 py-2.5 px-4 rounded-xl bg-farm-600 hover:bg-farm-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1.5">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i> Add Product
+                        </button>
+                    </div>
+
+                    <div class="sm:col-span-2 lg:col-span-4">
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Short Description</label>
+                        <input id="new-prod-desc" type="text" placeholder="Farm origin, freshness note, or harvest details..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-slate-200 p-5 sm:p-6 shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                    <div>
+                        <h3 class="font-extrabold text-lg text-slate-900">Manage Catalog Rates, Stock Quantities & Photos</h3>
+                        <p class="text-xs text-slate-500">Edit prices (₹), adjust available stock counts, replace product photos, or remove items. Updates sync live to the Storefront.</p>
+                    </div>
+                    <span id="kds-catalog-count" class="px-3 py-1 rounded-full bg-emerald-50 text-farm-700 font-extrabold text-xs border border-emerald-200 self-start">0 Items</span>
+                </div>
+                <div id="kds-stock-list" class="divide-y divide-slate-100"></div>
+            </div>
+        </div>
+
+        <!-- KDS TAB 3: SETTINGS, OFFERS, 3KM RADIUS & PORTAL PINS -->
+        <div id="kds-settings-section" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center">
+                        <i data-lucide="shield-lock" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-base text-slate-900">Portal Access PIN Configuration</h3>
+                        <p class="text-xs text-slate-500">Configure 4-digit security PINs for Store Ops KDS and Rider Portal.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 pt-2">
+                    <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                        <label class="block text-[11px] font-extrabold text-slate-700 mb-1">Store Ops KDS PIN</label>
+                        <input id="cfg-kds-pin" type="text" maxlength="4" pattern="\d{4}" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono text-base font-extrabold tracking-widest text-center bg-white focus:outline-none focus:border-farm-600">
+                        <span class="text-[10px] text-slate-400 block mt-1">Default: 1234</span>
+                    </div>
+                    <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                        <label class="block text-[11px] font-extrabold text-slate-700 mb-1">Rider Portal PIN</label>
+                        <input id="cfg-rider-pin" type="text" maxlength="4" pattern="\d{4}" class="w-full px-3 py-2 rounded-xl border border-slate-300 font-mono text-base font-extrabold tracking-widest text-center bg-white focus:outline-none focus:border-farm-600">
+                        <span class="text-[10px] text-slate-400 block mt-1">Default: 5678</span>
+                    </div>
+                </div>
+
+                <button onclick="savePortalPinsConfig()" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs transition">
+                    Save Portal PINs
+                </button>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-4">
+                <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
+                            <i data-lucide="percent" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-base text-slate-900">Promo Discount Code Control</h3>
+                            <p class="text-xs text-slate-500">Toggle storewide promo code ON/OFF & set discount %.</p>
+                        </div>
+                    </div>
+
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input id="cfg-promo-enabled" type="checkbox" onchange="savePromoConfig()" class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-farm-600"></div>
+                    </label>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 pt-2">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Promo Code String</label>
+                        <input id="cfg-promo-code" type="text" placeholder="FRESH15" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono text-xs font-extrabold uppercase focus:outline-none focus:border-farm-600">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Discount Percentage (%)</label>
+                        <input id="cfg-promo-percent" type="number" min="1" max="90" placeholder="15" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono text-xs font-extrabold focus:outline-none focus:border-farm-600">
+                    </div>
+                </div>
+
+                <button onclick="savePromoConfig()" class="w-full py-2.5 rounded-xl bg-farm-600 hover:bg-farm-700 text-white font-extrabold text-xs transition">
+                    Update Discount Settings
+                </button>
+            </div>
+
+            <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-farm-700 flex items-center justify-center">
+                            <i data-lucide="radar" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-base text-slate-900">Base Store Location & 3 km Delivery Radius Controls</h3>
+                            <p class="text-xs text-slate-500">Independently toggle delivery within 3 km and beyond 3 km from your base store hub, and customize zone fees.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                    <div class="lg:col-span-1 space-y-3">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[11px] font-extrabold uppercase tracking-wider text-farm-700">Store Hub GPS</span>
+                                <button type="button" onclick="captureStoreHubGPS()" class="text-[10px] font-bold text-farm-600 hover:underline flex items-center gap-1">
+                                    <i data-lucide="crosshair" class="w-3 h-3"></i> Capture GPS
+                                </button>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Store Hub Label</label>
+                                <input id="cfg-store-label" type="text" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold bg-white">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Latitude</label>
+                                    <input id="cfg-store-lat" type="number" step="0.0001" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 font-mono text-xs bg-white">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-600 mb-0.5">Longitude</label>
+                                    <input id="cfg-store-lng" type="number" step="0.0001" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 font-mono text-xs bg-white">
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-slate-500">Tip: Click anywhere on the map to relocate the Base Store Hub.</p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl border-2 border-emerald-200 bg-emerald-50/40 space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="font-extrabold text-xs text-slate-900 block">Zone A: Within 3 km Radius</span>
+                                    <span class="text-[10px] text-slate-500">Hyperlocal express zone (&le; 3.0 km)</span>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input id="cfg-within-3km-enabled" type="checkbox" onchange="saveDeliveryZoneConfig()" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-farm-600"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between gap-2 pt-1">
+                                <label class="text-[11px] font-bold text-slate-700">Zone Delivery Fee (₹):</label>
+                                <input id="cfg-within-3km-fee" type="number" min="0" class="w-24 px-2.5 py-1 rounded-lg border border-slate-300 font-mono text-xs font-bold text-right bg-white">
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-2xl border-2 border-amber-200 bg-amber-50/40 space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <span class="font-extrabold text-xs text-slate-900 block">Zone B: Beyond 3 km Radius</span>
+                                    <span class="text-[10px] text-slate-500">Extended city delivery (&gt; 3.0 km)</span>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input id="cfg-beyond-3km-enabled" type="checkbox" onchange="saveDeliveryZoneConfig()" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-slate-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between gap-2 pt-1">
+                                <label class="text-[11px] font-bold text-slate-700">Extended Delivery Fee (₹):</label>
+                                <input id="cfg-beyond-3km-fee" type="number" min="0" class="w-24 px-2.5 py-1 rounded-lg border border-slate-300 font-mono text-xs font-bold text-right bg-white">
+                            </div>
+                        </div>
+
+                        <button onclick="saveDeliveryZoneConfig()" class="w-full py-2.5 rounded-xl bg-farm-600 hover:bg-farm-700 text-white font-extrabold text-xs transition shadow-sm">
+                            Save Store Hub & Radius Settings
+                        </button>
+                    </div>
+
+                    <div class="lg:col-span-2 flex flex-col">
+                        <div id="kds-store-map" class="w-full h-80 lg:h-full min-h-[320px] rounded-2xl border border-slate-200 z-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- VIEW 3: RIDER DELIVERY PORTAL -->
+    <main id="view-rider" class="hidden max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-20">
+        <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-3xl p-6 mb-6 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                    <i data-lucide="bike" class="w-7 h-7"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-xl font-extrabold">Rider Delivery Console</h2>
+                        <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-bold border border-emerald-500/30">On Duty</span>
+                    </div>
+                    <p class="text-xs text-slate-300 mt-0.5">Rider: <strong class="text-white">Vikram Singh</strong> • ID: #RDR-104 • Connaught Place Hub</p>
+                </div>
+            </div>
+            <div class="bg-white/10 px-4 py-2.5 rounded-2xl border border-white/10 text-right">
+                <span class="text-[11px] text-slate-300 block">Completed Deliveries</span>
+                <span id="rider-completed-count" class="text-xl font-extrabold text-amber-400">0</span>
+            </div>
+        </div>
+
+        <div id="rider-orders-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+    </main>
+
+    <!-- SLIDE-OVER CART & CHECKOUT DRAWER -->
+    <div id="cart-drawer-backdrop" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="toggleCartDrawer(false)"></div>
+    <aside id="cart-drawer" class="fixed top-0 right-0 z-50 h-full w-full max-w-md bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+            <div class="flex items-center gap-2.5">
+                <i data-lucide="shopping-basket" class="w-5 h-5 text-farm-600"></i>
+                <h3 class="font-extrabold text-lg text-slate-900">Your Produce Basket</h3>
+            </div>
+            <button onclick="toggleCartDrawer(false)" class="p-2 rounded-xl hover:bg-slate-200 text-slate-500 transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-5 space-y-6">
+            <div id="cart-empty-state" class="text-center py-12">
+                <div class="w-16 h-16 rounded-full bg-emerald-50 text-farm-600 flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="shopping-bag" class="w-8 h-8"></i>
+                </div>
+                <h4 class="font-bold text-slate-900">Your produce basket is empty</h4>
+                <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">Add fresh fruits, daily veggies, and leafy herbs from our harvest catalog.</p>
+            </div>
+
+            <div id="cart-items-container" class="space-y-3 hidden"></div>
+
+            <div id="checkout-form-section" class="hidden space-y-5 pt-4 border-t border-slate-200">
+                <div>
+                    <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-3">1. Delivery Details & Live GPS</h4>
+                    <div class="space-y-3">
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Your Name *</label>
+                                <input id="cust-name" type="text" placeholder="e.g. Rahul Sharma" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-700 mb-1">Mobile Number *</label>
+                                <input id="cust-phone" type="tel" placeholder="10-digit mobile" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="block text-[11px] font-bold text-slate-700">Complete Delivery Address *</label>
+                                <button type="button" onclick="captureCustomerGPS('checkout')" class="text-[11px] font-bold text-farm-600 hover:underline flex items-center gap-1">
+                                    <i data-lucide="crosshair" class="w-3 h-3"></i> Use Live GPS
+                                </button>
+                            </div>
+                            <textarea id="cust-address" rows="2" placeholder="Flat/House No., Building, Street, Landmark..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600"></textarea>
+
+                            <div class="mt-2.5 p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                                <div class="flex items-center justify-between gap-1">
+                                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">Pin Drop Location on Map</span>
+                                    <div class="flex items-center gap-1">
+                                        <button type="button" onclick="setDemoCustomerPreset('within')" class="px-2 py-0.5 rounded bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold transition" title="Test pin inside 3km">
+                                            Test &lt;3km Pin
+                                        </button>
+                                        <button type="button" onclick="setDemoCustomerPreset('beyond')" class="px-2 py-0.5 rounded bg-amber-100 hover:bg-amber-200 text-amber-800 text-[10px] font-bold transition" title="Test pin beyond 3km">
+                                            Test &gt;3km Pin
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div id="checkout-leaflet-map" class="w-full h-36 rounded-xl border border-slate-200 z-10"></div>
+
+                                <div id="delivery-distance-status" class="flex items-center justify-between text-[11px] font-bold px-2.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                    <span id="distance-km-label">1.2 km from store (Within 3 km Zone)</span>
+                                    <span id="distance-zone-badge" class="uppercase text-[10px] font-extrabold">Serviceable</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-700 mb-1">Packing / Handling Instructions (Optional)</label>
+                            <input id="cust-notes" type="text" placeholder="e.g. Semi-ripe bananas, ring doorbell twice..." class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-medium focus:outline-none focus:border-farm-600">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="checkout-promo-box">
+                    <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-2">2. Promo / Harvest Discount Code</h4>
+                    <div class="flex gap-2">
+                        <input id="checkout-promo-input" type="text" placeholder="Enter code e.g. FRESH15" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 font-mono text-xs font-extrabold uppercase focus:outline-none focus:border-farm-600">
+                        <button type="button" onclick="applyPromoCodeInCheckout()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition">
+                            Apply
+                        </button>
+                    </div>
+                    <p id="checkout-promo-feedback" class="text-[11px] font-semibold mt-1 hidden"></p>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-3">3. Payment Method</h4>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="payment-method" value="UPI" checked onchange="togglePaymentMethodUI()" class="peer sr-only">
+                            <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-farm-600 peer-checked:bg-emerald-50/50 transition text-center">
+                                <i data-lucide="qr-code" class="w-5 h-5 mx-auto mb-1 text-farm-600"></i>
+                                <span class="block text-xs font-extrabold text-slate-900">Instant UPI QR</span>
+                                <span class="block text-[10px] text-slate-500">GPay / PhonePe / Paytm</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="payment-method" value="COD" onchange="togglePaymentMethodUI()" class="peer sr-only">
+                            <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-farm-600 peer-checked:bg-emerald-50/50 transition text-center">
+                                <i data-lucide="banknote" class="w-5 h-5 mx-auto mb-1 text-emerald-600"></i>
+                                <span class="block text-xs font-extrabold text-slate-900">Cash on Delivery</span>
+                                <span class="block text-[10px] text-slate-500">Pay rider at doorstep</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2 text-xs">
+                    <div class="flex justify-between text-slate-600">
+                        <span>Produce Subtotal</span>
+                        <span id="bill-subtotal" class="font-bold text-slate-900">₹0</span>
+                    </div>
+                    <div id="bill-discount-row" class="hidden flex justify-between text-emerald-700 font-bold">
+                        <span id="bill-discount-label">Promo Discount (15%)</span>
+                        <span id="bill-discount-amount">-₹0</span>
+                    </div>
+                    <div class="flex justify-between text-slate-600">
+                        <span>Farm Cold-Chain & Packaging</span>
+                        <span id="bill-gst" class="font-bold text-slate-900">₹0</span>
+                    </div>
+                    <div class="flex justify-between text-slate-600">
+                        <span id="bill-delivery-label">Delivery Fee</span>
+                        <span id="bill-delivery" class="font-bold text-emerald-600">FREE</span>
+                    </div>
+                    <div class="pt-2 border-t border-slate-200 flex justify-between text-sm font-extrabold text-slate-900">
+                        <span>Grand Total</span>
+                        <span id="bill-total" class="text-farm-700">₹0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="cart-drawer-footer" class="hidden p-4 border-t border-slate-200 bg-white">
+            <button id="place-order-cta-btn" onclick="initiateOrderPlacement()" class="w-full py-3.5 px-5 rounded-2xl bg-farm-600 hover:bg-farm-700 text-white font-extrabold text-sm shadow-lg shadow-farm-600/25 flex items-center justify-between transition">
+                <span id="place-order-cta-text">Proceed to Place Order</span>
+                <span id="footer-cta-amount" class="bg-black/20 px-2.5 py-1 rounded-lg font-mono">₹0</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MODAL 1: DYNAMIC UPI QR PAYMENT GATEWAY -->
+    <div id="upi-payment-modal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
+            <div class="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-5 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-sm">Scan & Pay via UPI</h3>
+                        <p class="text-[11px] text-slate-300">Merchant: Farm Fresh • farmfresh@upi</p>
+                    </div>
+                </div>
+                <button onclick="closeUpiModal()" class="p-1.5 rounded-lg hover:bg-white/10 text-slate-300">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="p-6 text-center">
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Amount Payable</span>
+                <div id="upi-modal-amount" class="text-3xl font-extrabold text-slate-900 mt-0.5 mb-4 font-mono">₹0</div>
+
+                <div class="bg-white p-4 rounded-2xl border-2 border-dashed border-farm-300 inline-block mx-auto shadow-inner mb-3">
+                    <div id="upi-qrcode-canvas" class="flex items-center justify-center"></div>
+                </div>
+
+                <p class="text-xs text-slate-500 max-w-xs mx-auto mb-4">
+                    Scan with <strong>GPay, PhonePe, Paytm, or BHIM</strong>. Amount is auto-filled.
+                </p>
+
+                <a id="upi-deep-link" href="#" class="sm:hidden w-full mb-3 py-2.5 px-4 rounded-xl bg-blue-600 text-white font-bold text-xs flex items-center justify-center gap-2">
+                    <i data-lucide="smartphone" class="w-4 h-4"></i> Open Installed UPI App
+                </a>
+
+                <div class="text-left bg-slate-50 p-3.5 rounded-2xl border border-slate-200 mb-4">
+                    <label class="block text-[11px] font-extrabold text-slate-700 mb-1">
+                        Enter 12-Digit UPI Ref / UTR No. (Optional for Demo)
+                    </label>
+                    <input id="upi-utr-input" type="text" maxlength="12" placeholder="e.g. 429184729104" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono focus:outline-none focus:border-farm-600">
+                </div>
+
+                <button onclick="confirmUpiPayment()" class="w-full py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 transition">
+                    <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                    <span>I Have Completed the Payment</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: PRODUCE CUSTOMIZER -->
+    <div id="customizer-modal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-farm-600">Select Weight & Prep</span>
+                    <h3 id="cust-modal-title" class="font-extrabold text-lg text-slate-900">Produce Name</h3>
+                </div>
+                <button onclick="closeCustomizerModal()" class="p-2 rounded-xl hover:bg-slate-100 text-slate-500">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="p-5 space-y-5 max-h-[65vh] overflow-y-auto">
+                <div>
+                    <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-2.5">1. Pack Size / Weight</h4>
+                    <div class="space-y-2" id="variant-options-container"></div>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-2.5">2. Harvest Prep & Extras (Optional)</h4>
+                    <div class="space-y-2" id="addon-options-container"></div>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
+                <div>
+                    <span class="text-[11px] text-slate-500 block">Item Total</span>
+                    <span id="cust-modal-price" class="text-lg font-extrabold text-slate-900">₹0</span>
+                </div>
+                <button onclick="confirmCustomizedItem()" class="px-6 py-3 rounded-xl bg-farm-600 hover:bg-farm-700 text-white font-extrabold text-xs sm:text-sm shadow-md transition">
+                    Add to Basket
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: MY ORDERS & LIVE TRACKING -->
+    <div id="my-orders-modal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[88vh] flex flex-col overflow-hidden shadow-2xl">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                <div class="flex items-center gap-2.5">
+                    <i data-lucide="receipt" class="w-5 h-5 text-farm-600"></i>
+                    <h3 class="font-extrabold text-lg text-slate-900">My Orders & Live Tracking</h3>
+                </div>
+                <button onclick="closeMyOrdersModal()" class="p-2 rounded-xl hover:bg-slate-200 text-slate-500">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div id="my-orders-list" class="p-5 overflow-y-auto space-y-5 flex-1"></div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: ORDER CANCELLATION -->
+    <div id="cancel-modal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl">
+            <div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center mb-4">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-extrabold text-lg text-slate-900">Cancel Order <span id="cancel-modal-order-id" class="font-mono text-red-600"></span>?</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-4">Please select a reason for cancellation. If paid via UPI, an instant refund reference will be generated.</p>
+            
+            <select id="cancel-reason-select" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold mb-4 focus:outline-none focus:border-red-500">
+                <option value="Ordered by mistake">Ordered by mistake</option>
+                <option value="Want to change delivery address">Want to change delivery address</option>
+                <option value="Produce out of stock / Store request">Produce out of stock / Store request</option>
+                <option value="Packing time is too long">Packing time is too long</option>
+            </select>
+
+            <div class="flex items-center gap-2.5">
+                <button onclick="closeCancelModal()" class="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">Keep Order</button>
+                <button onclick="confirmOrderCancellation()" class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs transition">Confirm Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: KDS PIN ACCESS -->
+    <div id="pin-modal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-xs w-full p-6 text-center shadow-2xl">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-farm-700 flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="lock" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-extrabold text-base text-slate-900">Store Ops / Packing Access</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-4">Enter 4-digit Store Ops PIN</p>
+            <input id="kds-pin-input" type="password" maxlength="4" placeholder="••••" class="w-full text-center tracking-[0.5em] font-mono text-xl font-extrabold py-2.5 rounded-xl border border-slate-300 mb-4 focus:outline-none focus:border-farm-600">
+            <div class="flex gap-2">
+                <button onclick="closePinModal()" class="flex-1 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">Cancel</button>
+                <button onclick="verifyKitchenPin()" class="flex-1 py-2.5 rounded-xl bg-farm-600 text-white font-bold text-xs">Unlock Ops</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 6: RIDER PORTAL PIN ACCESS -->
+    <div id="rider-pin-modal" class="hidden fixed inset-0 z-50 bg-slate-900/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-xs w-full p-6 text-center shadow-2xl">
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto mb-3">
+                <i data-lucide="bike" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-extrabold text-base text-slate-900">Rider Portal Access</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-4">Enter 4-digit Rider Delivery PIN</p>
+            <input id="rider-pin-input" type="password" maxlength="4" placeholder="••••" class="w-full text-center tracking-[0.5em] font-mono text-xl font-extrabold py-2.5 rounded-xl border border-slate-300 mb-4 focus:outline-none focus:border-amber-600">
+            <div class="flex gap-2">
+                <button onclick="closeRiderPinModal()" class="flex-1 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs">Cancel</button>
+                <button onclick="verifyRiderPin()" class="flex-1 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs">Unlock Rider</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="pdf-receipt-template" class="hidden"></div>
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        const DEFAULT_PRODUCTS = [
+            {
+                id: 'ff-1',
+                name: 'Devgad Alphonso Mangoes',
+                category: 'Fruits',
+                unit: '1 kg (4–5 pcs)',
+                price: 299,
+                stock: 24,
+                badge: 'Farm Pick',
+                veg: true,
+                desc: 'Naturally carbide-free ripened Ratnagiri & Devgad Hapus mangoes. Sweet, aromatic, and fiberless.',
+                image: 'https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=600&q=80',
+                customizable: true,
+                variants: [
+                    { name: '1 kg Pack (4–5 pcs)', priceAdd: 0 },
+                    { name: '2 kg Family Crate (8–10 pcs)', priceAdd: 280 }
+                ],
+                addons: [
+                    { name: 'Ready-to-Eat Ripe Selection', price: 0 },
+                    { name: 'Semi-Ripe (Ripens in 2 days)', price: 0 }
+                ]
+            },
+            {
+                id: 'ff-2',
+                name: 'Organic Red Onions',
+                category: 'Vegetables',
+                unit: '1 kg Mesh Bag',
+                price: 48,
+                stock: 60,
+                badge: 'Organic',
+                veg: true,
+                desc: 'Crisp, pungent Nashik red onions sorted for uniform medium-large size with zero moisture damage.',
+                image: 'https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?auto=format&fit=crop&w=600&q=80',
+                customizable: true,
+                variants: [
+                    { name: '1 kg Mesh Bag', priceAdd: 0 },
+                    { name: '2 kg Value Pack', priceAdd: 42 }
+                ],
+                addons: [
+                    { name: 'Whole & Unpeeled (Standard)', price: 0 },
+                    { name: 'Peeled & Vacuum Sealed', price: 25 }
+                ]
+            },
+            {
+                id: 'ff-3',
+                name: 'Farm Fresh Hybrid Tomatoes',
+                category: 'Vegetables',
+                unit: '1 kg Pack',
+                price: 42,
+                stock: 45,
+                badge: 'Farm Pick',
+                veg: true,
+                desc: 'Firm, juicy, vine-ripened red tomatoes ideal for curries, gravies, and fresh salads.',
+                image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80',
+                customizable: true,
+                variants: [
+                    { name: '500 g Pack', priceAdd: -18 },
+                    { name: '1 kg Standard Pack', priceAdd: 0 },
+                    { name: '2 kg Bulk Pack', priceAdd: 38 }
+                ],
+                addons: [
+                    { name: 'Ozone-Washed & Air Dried', price: 10 }
+                ]
+            },
+            {
+                id: 'ff-4',
+                name: 'Himachal Royal Apples',
+                category: 'Fruits',
+                unit: '1 kg (5–6 pcs)',
+                price: 189,
+                stock: 30,
+                badge: 'Orchard Fresh',
+                veg: true,
+                desc: 'Crunchy, sweet orchard-fresh Kinnaur & Shimla Royal Gala apples with natural wax-free skin.',
+                image: 'https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80',
+                customizable: true,
+                variants: [
+                    { name: '1 kg Pack (5–6 pcs)', priceAdd: 0 },
+                    { name: '2 kg Gift Box', priceAdd: 175 }
+                ],
+                addons: [
+                    { name: 'Ozone-Washed & Ready to Bite', price: 15 }
+                ]
+            },
+            {
+                id: 'ff-5',
+                name: 'Fresh Baby Spinach (Palak)',
+                category: 'Vegetables',
+                unit: '250 g Bunch',
+                price: 35,
+                stock: 18,
+                badge: 'Organic',
+                veg: true,
+                desc: 'Tender, dark-green morning-harvested palak leaves, root-trimmed and packed in breathable pouches.',
+                image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&w=600&q=80',
+                customizable: true,
+                variants: [
+                    { name: '250 g Bunch', priceAdd: 0 },
+                    { name: '500 g Family Pack', priceAdd: 30 }
+                ],
+                addons: [
+                    { name: 'Triple-Washed & Chopped', price: 20 }
+                ]
+            },
+            {
+                id: 'ff-6',
+                name: 'Nagpur Mandarin Oranges',
+                category: 'Fruits',
+                unit: '1 kg Pack',
+                price: 110,
+                stock: 35,
+                badge: 'Seasonal',
+                veg: true,
+                desc: 'Easy-to-peel, tangy-sweet Nagpur santra bursting with Vitamin C and fresh citrus juice.',
+                image: 'https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-7',
+                name: 'Green Broccoli & Bell Pepper Duo',
+                category: 'Vegetables',
+                unit: '650 g Combo',
+                price: 135,
+                stock: 4,
+                badge: 'Organic',
+                veg: true,
+                desc: '1 crisp Ooty broccoli head (350g) paired with 1 red & 1 yellow hydroponic bell pepper.',
+                image: 'https://images.unsplash.com/photo-1584270354949-c26b0d5b4a0c?auto=format&fit=crop&w=600&q=80',
+                customizable: true,
+                variants: [
+                    { name: 'Regular Combo (650 g)', priceAdd: 0 },
+                    { name: 'Large Salad Pack (1.2 kg)', priceAdd: 110 }
+                ],
+                addons: [
+                    { name: 'Floret-Cut & Washed', price: 25 }
+                ]
+            },
+            {
+                id: 'ff-9',
+                name: 'Fresh Coriander & Mint Bunch',
+                category: 'Vegetables',
+                unit: '200 g Bunch',
+                price: 29,
+                stock: 28,
+                badge: 'Daily Herb',
+                veg: true,
+                desc: 'Fragrant desi dhania (100g) and garden-fresh pudina (100g) for chutneys, garnishes, and raitas.',
+                image: 'https://images.unsplash.com/photo-1628556270448-4d4e4148e1b1?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-10',
+                name: 'Robusta Cavendish Bananas',
+                category: 'Fruits',
+                unit: '1 Dozen (12 pcs)',
+                price: 68,
+                stock: 40,
+                badge: 'Farm Pick',
+                veg: true,
+                desc: 'Spotless, energy-rich Yelakki/Robusta bananas harvested at optimal maturity.',
+                image: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=600&q=80',
+                customizable: true,
+                variants: [
+                    { name: '6 Pcs (Half Dozen)', priceAdd: -32 },
+                    { name: '12 Pcs (1 Dozen)', priceAdd: 0 }
+                ],
+                addons: [
+                    { name: 'Yellow & Ready to Eat', price: 0 },
+                    { name: 'Greenish-Yellow (Lasts 4 days)', price: 0 }
+                ]
+            },
+            {
+                id: 'ff-11',
+                name: 'Hass Avocados (2 Pcs)',
+                category: 'Fruits',
+                unit: '2 Pcs (~400 g)',
+                price: 249,
+                stock: 12,
+                badge: 'Exotic',
+                veg: true,
+                desc: 'Creamy, buttery Hass avocados rich in healthy fats. Ideal for guacamole, toast, and smoothies.',
+                image: 'https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-12',
+                name: 'Desi Potatoes (Aloo)',
+                category: 'Vegetables',
+                unit: '1 kg Pack',
+                price: 34,
+                stock: 80,
+                badge: 'Daily Essential',
+                veg: true,
+                desc: 'Fresh starchy new-crop potatoes with clean skin, perfect for frying, boiling, and curries.',
+                image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-13',
+                name: 'Ginger (Adrak) & Garlic (Lahsun) Combo',
+                category: 'Vegetables',
+                unit: '250 g Pack',
+                price: 55,
+                stock: 35,
+                badge: 'Fresh Roots',
+                veg: true,
+                desc: 'Fibrous aromatic ginger and plump garlic cloves essential for daily Indian cooking bases.',
+                image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-14',
+                name: 'Green Chillies (Hari Mirch)',
+                category: 'Vegetables',
+                unit: '200 g Pack',
+                price: 22,
+                stock: 50,
+                badge: 'Spicy Fresh',
+                veg: true,
+                desc: 'Shiny, firm, and hot farm-picked green chillies sorted without stems.',
+                image: 'https://images.unsplash.com/photo-1588258219512-69ebfcdc9318?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-15',
+                name: 'Cauliflower (Phool Gobhi)',
+                category: 'Vegetables',
+                unit: '1 Pc (~600 g)',
+                price: 45,
+                stock: 25,
+                badge: 'Farm Pick',
+                veg: true,
+                desc: 'Snow-white, tight-curled cauliflower head packed fresh without outer leaves.',
+                image: 'https://images.unsplash.com/photo-1568584715575-94bcbe05e456?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-16',
+                name: 'Fresh Carrots (Gajar)',
+                category: 'Vegetables',
+                unit: '500 g Pack',
+                price: 38,
+                stock: 40,
+                badge: 'Seasonal',
+                veg: true,
+                desc: 'Sweet, crisp orange carrots rich in beta-carotene. Great for salads, juices, and halwa.',
+                image: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-17',
+                name: 'Fresh Cucumber (Kheera)',
+                category: 'Vegetables',
+                unit: '500 g Pack',
+                price: 30,
+                stock: 45,
+                badge: 'Salad Special',
+                veg: true,
+                desc: 'Juicy, crisp green salad cucumbers picked at peak hydration.',
+                image: 'https://images.unsplash.com/photo-1604977042046-52cff39ef349?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-18',
+                name: 'Fresh Lemon (Nimbu)',
+                category: 'Vegetables',
+                unit: '250 g (6-8 pcs)',
+                price: 35,
+                stock: 55,
+                badge: 'Juicy',
+                veg: true,
+                desc: 'Thin-skinned, fragrant yellow lemons packed with zesty citrus juice.',
+                image: 'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-19',
+                name: 'Capsicum (Shimla Mirch)',
+                category: 'Vegetables',
+                unit: '500 g Pack',
+                price: 48,
+                stock: 30,
+                badge: 'Farm Pick',
+                veg: true,
+                desc: 'Glossy, crisp green bell peppers ideal for stir-fries, pizzas, and sabzis.',
+                image: 'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-20',
+                name: 'Fresh Lady Finger (Bhindi)',
+                category: 'Vegetables',
+                unit: '500 g Pack',
+                price: 42,
+                stock: 35,
+                badge: 'Tender',
+                veg: true,
+                desc: 'Tender finger-length green okra pods sorted for zero fiber hardness.',
+                image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-21',
+                name: 'Fresh Green Peas (Matar)',
+                category: 'Vegetables',
+                unit: '500 g Pack',
+                price: 65,
+                stock: 22,
+                badge: 'Sweet & Tender',
+                veg: true,
+                desc: 'Plump pods filled with sweet, tender green peas.',
+                image: 'https://images.unsplash.com/photo-1590779035999-810a9c9b5427?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-22',
+                name: 'Fresh Papaya (Medium)',
+                category: 'Fruits',
+                unit: '1 Pc (~1.2 kg)',
+                price: 75,
+                stock: 15,
+                badge: 'Orchard Fresh',
+                veg: true,
+                desc: 'Tree-ripened sweet yellow papaya rich in papain enzymes and antioxidants.',
+                image: 'https://images.unsplash.com/photo-1517282054209-a78b5e28a512?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-23',
+                name: 'Fresh Pomegranate (Anar)',
+                category: 'Fruits',
+                unit: '1 kg (3–4 pcs)',
+                price: 210,
+                stock: 18,
+                badge: 'Ruby Gems',
+                veg: true,
+                desc: 'Deep ruby-red pomegranate arils bursting with sweet-tart juice and iron.',
+                image: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-24',
+                name: 'Sweet Pineapple (Ananas)',
+                category: 'Fruits',
+                unit: '1 Pc (~900 g)',
+                price: 95,
+                stock: 14,
+                badge: 'Tropical',
+                veg: true,
+                desc: 'Golden ripe Queen pineapple with sweet aromatic flesh and zero woody core.',
+                image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-25',
+                name: 'Fresh Watermelon (Tarbuj)',
+                category: 'Fruits',
+                unit: '1 Pc (~2.5 kg)',
+                price: 130,
+                stock: 10,
+                badge: 'Summer Chill',
+                veg: true,
+                desc: 'Juicy, sugar-red striped watermelon chilled and ready for slicing.',
+                image: 'https://images.unsplash.com/photo-1587049352847-4a222e784d38?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-26',
+                name: 'Fresh Muskmelon (Kharbooja)',
+                category: 'Fruits',
+                unit: '1 Pc (~1 kg)',
+                price: 85,
+                stock: 16,
+                badge: 'Sweet Aroma',
+                veg: true,
+                desc: 'Fragrant, net-skinned orange-flesh cantaloupe with high natural sweetness.',
+                image: 'https://images.unsplash.com/photo-1526318896980-cf78c088247c?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-27',
+                name: 'Fresh Black Grapes (Kali Draksh)',
+                category: 'Fruits',
+                unit: '500 g Punnet',
+                price: 120,
+                stock: 20,
+                badge: 'Seedless',
+                veg: true,
+                desc: 'Plump, crisp, and seedless sweet black grapes washed and ready to snack.',
+                image: 'https://images.unsplash.com/photo-1537640538966-79f365143fce?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-28',
+                name: 'Fresh Green Grapes (Sonaka)',
+                category: 'Fruits',
+                unit: '500 g Punnet',
+                price: 105,
+                stock: 22,
+                badge: 'Export Quality',
+                veg: true,
+                desc: 'Long, elongated seedless green grapes with a refreshing sweet-tart crunch.',
+                image: 'https://images.unsplash.com/photo-1596363505789-4e613c72d6a5?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-29',
+                name: 'Fresh Kiwi (Zespri SunGold/Green)',
+                category: 'Fruits',
+                unit: '3 Pcs Pack',
+                price: 145,
+                stock: 15,
+                badge: 'Imported',
+                veg: true,
+                desc: 'Vitamin C powerhouse kiwis with tangy emerald flesh and edible fuzzy skin.',
+                image: 'https://images.unsplash.com/photo-1585059895050-66c5b4f0b727?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            },
+            {
+                id: 'ff-30',
+                name: 'Fresh Dragon Fruit (Pitaya)',
+                category: 'Fruits',
+                unit: '1 Pc (~350 g)',
+                price: 110,
+                stock: 12,
+                badge: 'Exotic',
+                veg: true,
+                desc: 'Vibrant pink skin with sweet white flesh studded with edible black seeds.',
+                image: 'https://images.unsplash.com/photo-1527661591475-527312dd65f5?auto=format&fit=crop&w=600&q=80',
+                customizable: false
+            }
+        ];
+
+        let state = {
+            currentView: 'customer',
+            kdsTab: 'orders',
+            selectedCategory: 'All',
+            vegOnly: false,
+            storeOpen: true,
+            kitchenUnlocked: false,
+            riderUnlocked: false,
+            products: [],
+            cart: [],
+            orders: [],
+            appliedPromoCode: '',
+            newProductPhotoBase64: '',
+            config: {
+                kdsPin: '1234',
+                riderPin: '5678',
+                promoEnabled: true,
+                promoCode: 'FRESH15',
+                promoPercent: 15,
+                storeLabel: 'Connaught Place Hub, New Delhi',
+                storeLat: 28.6315,
+                storeLng: 77.2167,
+                within3kmEnabled: true,
+                within3kmFee: 0,
+                beyond3kmEnabled: true,
+                beyond3kmFee: 49
+            },
+            customerLocation: {
+                address: 'Block B, Connaught Place, New Delhi',
+                lat: 28.6380,
+                lng: 77.2210,
+                gpsVerified: true
+            },
+            activeCustomizingItem: null,
+            pendingOrderDraft: null,
+            cancelingOrderId: null
+        };
+
+        let checkoutMap = null;
+        let checkoutCustomerMarker = null;
+        let checkoutStoreMarker = null;
+        let checkoutRadiusCircle = null;
+
+        let kdsStoreMap = null;
+        let kdsStoreMarker = null;
+        let kdsRadiusCircle = null;
+
+        function loadState() {
+            try {
+                const savedOrders = localStorage.getItem('ff_orders');
+                const savedCart = localStorage.getItem('ff_cart');
+                const savedProducts = localStorage.getItem('ff_products');
+                const savedConfig = localStorage.getItem('ff_config');
+                const savedStoreOpen = localStorage.getItem('ff_store_open');
+
+                if (savedOrders) state.orders = JSON.parse(savedOrders);
+                if (savedCart) state.cart = JSON.parse(savedCart);
+                if (savedProducts) {
+                    state.products = JSON.parse(savedProducts);
+                } else {
+                    state.products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+                }
+                if (savedConfig) {
+                    state.config = { ...state.config, ...JSON.parse(savedConfig) };
+                }
+                if (savedStoreOpen !== null) state.storeOpen = JSON.parse(savedStoreOpen);
+            } catch (e) {
+                console.warn('State load error:', e);
+                state.products = JSON.parse(JSON.stringify(DEFAULT_PRODUCTS));
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem('ff_orders', JSON.stringify(state.orders));
+                localStorage.setItem('ff_cart', JSON.stringify(state.cart));
+                localStorage.setItem('ff_products', JSON.stringify(state.products));
+                localStorage.setItem('ff_config', JSON.stringify(state.config));
+                localStorage.setItem('ff_store_open', JSON.stringify(state.storeOpen));
+            } catch (e) {
+                console.warn('State save error:', e);
+            }
+        }
+
+        window.addEventListener('storage', (e) => {
+            if (e.key && e.key.startsWith('ff_')) {
+                loadState();
+                refreshAllUI();
+            }
+        });
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadState();
+            renderCategories();
+            refreshAllUI();
+            lucide.createIcons();
+        });
+
+        function refreshAllUI() {
+            updateStoreStatusUI();
+            updatePromoBannerUI();
+            renderMenu();
+            updateCartUI();
+            updateBadgesAndBanners();
+            if (state.currentView === 'kitchen') renderKDS();
+            if (state.currentView === 'rider') renderRiderPortal();
+            lucide.createIcons();
+        }
+
+        function switchView(viewName) {
+            state.currentView = viewName;
+            document.getElementById('view-customer').classList.toggle('hidden', viewName !== 'customer');
+            document.getElementById('view-kitchen').classList.toggle('hidden', viewName !== 'kitchen');
+            document.getElementById('view-rider').classList.toggle('hidden', viewName !== 'rider');
+
+            const tabs = {
+                customer: document.getElementById('nav-customer'),
+                kitchen: document.getElementById('nav-kitchen'),
+                rider: document.getElementById('nav-rider')
+            };
+            Object.entries(tabs).forEach(([key, el]) => {
+                if (key === viewName) {
+                    el.className = 'relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all bg-white text-slate-900 shadow-sm';
+                } else {
+                    el.className = 'relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold transition-all text-slate-600 hover:text-slate-900';
+                }
+            });
+
+            if (viewName === 'kitchen') renderKDS();
+            if (viewName === 'rider') renderRiderPortal();
+            lucide.createIcons();
+        }
+
+        function promptKitchenAccess() {
+            if (state.kitchenUnlocked) {
+                switchView('kitchen');
+                return;
+            }
+            document.getElementById('kds-pin-input').value = '';
+            document.getElementById('pin-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('kds-pin-input').focus(), 50);
+        }
+
+        function closePinModal() {
+            document.getElementById('pin-modal').classList.add('hidden');
+        }
+
+        function verifyKitchenPin() {
+            const pin = document.getElementById('kds-pin-input').value.trim();
+            if (pin === state.config.kdsPin) {
+                state.kitchenUnlocked = true;
+                closePinModal();
+                switchView('kitchen');
+                showToast('Store Ops & Packing KDS Unlocked', 'success');
+            } else {
+                showToast('Invalid Store Ops PIN!', 'error');
+            }
+        }
+
+        function promptRiderAccess() {
+            if (state.riderUnlocked) {
+                switchView('rider');
+                return;
+            }
+            document.getElementById('rider-pin-input').value = '';
+            document.getElementById('rider-pin-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('rider-pin-input').focus(), 50);
+        }
+
+        function closeRiderPinModal() {
+            document.getElementById('rider-pin-modal').classList.add('hidden');
+        }
+
+        function verifyRiderPin() {
+            const pin = document.getElementById('rider-pin-input').value.trim();
+            if (pin === state.config.riderPin) {
+                state.riderUnlocked = true;
+                closeRiderPinModal();
+                switchView('rider');
+                showToast('Rider Delivery Portal Unlocked', 'success');
+            } else {
+                showToast('Invalid Rider Portal PIN!', 'error');
+            }
+        }
+
+        function toggleStoreOpen() {
+            state.storeOpen = !state.storeOpen;
+            saveState();
+            refreshAllUI();
+            showToast(state.storeOpen ? 'Store is now OPEN for orders!' : 'Store marked CLOSED for new orders.', state.storeOpen ? 'success' : 'warning');
+        }
+
+        function updateStoreStatusUI() {
+            const badge = document.getElementById('store-status-badge');
+            const banner = document.getElementById('store-closed-banner');
+            const kdsBtn = document.getElementById('kds-store-toggle');
+            const kdsText = document.getElementById('kds-store-toggle-text');
+
+            if (state.storeOpen) {
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Open Now`;
+                badge.className = 'hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200';
+                banner.classList.add('hidden');
+                if (kdsBtn) {
+                    kdsBtn.className = 'px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-2 transition';
+                    kdsText.textContent = 'Store: OPEN (Accepting Orders)';
+                }
+            } else {
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Store Closed for Today`;
+                badge.className = 'hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-red-50 text-red-700 border border-red-200';
+                banner.classList.remove('hidden');
+                if (kdsBtn) {
+                    kdsBtn.className = 'px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold flex items-center gap-2 transition';
+                    kdsText.textContent = 'Store: CLOSED (Tap to Reopen)';
+                }
+            }
+        }
+
+        function updatePromoBannerUI() {
+            const promoBanner = document.getElementById('promo-hero-banner');
+            const checkoutPromoBox = document.getElementById('checkout-promo-box');
+
+            if (state.config.promoEnabled) {
+                promoBanner.classList.remove('hidden');
+                checkoutPromoBox.classList.remove('hidden');
+                document.getElementById('banner-promo-title').textContent = `Get ${state.config.promoPercent}% OFF on Fresh Produce!`;
+                document.getElementById('banner-promo-code').textContent = state.config.promoCode;
+            } else {
+                promoBanner.classList.add('hidden');
+                checkoutPromoBox.classList.add('hidden');
+                state.appliedPromoCode = '';
+            }
+        }
+
+        function copyAndApplyPromoFromBanner() {
+            if (!state.config.promoEnabled) return;
+            state.appliedPromoCode = state.config.promoCode;
+            document.getElementById('checkout-promo-input').value = state.config.promoCode;
+            updateCartUI();
+            toggleCartDrawer(true);
+            showToast(`Promo code ${state.config.promoCode} (${state.config.promoPercent}% OFF) applied!`, 'success');
+        }
+
+        function renderCategories() {
+            const tabs = [
+                { id: 'All', label: 'All Produce', icon: 'layout-grid' },
+                { id: 'Vegetables', label: 'Fresh Vegetables', icon: 'carrot' },
+                { id: 'Fruits', label: 'Orchard Fruits', icon: 'apple' }
+            ];
+            const container = document.getElementById('category-tabs');
+            container.innerHTML = tabs.map(t => {
+                const active = state.selectedCategory === t.id;
+                return `
+                    <button onclick="selectCategory('${t.id}')" class="px-4 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition flex items-center gap-1.5 ${
+                        active 
+                        ? 'bg-farm-600 text-white shadow-md shadow-farm-600/20' 
+                        : 'bg-white text-slate-600 hover:bg-emerald-50 border border-slate-200'
+                    }">
+                        <i data-lucide="${t.icon}" class="w-3.5 h-3.5"></i>
+                        <span>${t.label}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectCategory(cat) {
+            state.selectedCategory = cat;
+            renderCategories();
+            renderMenu();
+        }
+
+        function toggleVegOnly() {
+            state.vegOnly = !state.vegOnly;
+            const btn = document.getElementById('veg-only-btn');
+            if (state.vegOnly) {
+                btn.className = 'px-3 py-2 rounded-xl bg-emerald-600 text-white border border-emerald-600 text-xs font-bold flex items-center gap-1.5 shrink-0 transition shadow-sm';
+            } else {
+                btn.className = 'px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-emerald-50 flex items-center gap-1.5 shrink-0 transition';
+            }
+            renderMenu();
+        }
+
+        function renderProductCardHTML(item) {
+            const stockQty = Number(item.stock ?? 0);
+            const inStock = stockQty > 0;
+            const lowStock = inStock && stockQty <= 5;
+            const cartQty = state.cart
+                .filter(c => c.itemId === item.id)
+                .reduce((sum, c) => sum + c.qty, 0);
+
+            return `
+                <div class="bg-white rounded-3xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col ${!inStock ? 'opacity-75' : ''}">
+                    <div class="relative h-48 bg-slate-100 overflow-hidden">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover ${!inStock ? 'grayscale' : ''}" onerror="this.src='https://placehold.co/600x400/15803d/ffffff?text=Farm+Fresh+Produce'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                        
+                        <div class="absolute top-3 left-3 flex flex-wrap items-center gap-1.5">
+                            <span class="w-5 h-5 rounded-md bg-white/95 flex items-center justify-center shadow-sm">
+                                <span class="w-3 h-3 rounded-sm border-2 border-emerald-600 flex items-center justify-center">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                                </span>
+                            </span>
+                            ${item.badge ? `<span class="px-2.5 py-0.5 rounded-md bg-harvest-400 text-slate-950 text-[10px] font-extrabold uppercase tracking-wider shadow-sm">${item.badge}</span>` : ''}
+                            ${lowStock ? `<span class="px-2 py-0.5 rounded-md bg-amber-600 text-white text-[10px] font-extrabold shadow-sm">Only ${stockQty} left</span>` : ''}
+                        </div>
+
+                        ${!inStock ? `
+                            <div class="absolute inset-0 bg-slate-900/65 flex items-center justify-center">
+                                <span class="px-3.5 py-1.5 rounded-xl bg-red-600 text-white font-extrabold text-xs uppercase tracking-wider shadow-lg">Out of Stock</span>
+                            </div>
+                        ` : ''}
+
+                        <div class="absolute bottom-3 left-3 right-3 flex items-end justify-between text-white">
+                            <span class="text-xs font-bold bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-lg">${item.unit || '1 Pack'}</span>
+                            <span class="text-lg font-extrabold font-mono bg-farm-700/95 px-2.5 py-0.5 rounded-lg shadow">₹${item.price}</span>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-extrabold text-base text-slate-900 leading-snug">${item.name}</h3>
+                            <p class="text-xs text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">${item.desc || 'Freshly harvested daily from partner farms.'}</p>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <span class="text-[11px] font-semibold ${lowStock ? 'text-amber-600' : 'text-slate-400'}">
+                                ${!inStock ? 'Restocking soon' : `${stockQty} packs in stock`}
+                            </span>
+
+                            ${!inStock ? `
+                                <button disabled class="px-4 py-2 rounded-xl bg-slate-100 text-slate-400 font-bold text-xs cursor-not-allowed">Sold Out</button>
+                            ` : cartQty > 0 ? `
+                                <div class="flex items-center gap-2 bg-farm-600 text-white rounded-xl p-1 shadow-md shadow-farm-600/20">
+                                    <button onclick="decrementItemFromMenu('${item.id}')" class="w-7 h-7 rounded-lg hover:bg-black/20 flex items-center justify-center font-extrabold transition">-</button>
+                                    <span class="font-mono font-extrabold text-xs px-1.5">${cartQty}</span>
+                                    <button onclick="handleAddItemClick('${item.id}')" class="w-7 h-7 rounded-lg hover:bg-black/20 flex items-center justify-center font-extrabold transition">+</button>
+                                </div>
+                            ` : `
+                                <button onclick="handleAddItemClick('${item.id}')" class="px-4 py-2 rounded-xl bg-emerald-50 hover:bg-farm-600 text-farm-700 hover:text-white border border-emerald-200 hover:border-farm-600 font-extrabold text-xs flex items-center gap-1.5 transition">
+                                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMenu() {
+            const search = document.getElementById('menu-search').value.toLowerCase().trim();
+            const container = document.getElementById('menu-sections-container');
+
+            const filtered = state.products.filter(item => {
+                const matchesVeg = !state.vegOnly || (item.badge && (item.badge.toLowerCase().includes('organic') || item.badge.toLowerCase().includes('farm')));
+                const matchesSearch = !search || item.name.toLowerCase().includes(search) || (item.desc && item.desc.toLowerCase().includes(search));
+                return matchesVeg && matchesSearch;
+            });
+
+            const veggies = filtered.filter(i => i.category === 'Vegetables');
+            const fruits = filtered.filter(i => i.category === 'Fruits');
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-14 bg-white rounded-3xl border border-slate-200">
+                        <i data-lucide="search-x" class="w-10 h-10 text-slate-300 mx-auto mb-2"></i>
+                        <h3 class="font-bold text-slate-800">No matching produce found</h3>
+                        <p class="text-xs text-slate-500 mt-1">Try clearing your search or switching produce categories.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            let html = '';
+
+            if ((state.selectedCategory === 'All' || state.selectedCategory === 'Vegetables') && veggies.length > 0) {
+                html += `
+                    <section>
+                        <div class="flex items-center justify-between mb-4 pb-2 border-b border-emerald-200/70">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-emerald-100 text-farm-700 flex items-center justify-center">
+                                    <i data-lucide="carrot" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">Fresh Vegetables</h2>
+                                    <p class="text-xs text-slate-500">Crisp daily-harvested roots, greens & kitchen staples</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-emerald-50 text-farm-700 text-xs font-extrabold border border-emerald-200">${veggies.length} Items</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${veggies.map(renderProductCardHTML).join('')}
+                        </div>
+                    </section>
+                `;
+            }
+
+            if ((state.selectedCategory === 'All' || state.selectedCategory === 'Fruits') && fruits.length > 0) {
+                html += `
+                    <section>
+                        <div class="flex items-center justify-between mb-4 pb-2 border-b border-amber-200/70">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center">
+                                    <i data-lucide="apple" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">Orchard Fruits</h2>
+                                    <p class="text-xs text-slate-500">Naturally ripened seasonal fruits, citrus & exotics</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-extrabold border border-amber-200">${fruits.length} Items</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${fruits.map(renderProductCardHTML).join('')}
+                        </div>
+                    </section>
+                `;
+            }
+
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+
+        function handleAddItemClick(itemId) {
+            if (!state.storeOpen) {
+                showToast('Store is currently closed for new orders!', 'error');
+                return;
+            }
+            const item = state.products.find(m => m.id === itemId);
+            if (!item || Number(item.stock) <= 0) return;
+
+            const currentInCart = state.cart.filter(c => c.itemId === itemId).reduce((s, c) => s + c.qty, 0);
+            if (currentInCart >= Number(item.stock)) {
+                showToast(`Maximum available stock (${item.stock}) reached for ${item.name}`, 'warning');
+                return;
+            }
+
+            if (item.customizable && item.variants && item.variants.length > 0) {
+                openCustomizerModal(item);
+            } else {
+                addItemToCart({
+                    cartKey: item.id,
+                    itemId: item.id,
+                    name: item.name,
+                    unitPrice: Number(item.price),
+                    customizationText: item.unit || '',
+                    qty: 1
+                });
+            }
+        }
+
+        function openCustomizerModal(item) {
+            state.activeCustomizingItem = item;
+            document.getElementById('cust-modal-title').textContent = item.name;
+
+            const vContainer = document.getElementById('variant-options-container');
+            vContainer.innerHTML = (item.variants || []).map((v, idx) => `
+                <label class="flex items-center justify-between p-3 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50">
+                    <div class="flex items-center gap-2.5">
+                        <input type="radio" name="cust-variant" value="${idx}" ${idx === 0 ? 'checked' : ''} onchange="updateCustomizerTotal()" class="accent-farm-600 w-4 h-4">
+                        <span class="text-xs font-bold text-slate-800">${v.name}</span>
+                    </div>
+                    <span class="text-xs font-mono font-bold text-slate-600">${v.priceAdd === 0 ? 'Included' : (v.priceAdd > 0 ? '+₹' + v.priceAdd : '-₹' + Math.abs(v.priceAdd))}</span>
+                </label>
+            `).join('');
+
+            const aContainer = document.getElementById('addon-options-container');
+            aContainer.innerHTML = (item.addons || []).map((a, idx) => `
+                <label class="flex items-center justify-between p-3 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50">
+                    <div class="flex items-center gap-2.5">
+                        <input type="checkbox" name="cust-addon" value="${idx}" onchange="updateCustomizerTotal()" class="accent-farm-600 w-4 h-4 rounded">
+                        <span class="text-xs font-bold text-slate-800">${a.name}</span>
+                    </div>
+                    <span class="text-xs font-mono font-bold text-slate-600">${a.price === 0 ? 'Free' : '+₹' + a.price}</span>
+                </label>
+            `).join('');
+
+            updateCustomizerTotal();
+            document.getElementById('customizer-modal').classList.remove('hidden');
+        }
+
+        function closeCustomizerModal() {
+            document.getElementById('customizer-modal').classList.add('hidden');
+            state.activeCustomizingItem = null;
+        }
+
+        function updateCustomizerTotal() {
+            const item = state.activeCustomizingItem;
+            if (!item) return;
+
+            let total = item.price;
+            const vRadio = document.querySelector('input[name="cust-variant"]:checked');
+            if (vRadio && item.variants[vRadio.value]) {
+                total += item.variants[vRadio.value].priceAdd;
+            }
+            document.querySelectorAll('input[name="cust-addon"]:checked').forEach(cb => {
+                if (item.addons[cb.value]) {
+                    total += item.addons[cb.value].price;
+                }
+            });
+            document.getElementById('cust-modal-price').textContent = `₹${total}`;
+        }
+
+        function confirmCustomizedItem() {
+            const item = state.activeCustomizingItem;
+            if (!item) return;
+
+            let unitPrice = item.price;
+            let notes = [];
+
+            const vRadio = document.querySelector('input[name="cust-variant"]:checked');
+            if (vRadio && item.variants[vRadio.value]) {
+                const v = item.variants[vRadio.value];
+                unitPrice += v.priceAdd;
+                notes.push(v.name);
+            }
+
+            const selectedAddons = [];
+            document.querySelectorAll('input[name="cust-addon"]:checked').forEach(cb => {
+                const a = item.addons[cb.value];
+                if (a) {
+                    unitPrice += a.price;
+                    selectedAddons.push(a.name);
+                }
+            });
+            if (selectedAddons.length > 0) {
+                notes.push(selectedAddons.join(', '));
+            }
+
+            const customizationText = notes.join(' • ');
+            const cartKey = `${item.id}::${customizationText}`;
+
+            addItemToCart({
+                cartKey,
+                itemId: item.id,
+                name: item.name,
+                unitPrice,
+                customizationText,
+                qty: 1
+            });
+
+            closeCustomizerModal();
+        }
+
+        function addItemToCart(newEntry) {
+            const product = state.products.find(p => p.id === newEntry.itemId);
+            const maxStock = product ? Number(product.stock) : 99;
+            const totalInCart = state.cart.filter(c => c.itemId === newEntry.itemId).reduce((s, c) => s + c.qty, 0);
+
+            if (totalInCart + 1 > maxStock) {
+                showToast(`Only ${maxStock} packs available in stock!`, 'warning');
+                return;
+            }
+
+            const existing = state.cart.find(c => c.cartKey === newEntry.cartKey);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                state.cart.push(newEntry);
+            }
+            saveState();
+            refreshAllUI();
+            showToast(`Added ${newEntry.name} to basket`, 'success');
+        }
+
+        function decrementItemFromMenu(itemId) {
+            for (let i = state.cart.length - 1; i >= 0; i--) {
+                if (state.cart[i].itemId === itemId) {
+                    updateCartItemQty(state.cart[i].cartKey, -1);
+                    break;
+                }
+            }
+        }
+
+        function updateCartItemQty(cartKey, delta) {
+            const idx = state.cart.findIndex(c => c.cartKey === cartKey);
+            if (idx === -1) return;
+
+            if (delta > 0) {
+                const product = state.products.find(p => p.id === state.cart[idx].itemId);
+                const maxStock = product ? Number(product.stock) : 99;
+                const totalInCart = state.cart.filter(c => c.itemId === state.cart[idx].itemId).reduce((s, c) => s + c.qty, 0);
+                if (totalInCart + delta > maxStock) {
+                    showToast(`Only ${maxStock} packs in stock!`, 'warning');
+                    return;
+                }
+            }
+
+            state.cart[idx].qty += delta;
+            if (state.cart[idx].qty <= 0) {
+                state.cart.splice(idx, 1);
+            }
+            saveState();
+            refreshAllUI();
+        }
+
+        function calculateHaversineKm(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        function evaluateDeliveryZone() {
+            const distKm = calculateHaversineKm(
+                Number(state.config.storeLat),
+                Number(state.config.storeLng),
+                Number(state.customerLocation.lat),
+                Number(state.customerLocation.lng)
+            );
+            const isWithin3km = distKm <= 3.0;
+            const serviceable = isWithin3km ? state.config.within3kmEnabled : state.config.beyond3kmEnabled;
+            const fee = isWithin3km ? Number(state.config.within3kmFee) : Number(state.config.beyond3kmFee);
+
+            return {
+                distanceKm: Number(distKm.toFixed(2)),
+                isWithin3km,
+                serviceable,
+                fee
+            };
+        }
+
+        function applyPromoCodeInCheckout() {
+            if (!state.config.promoEnabled) {
+                showToast('Promotional offers are currently disabled.', 'warning');
+                return;
+            }
+            const entered = document.getElementById('checkout-promo-input').value.trim().toUpperCase();
+            const feedback = document.getElementById('checkout-promo-feedback');
+            feedback.classList.remove('hidden');
+
+            if (entered === state.config.promoCode.toUpperCase()) {
+                state.appliedPromoCode = state.config.promoCode.toUpperCase();
+                feedback.className = 'text-[11px] font-bold mt-1 text-emerald-700';
+                feedback.textContent = `✓ Code ${state.appliedPromoCode} applied! (${state.config.promoPercent}% OFF)`;
+                showToast(`Discount code ${state.appliedPromoCode} applied!`, 'success');
+            } else {
+                state.appliedPromoCode = '';
+                feedback.className = 'text-[11px] font-bold mt-1 text-red-600';
+                feedback.textContent = `✕ Invalid code. Try ${state.config.promoCode}`;
+            }
+            updateCartUI();
+        }
+
+        function calculateCartTotals() {
+            const subtotal = state.cart.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
+            let discountAmount = 0;
+            if (state.config.promoEnabled && state.appliedPromoCode && state.appliedPromoCode.toUpperCase() === state.config.promoCode.toUpperCase()) {
+                discountAmount = Math.round(subtotal * (Number(state.config.promoPercent) / 100));
+            }
+            const discountedSubtotal = Math.max(0, subtotal - discountAmount);
+            const gst = Math.round(discountedSubtotal * 0.05);
+            const zone = evaluateDeliveryZone();
+            const delivery = subtotal === 0 ? 0 : zone.fee;
+            const total = discountedSubtotal + gst + delivery;
+            return { subtotal, discountAmount, gst, delivery, total, zone };
+        }
+
+        function updateCartUI() {
+            const totalCount = state.cart.reduce((sum, i) => sum + i.qty, 0);
+            const { subtotal, discountAmount, gst, delivery, total, zone } = calculateCartTotals();
+
+            document.getElementById('header-cart-count').textContent = totalCount;
+            document.getElementById('header-cart-total').textContent = `₹${total}`;
+
+            const emptyState = document.getElementById('cart-empty-state');
+            const itemsContainer = document.getElementById('cart-items-container');
+            const checkoutSection = document.getElementById('checkout-form-section');
+            const drawerFooter = document.getElementById('cart-drawer-footer');
+
+            if (state.cart.length === 0) {
+                emptyState.classList.remove('hidden');
+                itemsContainer.classList.add('hidden');
+                checkoutSection.classList.add('hidden');
+                drawerFooter.classList.add('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            itemsContainer.classList.remove('hidden');
+            checkoutSection.classList.remove('hidden');
+            drawerFooter.classList.remove('hidden');
+
+            const custAddr = document.getElementById('cust-address');
+            if (!custAddr.value.trim()) {
+                custAddr.value = state.customerLocation.address;
+            }
+
+            itemsContainer.innerHTML = state.cart.map(item => `
+                <div class="flex items-center justify-between gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-200/70">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-xs text-slate-900 truncate">${item.name}</h4>
+                        ${item.customizationText ? `<p class="text-[11px] text-slate-500 truncate mt-0.5">${item.customizationText}</p>` : ''}
+                        <span class="text-xs font-mono font-extrabold text-farm-700 mt-1 block">₹${item.unitPrice * item.qty}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl p-1">
+                        <button onclick="updateCartItemQty('${item.cartKey.replace(/'/g, "\\'")}', -1)" class="w-6 h-6 rounded-lg hover:bg-slate-100 font-bold text-xs">-</button>
+                        <span class="font-mono font-bold text-xs px-1.5">${item.qty}</span>
+                        <button onclick="updateCartItemQty('${item.cartKey.replace(/'/g, "\\'")}', 1)" class="w-6 h-6 rounded-lg hover:bg-slate-100 font-bold text-xs">+</button>
+                    </div>
+                </div>
+            `).join('');
+
+            const distStatusEl = document.getElementById('delivery-distance-status');
+            const distKmLabel = document.getElementById('distance-km-label');
+            const distBadge = document.getElementById('distance-zone-badge');
+            const ctaBtn = document.getElementById('place-order-cta-btn');
+            const ctaText = document.getElementById('place-order-cta-text');
+
+            const zoneText = zone.isWithin3km ? 'Within 3 km Zone' : 'Beyond 3 km Zone';
+            distKmLabel.textContent = `${zone.distanceKm} km from store (${zoneText})`;
+
+            if (zone.serviceable) {
+                distStatusEl.className = 'flex items-center justify-between text-[11px] font-bold px-2.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200';
+                distBadge.textContent = delivery === 0 ? 'FREE DELIVERY' : `₹${delivery} FEE`;
+                ctaBtn.disabled = false;
+                ctaBtn.className = 'w-full py-3.5 px-5 rounded-2xl bg-farm-600 hover:bg-farm-700 text-white font-extrabold text-sm shadow-lg shadow-farm-600/25 flex items-center justify-between transition';
+                ctaText.textContent = 'Proceed to Place Order';
+            } else {
+                distStatusEl.className = 'flex items-center justify-between text-[11px] font-bold px-2.5 py-1.5 rounded-xl bg-red-50 text-red-700 border border-red-200';
+                distBadge.textContent = zone.isWithin3km ? 'LOCAL <3KM PAUSED' : 'BEYOND 3KM PAUSED';
+                ctaBtn.disabled = true;
+                ctaBtn.className = 'w-full py-3.5 px-5 rounded-2xl bg-red-600/90 text-white font-extrabold text-xs flex items-center justify-between cursor-not-allowed opacity-90';
+                ctaText.textContent = zone.isWithin3km ? 'Delivery Within 3 km Currently Paused' : 'Delivery Beyond 3 km Currently Paused';
+            }
+
+            const discountRow = document.getElementById('bill-discount-row');
+            if (discountAmount > 0) {
+                discountRow.classList.remove('hidden');
+                document.getElementById('bill-discount-label').textContent = `Promo (${state.appliedPromoCode} - ${state.config.promoPercent}% OFF)`;
+                document.getElementById('bill-discount-amount').textContent = `-₹${discountAmount}`;
+            } else {
+                discountRow.classList.add('hidden');
+            }
+
+            document.getElementById('bill-subtotal').textContent = `₹${subtotal}`;
+            document.getElementById('bill-gst').textContent = `₹${gst}`;
+            document.getElementById('bill-delivery-label').textContent = `Delivery Fee (${zone.distanceKm} km)`;
+            document.getElementById('bill-delivery').textContent = delivery === 0 ? 'FREE' : `₹${delivery}`;
+            document.getElementById('bill-total').textContent = `₹${total}`;
+            document.getElementById('footer-cta-amount').textContent = `₹${total}`;
+        }
+
+        function toggleCartDrawer(open) {
+            const backdrop = document.getElementById('cart-drawer-backdrop');
+            const drawer = document.getElementById('cart-drawer');
+            if (open) {
+                backdrop.classList.remove('hidden');
+                setTimeout(() => {
+                    drawer.classList.remove('translate-x-full');
+                    initOrRefreshCheckoutMap();
+                }, 20);
+            } else {
+                drawer.classList.add('translate-x-full');
+                setTimeout(() => backdrop.classList.add('hidden'), 300);
+            }
+        }
+
+        function initOrRefreshCheckoutMap() {
+            const mapEl = document.getElementById('checkout-leaflet-map');
+            if (!mapEl || state.cart.length === 0) return;
+
+            const sLat = Number(state.config.storeLat);
+            const sLng = Number(state.config.storeLng);
+            const cLat = Number(state.customerLocation.lat);
+            const cLng = Number(state.customerLocation.lng);
+
+            if (!checkoutMap) {
+                checkoutMap = L.map('checkout-leaflet-map').setView([cLat, cLng], 12);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap'
+                }).addTo(checkoutMap);
+
+                checkoutStoreMarker = L.marker([sLat, sLng]).addTo(checkoutMap).bindPopup('Farm Fresh Base Store');
+                checkoutRadiusCircle = L.circle([sLat, sLng], {
+                    radius: 3000,
+                    color: '#16a34a',
+                    fillColor: '#22c55e',
+                    fillOpacity: 0.12,
+                    weight: 2
+                }).addTo(checkoutMap);
+
+                checkoutCustomerMarker = L.marker([cLat, cLng], { draggable: true }).addTo(checkoutMap).bindPopup('Your Delivery Pin (Drag or Click Map)');
+
+                checkoutMap.on('click', (e) => {
+                    updateCustomerMapCoordinates(e.latlng.lat, e.latlng.lng);
+                });
+                checkoutCustomerMarker.on('dragend', () => {
+                    const pos = checkoutCustomerMarker.getLatLng();
+                    updateCustomerMapCoordinates(pos.lat, pos.lng);
+                });
+            } else {
+                checkoutStoreMarker.setLatLng([sLat, sLng]);
+                checkoutRadiusCircle.setLatLng([sLat, sLng]);
+                checkoutCustomerMarker.setLatLng([cLat, cLng]);
+                checkoutMap.invalidateSize();
+                checkoutMap.panTo([cLat, cLng]);
+            }
+        }
+
+        function updateCustomerMapCoordinates(lat, lng, customAddressLabel) {
+            state.customerLocation.lat = Number(lat.toFixed(5));
+            state.customerLocation.lng = Number(lng.toFixed(5));
+            state.customerLocation.gpsVerified = true;
+
+            if (customAddressLabel) {
+                state.customerLocation.address = customAddressLabel;
+                const addrInput = document.getElementById('cust-address');
+                if (addrInput) addrInput.value = customAddressLabel;
+            }
+            if (checkoutCustomerMarker) {
+                checkoutCustomerMarker.setLatLng([state.customerLocation.lat, state.customerLocation.lng]);
+            }
+            if (checkoutMap) {
+                checkoutMap.panTo([state.customerLocation.lat, state.customerLocation.lng]);
+            }
+            updateCartUI();
+        }
+
+        function setDemoCustomerPreset(type) {
+            const sLat = Number(state.config.storeLat);
+            const sLng = Number(state.config.storeLng);
+            if (type === 'within') {
+                updateCustomerMapCoordinates(sLat + 0.010, sLng + 0.008, 'Janpath Lane, Near Base Store (< 3 km)');
+                showToast('Pinned location inside 3 km delivery zone', 'info');
+            } else {
+                updateCustomerMapCoordinates(sLat + 0.038, sLng + 0.030, 'South Extension Part II (> 3 km Extended Zone)');
+                showToast('Pinned location beyond 3 km delivery zone', 'info');
+            }
+        }
+
+        function togglePaymentMethodUI() {}
+
+        function captureCustomerGPS(source) {
+            if (!navigator.geolocation) {
+                showToast('Geolocation is not supported by your browser. Using default hub.', 'warning');
+                setDemoCustomerPreset('within');
+                return;
+            }
+            showToast('Capturing your live GPS coordinates & resolving address...', 'info');
+            
+            const geoOptions = {
+                timeout: 10000,
+                maximumAge: 0,
+                enableHighAccuracy: true
+            };
+
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    
+                    let addressLabel = `Live GPS (${lat.toFixed(4)}, ${lng.toFixed(4)})`;
+                    try {
+                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1`);
+                        if (res.ok) {
+                            const data = await res.json();
+                            if (data && data.display_name) {
+                                const parts = data.display_name.split(',');
+                                addressLabel = parts.slice(0, 3).join(',').trim();
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Reverse geocoding lookup failed:', e);
+                    }
+
+                    updateCustomerMapCoordinates(lat, lng, addressLabel);
+                    if (source === 'hero') {
+                        const heroInput = document.getElementById('hero-location-input');
+                        if (heroInput) heroInput.value = addressLabel;
+                    }
+                    const checkoutAddrInput = document.getElementById('cust-address');
+                    if (checkoutAddrInput) checkoutAddrInput.value = addressLabel;
+
+                    showToast('Live GPS Pin captured & address resolved!', 'success');
+                },
+                (err) => {
+                    console.warn('Geolocation error:', err.message);
+                    showToast('GPS capture failed or timed out. Using default store area.', 'warning');
+                    setDemoCustomerPreset('within');
+                },
+                geoOptions
+            );
+        }
+
+        function initiateOrderPlacement() {
+            if (!state.storeOpen) {
+                showToast('Sorry, the store just closed for new orders!', 'error');
+                return;
+            }
+            const totals = calculateCartTotals();
+            if (!totals.zone.serviceable) {
+                showToast(
+                    totals.zone.isWithin3km
+                        ? 'Delivery within 3 km is currently paused by the store.'
+                        : 'Extended delivery beyond 3 km is currently paused by the store.',
+                    'error'
+                );
+                return;
+            }
+
+            const name = document.getElementById('cust-name').value.trim();
+            const phone = document.getElementById('cust-phone').value.trim();
+            const address = document.getElementById('cust-address').value.trim();
+            const notes = document.getElementById('cust-notes').value.trim();
+            const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+
+            if (!name || !phone || !address) {
+                showToast('Please fill Name, Mobile Number, and Delivery Address.', 'error');
+                return;
+            }
+
+            const orderId = 'FF-' + Math.floor(1000 + Math.random() * 9000);
+
+            const draft = {
+                id: orderId,
+                createdAt: new Date().toISOString(),
+                customer: {
+                    name,
+                    phone,
+                    address,
+                    notes,
+                    lat: state.customerLocation.lat,
+                    lng: state.customerLocation.lng,
+                    distanceKm: totals.zone.distanceKm
+                },
+                items: JSON.parse(JSON.stringify(state.cart)),
+                totals,
+                promoApplied: totals.discountAmount > 0 ? `${state.appliedPromoCode} (${state.config.promoPercent}%)` : '',
+                paymentMethod,
+                paymentStatus: paymentMethod === 'COD' ? 'COD_PENDING' : 'PAID_UPI',
+                utrNumber: '',
+                status: 'PREPARING',
+                cancelReason: '',
+                refundStatus: ''
+            };
+
+            state.pendingOrderDraft = draft;
+
+            if (paymentMethod === 'UPI') {
+                openUpiModal(draft);
+            } else {
+                finalizeOrder(draft);
+            }
+        }
+
+        function openUpiModal(draft) {
+            const amount = draft.totals.total;
+            document.getElementById('upi-modal-amount').textContent = `₹${amount}`;
+            document.getElementById('upi-utr-input').value = '';
+
+            const upiUri = `upi://pay?pa=farmfresh@upi&pn=Farm%20Fresh&am=${amount}&cu=INR&tn=Order%20${draft.id}`;
+            document.getElementById('upi-deep-link').href = upiUri;
+
+            const qrContainer = document.getElementById('upi-qrcode-canvas');
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+                text: upiUri,
+                width: 180,
+                height: 180,
+                colorDark: '#064e3b',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            document.getElementById('upi-payment-modal').classList.remove('hidden');
+        }
+
+        function closeUpiModal() {
+            document.getElementById('upi-payment-modal').classList.add('hidden');
+        }
+
+        function confirmUpiPayment() {
+            if (!state.pendingOrderDraft) return;
+            const utr = document.getElementById('upi-utr-input').value.trim();
+            state.pendingOrderDraft.utrNumber = utr || ('UPI' + Math.floor(100000000000 + Math.random() * 900000000000));
+            state.pendingOrderDraft.paymentStatus = 'PAID_UPI';
+            closeUpiModal();
+            finalizeOrder(state.pendingOrderDraft);
+        }
+
+        function finalizeOrder(orderObj) {
+            orderObj.items.forEach(ordered => {
+                const prod = state.products.find(p => p.id === ordered.itemId);
+                if (prod) {
+                    prod.stock = Math.max(0, Number(prod.stock) - Number(ordered.qty));
+                }
+            });
+
+            state.orders.unshift(orderObj);
+            state.cart = [];
+            state.pendingOrderDraft = null;
+            saveState();
+
+            toggleCartDrawer(false);
+            refreshAllUI();
+            showToast(`Order #${orderObj.id} sent to Store Packing Station!`, 'success');
+            openMyOrdersModal();
+        }
+
+        function updateBadgesAndBanners() {
+            const activeOrders = state.orders.filter(o => !['DELIVERED', 'CANCELLED'].includes(o.status));
+            const kdsOrders = state.orders.filter(o => ['PREPARING', 'READY'].includes(o.status));
+            const riderOrders = state.orders.filter(o => ['READY', 'OUT_FOR_DELIVERY'].includes(o.status));
+
+            const countEl = document.getElementById('active-orders-count');
+            if (activeOrders.length > 0) {
+                countEl.textContent = activeOrders.length;
+                countEl.classList.remove('hidden');
+            } else {
+                countEl.classList.add('hidden');
+            }
+
+            const kdsBadge = document.getElementById('kds-badge');
+            if (kdsOrders.length > 0) {
+                kdsBadge.textContent = kdsOrders.length;
+                kdsBadge.classList.remove('hidden');
+            } else {
+                kdsBadge.classList.add('hidden');
+            }
+
+            const riderBadge = document.getElementById('rider-badge');
+            if (riderOrders.length > 0) {
+                riderBadge.textContent = riderOrders.length;
+                riderBadge.classList.remove('hidden');
+            } else {
+                riderBadge.classList.add('hidden');
+            }
+
+            const banner = document.getElementById('live-order-tracker-banner');
+            if (activeOrders.length > 0) {
+                const latest = activeOrders[0];
+                banner.classList.remove('hidden');
+                document.getElementById('banner-order-id').textContent = `#${latest.id}`;
+                const statusMap = {
+                    'PREPARING': 'Sorting & Weighing • Fresh Produce Being Packed',
+                    'READY': 'Packed & Sealed • Waiting for Rider Pickup',
+                    'OUT_FOR_DELIVERY': 'Out for Delivery • Rider Vikram is on the way!'
+                };
+                document.getElementById('banner-order-status').textContent = statusMap[latest.status] || latest.status;
+            } else {
+                banner.classList.add('hidden');
+            }
+        }
+
+        function openMyOrdersModal() {
+            renderMyOrdersList();
+            document.getElementById('my-orders-modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeMyOrdersModal() {
+            document.getElementById('my-orders-modal').classList.add('hidden');
+        }
+
+        function renderMyOrdersList() {
+            const container = document.getElementById('my-orders-list');
+            if (state.orders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12">
+                        <i data-lucide="shopping-bag" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
+                        <h4 class="font-bold text-slate-800">No orders placed yet</h4>
+                        <p class="text-xs text-slate-500 mt-1">Order farm-fresh fruits & vegetables to track them live right here.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = state.orders.map(order => {
+                const isCancelled = order.status === 'CANCELLED';
+                const steps = ['PREPARING', 'READY', 'OUT_FOR_DELIVERY', 'DELIVERED'];
+                const currentIdx = steps.indexOf(order.status);
+
+                return `
+                    <div class="rounded-2xl border ${isCancelled ? 'border-red-200 bg-red-50/30' : 'border-slate-200 bg-white'} p-4 sm:p-5 shadow-sm">
+                        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono font-extrabold text-sm text-slate-900">#${order.id}</span>
+                                    <span class="px-2 py-0.5 rounded-md text-[10px] font-extrabold ${
+                                        order.paymentStatus === 'PAID_UPI' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-800'
+                                    }">
+                                        ${order.paymentStatus === 'PAID_UPI' ? 'PAID VIA UPI' : 'CASH ON DELIVERY'}
+                                    </span>
+                                </div>
+                                <span class="text-[11px] text-slate-400">${new Date(order.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} • ${order.items.length} Produce Item(s)</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-mono font-extrabold text-base text-slate-900">₹${order.totals.total}</span>
+                            </div>
+                        </div>
+
+                        ${isCancelled ? `
+                            <div class="my-3 p-3 rounded-xl bg-red-100/80 border border-red-200 text-xs text-red-800">
+                                <strong>Order Cancelled:</strong> ${order.cancelReason}
+                                ${order.refundStatus ? `<span class="block mt-1 font-mono text-[11px] text-emerald-800 font-bold">✓ ${order.refundStatus}</span>` : ''}
+                            </div>
+                        ` : `
+                            <div class="my-4">
+                                <div class="grid grid-cols-4 gap-1 text-center">
+                                    ${[
+                                        { label: 'Sorting', icon: 'scale' },
+                                        { label: 'Packed', icon: 'package-check' },
+                                        { label: 'On Way', icon: 'bike' },
+                                        { label: 'Delivered', icon: 'home' }
+                                    ].map((st, idx) => {
+                                        const done = idx <= currentIdx;
+                                        return `
+                                            <div class="flex flex-col items-center">
+                                                <div class="w-8 h-8 rounded-full flex items-center justify-center mb-1 ${done ? 'bg-farm-600 text-white shadow-sm' : 'bg-slate-100 text-slate-400'}">
+                                                    <i data-lucide="${st.icon}" class="w-4 h-4"></i>
+                                                </div>
+                                                <span class="text-[10px] font-bold ${done ? 'text-slate-900' : 'text-slate-400'}">${st.label}</span>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        `}
+
+                        <div class="text-xs text-slate-600 space-y-1 mb-4 bg-slate-50 p-3 rounded-xl">
+                            ${order.items.map(i => `
+                                <div class="flex justify-between">
+                                    <span><strong>${i.qty}x</strong> ${i.name} ${i.customizationText ? `<em class="text-slate-400">(${i.customizationText})</em>` : ''}</span>
+                                    <span class="font-mono font-semibold">₹${i.unitPrice * i.qty}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <button onclick="downloadOrderPDF('${order.id}')" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition">
+                                <i data-lucide="download" class="w-3.5 h-3.5 text-harvest-400"></i> Download PDF Invoice
+                            </button>
+
+                            ${order.status === 'PREPARING' ? `
+                                <button onclick="openCancelModal('${order.id}')" class="px-3.5 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold text-xs transition">
+                                    Cancel Order
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openCancelModal(orderId) {
+            state.cancelingOrderId = orderId;
+            document.getElementById('cancel-modal-order-id').textContent = `#${orderId}`;
+            document.getElementById('cancel-modal').classList.remove('hidden');
+        }
+
+        function closeCancelModal() {
+            state.cancelingOrderId = null;
+            document.getElementById('cancel-modal').classList.add('hidden');
+        }
+
+        function confirmOrderCancellation() {
+            const order = state.orders.find(o => o.id === state.cancelingOrderId);
+            if (!order) return;
+
+            const reason = document.getElementById('cancel-reason-select').value;
+            order.status = 'CANCELLED';
+            order.cancelReason = reason;
+
+            if (order.paymentStatus === 'PAID_UPI') {
+                const refId = 'RFND-' + Math.floor(100000 + Math.random() * 900000);
+                order.refundStatus = `Instant UPI Refund Initiated (Ref: ${refId})`;
+            }
+
+            saveState();
+            closeCancelModal();
+            refreshAllUI();
+            renderMyOrdersList();
+            showToast(`Order #${order.id} cancelled.`, 'warning');
+        }
+
+        function switchKdsTab(tab) {
+            state.kdsTab = tab;
+            document.getElementById('kds-orders-section').classList.toggle('hidden', tab !== 'orders');
+            document.getElementById('kds-menu-section').classList.toggle('hidden', tab !== 'menu');
+            document.getElementById('kds-settings-section').classList.toggle('hidden', tab !== 'settings');
+
+            const tabButtons = {
+                orders: document.getElementById('kds-tab-orders'),
+                menu: document.getElementById('kds-tab-menu'),
+                settings: document.getElementById('kds-tab-settings')
+            };
+            Object.entries(tabButtons).forEach(([key, btn]) => {
+                btn.className = key === tab
+                    ? 'px-3.5 py-1.5 rounded-lg text-xs font-bold bg-farm-600 text-white transition'
+                    : 'px-3.5 py-1.5 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition';
+            });
+
+            renderKDS();
+        }
+
+        function renderKDS() {
+            const newCount = state.orders.filter(o => o.status === 'PREPARING').length;
+            const readyCount = state.orders.filter(o => o.status === 'READY').length;
+            const delivCount = state.orders.filter(o => o.status === 'OUT_FOR_DELIVERY').length;
+            const revenue = state.orders
+                .filter(o => o.status !== 'CANCELLED')
+                .reduce((sum, o) => sum + o.totals.total, 0);
+
+            document.getElementById('stat-new-orders').textContent = newCount;
+            document.getElementById('stat-ready-orders').textContent = readyCount;
+            document.getElementById('stat-delivery-orders').textContent = delivCount;
+            document.getElementById('stat-revenue').textContent = `₹${revenue}`;
+
+            if (state.kdsTab === 'orders') {
+                renderKdsOrdersGrid();
+            } else if (state.kdsTab === 'menu') {
+                renderKdsStockManager();
+            } else if (state.kdsTab === 'settings') {
+                populateKdsSettingsForm();
+            }
+            lucide.createIcons();
+        }
+
+        function renderKdsOrdersGrid() {
+            const grid = document.getElementById('kds-orders-grid');
+            if (state.orders.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-16 bg-white rounded-3xl border border-slate-200">
+                        <i data-lucide="package-open" class="w-12 h-12 text-slate-300 mx-auto mb-2"></i>
+                        <h3 class="font-bold text-slate-800">No Packing Tickets Yet</h3>
+                        <p class="text-xs text-slate-500 mt-1">Place a fresh produce order from the Storefront tab to watch it appear here live!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = state.orders.map(order => {
+                const statusBadge = {
+                    'PREPARING': 'bg-emerald-100 text-farm-700 border-emerald-200',
+                    'READY': 'bg-amber-100 text-amber-800 border-amber-200',
+                    'OUT_FOR_DELIVERY': 'bg-blue-100 text-blue-700 border-blue-200',
+                    'DELIVERED': 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                    'CANCELLED': 'bg-red-100 text-red-700 border-red-200'
+                }[order.status] || 'bg-slate-100 text-slate-700';
+
+                const statusLabel = {
+                    'PREPARING': 'SORTING & PACKING',
+                    'READY': 'PACKED & SEALED',
+                    'OUT_FOR_DELIVERY': 'OUT FOR DELIVERY',
+                    'DELIVERED': 'DELIVERED',
+                    'CANCELLED': 'CANCELLED'
+                }[order.status] || order.status;
+
+                return `
+                    <div class="bg-white rounded-3xl border-2 ${order.status === 'PREPARING' ? 'border-farm-500 shadow-lg shadow-farm-500/10' : 'border-slate-200'} p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 pb-3 border-b border-slate-100">
+                                <span class="font-mono font-extrabold text-base text-slate-900">#${order.id}</span>
+                                <span class="px-2.5 py-1 rounded-lg border text-[10px] font-extrabold uppercase ${statusBadge}">${statusLabel}</span>
+                            </div>
+
+                            <div class="my-3 text-xs">
+                                <p class="font-bold text-slate-900">${order.customer.name} • <span class="font-mono text-slate-600">${order.customer.phone}</span></p>
+                                <p class="text-slate-500 mt-0.5 line-clamp-1">${order.customer.address}</p>
+                                ${order.customer.distanceKm !== undefined ? `<span class="inline-block mt-1 px-2 py-0.5 rounded bg-emerald-50 text-farm-700 font-mono text-[10px] font-bold border border-emerald-200">${order.customer.distanceKm} km from store</span>` : ''}
+                                ${order.customer.notes ? `<p class="mt-1.5 px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 font-semibold border border-amber-200">Note: ${order.customer.notes}</p>` : ''}
+                            </div>
+
+                            <div class="space-y-1.5 my-3 bg-slate-50 p-3 rounded-2xl border border-slate-100 max-h-40 overflow-y-auto text-xs">
+                                ${order.items.map(i => `
+                                    <div class="flex items-center justify-between">
+                                        <span><strong>${i.qty}x</strong> ${i.name} ${i.customizationText ? `<em class="text-slate-400">(${i.customizationText})</em>` : ''}</span>
+                                        <span class="font-mono font-bold">₹${i.unitPrice * i.qty}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                            <span class="font-mono font-extrabold text-sm text-slate-900">Total: ₹${order.totals.total}</span>
+                            
+                            ${order.status === 'PREPARING' ? `
+                                <button onclick="updateOrderStatus('${order.id}', 'READY')" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs flex items-center gap-1.5 transition shadow-sm">
+                                    <i data-lucide="package-check" class="w-3.5 h-3.5"></i> Mark Packed & Ready
+                                </button>
+                            ` : order.status === 'READY' ? `
+                                <span class="text-xs font-bold text-amber-700 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">Waiting for Rider Pickup</span>
+                            ` : `
+                                <span class="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200">Out with Rider</span>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function handleNewProductPhotoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                state.newProductPhotoBase64 = e.target.result;
+                document.getElementById('new-prod-preview').src = state.newProductPhotoBase64;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleAddNewProduct(event) {
+            event.preventDefault();
+            const name = document.getElementById('new-prod-name').value.trim();
+            const category = document.getElementById('new-prod-category').value;
+            const unit = document.getElementById('new-prod-unit').value.trim();
+            const price = Number(document.getElementById('new-prod-price').value);
+            const stock = Number(document.getElementById('new-prod-stock').value);
+            const badge = document.getElementById('new-prod-badge').value.trim() || 'Fresh';
+            const desc = document.getElementById('new-prod-desc').value.trim() || `Farm-fresh ${name} (${unit}) harvested daily.`;
+            const urlInput = document.getElementById('new-prod-image-url').value.trim();
+
+            const finalImage = state.newProductPhotoBase64 || urlInput || (
+                category === 'Fruits'
+                    ? 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=600&q=80'
+                    : 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80'
+            );
+
+            const newItem = {
+                id: 'ff-' + Date.now(),
+                name,
+                category,
+                unit,
+                price,
+                stock,
+                badge,
+                veg: true,
+                desc,
+                image: finalImage,
+                customizable: false
+            };
+
+            state.products.unshift(newItem);
+            state.newProductPhotoBase64 = '';
+            document.getElementById('add-product-form').reset();
+            document.getElementById('new-prod-preview').src = 'https://placehold.co/100x100/15803d/ffffff?text=Preview';
+
+            saveState();
+            refreshAllUI();
+            showToast(`Added "${name}" to ${category} catalog!`, 'success');
+        }
+
+        function renderKdsStockManager() {
+            const list = document.getElementById('kds-stock-list');
+            document.getElementById('kds-catalog-count').textContent = `${state.products.length} Total Products`;
+
+            list.innerHTML = state.products.map(item => {
+                const stockQty = Number(item.stock ?? 0);
+                return `
+                    <div class="py-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div class="flex items-center gap-3.5 min-w-0 flex-1">
+                            <div class="relative group shrink-0">
+                                <img src="${item.image}" class="w-14 h-14 rounded-2xl object-cover border border-slate-200" onerror="this.src='https://placehold.co/100x100/15803d/ffffff?text=Produce'">
+                                <label class="absolute inset-0 bg-black/50 text-white text-[9px] font-extrabold rounded-2xl opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition text-center px-1">
+                                    Change Photo
+                                    <input type="file" accept="image/*" class="hidden" onchange="updateExistingProductPhoto('${item.id}', event)">
+                                </label>
+                            </div>
+                            <div class="min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${item.category === 'Fruits' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-farm-700'}">
+                                        ${item.category}
+                                    </span>
+                                    <span class="text-[11px] font-semibold text-slate-400">${item.unit || ''}</span>
+                                </div>
+                                <h4 class="font-extrabold text-sm text-slate-900 truncate mt-0.5">${item.name}</h4>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-3">
+                            <div class="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-xl border border-slate-200">
+                                <span class="text-[11px] font-bold text-slate-500">Rate ₹</span>
+                                <input type="number" min="1" value="${item.price}" onchange="updateProductPrice('${item.id}', this.value)" class="w-16 font-mono text-xs font-extrabold text-slate-900 bg-white border border-slate-200 rounded-lg px-2 py-1 text-right focus:outline-none focus:border-farm-600">
+                            </div>
+
+                            <div class="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1.5 rounded-xl border border-slate-200">
+                                <span class="text-[11px] font-bold text-slate-500">Stock:</span>
+                                <button type="button" onclick="adjustProductStock('${item.id}', -1)" class="w-6 h-6 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 font-extrabold text-xs">-</button>
+                                <input type="number" min="0" value="${stockQty}" onchange="setProductStock('${item.id}', this.value)" class="w-14 font-mono text-xs font-extrabold text-center bg-white border border-slate-200 rounded-lg py-1 focus:outline-none focus:border-farm-600">
+                                <button type="button" onclick="adjustProductStock('${item.id}', 1)" class="w-6 h-6 rounded-lg bg-white border border-slate-200 hover:bg-slate-100 font-extrabold text-xs">+</button>
+                            </div>
+
+                            <button type="button" onclick="toggleItemStock('${item.id}')" class="px-3 py-2 rounded-xl text-xs font-extrabold transition ${
+                                stockQty > 0
+                                ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' 
+                                : 'bg-red-100 text-red-700 hover:bg-red-200'
+                            }">
+                                ${stockQty > 0 ? '✓ In Stock' : '✕ Sold Out'}
+                            </button>
+
+                            <button type="button" onclick="deleteProductFromCatalog('${item.id}')" class="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition" title="Delete Product">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function updateProductPrice(itemId, newPrice) {
+            const prod = state.products.find(p => p.id === itemId);
+            const val = Number(newPrice);
+            if (!prod || isNaN(val) || val <= 0) return;
+            prod.price = val;
+            saveState();
+            refreshAllUI();
+            showToast(`Updated ${prod.name} rate to ₹${val}`, 'success');
+        }
+
+        function adjustProductStock(itemId, delta) {
+            const prod = state.products.find(p => p.id === itemId);
+            if (!prod) return;
+            prod.stock = Math.max(0, Number(prod.stock || 0) + delta);
+            saveState();
+            refreshAllUI();
+        }
+
+        function setProductStock(itemId, val) {
+            const prod = state.products.find(p => p.id === itemId);
+            if (!prod) return;
+            prod.stock = Math.max(0, Number(val) || 0);
+            saveState();
+            refreshAllUI();
+            showToast(`Updated ${prod.name} stock to ${prod.stock}`, 'info');
+        }
+
+        function toggleItemStock(itemId) {
+            const prod = state.products.find(p => p.id === itemId);
+            if (!prod) return;
+            prod.stock = Number(prod.stock) > 0 ? 0 : 20;
+            saveState();
+            refreshAllUI();
+            showToast(prod.stock > 0 ? `${prod.name} restocked (20 packs)` : `${prod.name} marked Sold Out`, 'info');
+        }
+
+        function updateExistingProductPhoto(itemId, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const prod = state.products.find(p => p.id === itemId);
+                if (prod) {
+                    prod.image = e.target.result;
+                    saveState();
+                    refreshAllUI();
+                    showToast(`Updated photo for ${prod.name}`, 'success');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function deleteProductFromCatalog(itemId) {
+            state.products = state.products.filter(p => p.id !== itemId);
+            state.cart = state.cart.filter(c => c.itemId !== itemId);
+            saveState();
+            refreshAllUI();
+            showToast('Product removed from catalog', 'warning');
+        }
+
+        function populateKdsSettingsForm() {
+            document.getElementById('cfg-kds-pin').value = state.config.kdsPin;
+            document.getElementById('cfg-rider-pin').value = state.config.riderPin;
+
+            document.getElementById('cfg-promo-enabled').checked = state.config.promoEnabled;
+            document.getElementById('cfg-promo-code').value = state.config.promoCode;
+            document.getElementById('cfg-promo-percent').value = state.config.promoPercent;
+
+            document.getElementById('cfg-store-label').value = state.config.storeLabel;
+            document.getElementById('cfg-store-lat').value = state.config.storeLat;
+            document.getElementById('cfg-store-lng').value = state.config.storeLng;
+            document.getElementById('cfg-within-3km-enabled').checked = state.config.within3kmEnabled;
+            document.getElementById('cfg-within-3km-fee').value = state.config.within3kmFee;
+            document.getElementById('cfg-beyond-3km-enabled').checked = state.config.beyond3kmEnabled;
+            document.getElementById('cfg-beyond-3km-fee').value = state.config.beyond3kmFee;
+
+            setTimeout(() => initOrRefreshKdsStoreMap(), 30);
+        }
+
+        function savePortalPinsConfig() {
+            const kdsPin = document.getElementById('cfg-kds-pin').value.trim();
+            const riderPin = document.getElementById('cfg-rider-pin').value.trim();
+            if (!/^\d{4}$/.test(kdsPin) || !/^\d{4}$/.test(riderPin)) {
+                showToast('Both PINs must be exactly 4 numeric digits.', 'error');
+                return;
+            }
+            state.config.kdsPin = kdsPin;
+            state.config.riderPin = riderPin;
+            saveState();
+            showToast(`Portal PINs updated (KDS: ${kdsPin}, Rider: ${riderPin})`, 'success');
+        }
+
+        function savePromoConfig() {
+            const enabled = document.getElementById('cfg-promo-enabled').checked;
+            const code = document.getElementById('cfg-promo-code').value.trim().toUpperCase() || 'FRESH15';
+            const percent = Math.min(90, Math.max(1, Number(document.getElementById('cfg-promo-percent').value) || 15));
+
+            state.config.promoEnabled = enabled;
+            state.config.promoCode = code;
+            state.config.promoPercent = percent;
+            saveState();
+            refreshAllUI();
+            showToast(enabled ? `Promo ${code} (${percent}% OFF) is now ACTIVE!` : 'Promo discount code disabled.', 'success');
+        }
+
+        function saveDeliveryZoneConfig() {
+            state.config.storeLabel = document.getElementById('cfg-store-label').value.trim() || 'Base Store Hub';
+            state.config.storeLat = Number(document.getElementById('cfg-store-lat').value) || 28.6315;
+            state.config.storeLng = Number(document.getElementById('cfg-store-lng').value) || 77.2167;
+            state.config.within3kmEnabled = document.getElementById('cfg-within-3km-enabled').checked;
+            state.config.within3kmFee = Math.max(0, Number(document.getElementById('cfg-within-3km-fee').value) || 0);
+            state.config.beyond3kmEnabled = document.getElementById('cfg-beyond-3km-enabled').checked;
+            state.config.beyond3kmFee = Math.max(0, Number(document.getElementById('cfg-beyond-3km-fee').value) || 0);
+
+            saveState();
+            refreshAllUI();
+            initOrRefreshKdsStoreMap();
+            showToast('3 km Delivery Radius & Store Hub settings saved!', 'success');
+        }
+
+        function captureStoreHubGPS() {
+            if (!navigator.geolocation) {
+                showToast('Geolocation not supported by browser.', 'error');
+                return;
+            }
+            showToast('Capturing store hub live GPS & resolving address...', 'info');
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    document.getElementById('cfg-store-lat').value = lat.toFixed(5);
+                    document.getElementById('cfg-store-lng').value = lng.toFixed(5);
+
+                    try {
+                        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1`);
+                        if (res.ok) {
+                            const data = await res.json();
+                            if (data && data.display_name) {
+                                const parts = data.display_name.split(',');
+                                const resolved = parts.slice(0, 2).join(',').trim() + ', New Delhi';
+                                document.getElementById('cfg-store-label').value = resolved;
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Store hub reverse geocode failed:', e);
+                    }
+
+                    saveDeliveryZoneConfig();
+                    showToast('Store Hub GPS coordinates & address updated!', 'success');
+                },
+                (err) => {
+                    showToast('Failed to capture GPS. Please check browser permissions.', 'error');
+                },
+                { timeout: 10000, enableHighAccuracy: true }
+            );
+        }
+
+        function initOrRefreshKdsStoreMap() {
+            const mapEl = document.getElementById('kds-store-map');
+            if (!mapEl) return;
+
+            const sLat = Number(state.config.storeLat);
+            const sLng = Number(state.config.storeLng);
+
+            if (!kdsStoreMap) {
+                kdsStoreMap = L.map('kds-store-map').setView([sLat, sLng], 12);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap'
+                }).addTo(kdsStoreMap);
+
+                kdsStoreMarker = L.marker([sLat, sLng]).addTo(kdsStoreMap).bindPopup('Base Store Hub (3 km Radius Center)');
+                kdsRadiusCircle = L.circle([sLat, sLng], {
+                    radius: 3000,
+                    color: '#15803d',
+                    fillColor: '#22c55e',
+                    fillOpacity: 0.16,
+                    weight: 2
+                }).addTo(kdsStoreMap);
+
+                kdsStoreMap.on('click', (e) => {
+                    document.getElementById('cfg-store-lat').value = e.latlng.lat.toFixed(5);
+                    document.getElementById('cfg-store-lng').value = e.latlng.lng.toFixed(5);
+                    saveDeliveryZoneConfig();
+                });
+            } else {
+                kdsStoreMarker.setLatLng([sLat, sLng]);
+                kdsRadiusCircle.setLatLng([sLat, sLng]);
+                kdsStoreMap.invalidateSize();
+                kdsStoreMap.panTo([sLat, sLng]);
+            }
+        }
+
+        function renderRiderPortal() {
+            const completedCount = state.orders.filter(o => o.status === 'DELIVERED').length;
+            document.getElementById('rider-completed-count').textContent = completedCount;
+
+            const activeDeliveries = state.orders.filter(o => ['READY', 'OUT_FOR_DELIVERY'].includes(o.status));
+            const grid = document.getElementById('rider-orders-grid');
+
+            if (activeDeliveries.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-16 bg-white rounded-3xl border border-slate-200">
+                        <i data-lucide="bike" class="w-12 h-12 text-slate-300 mx-auto mb-2"></i>
+                        <h3 class="font-bold text-slate-800">No Active Deliveries</h3>
+                        <p class="text-xs text-slate-500 mt-1">Once Store Ops marks a crate "Packed & Ready", it appears here for rider pickup.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            grid.innerHTML = activeDeliveries.map(order => {
+                const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(order.customer.address)}`;
+                return `
+                    <div class="bg-white rounded-3xl border-2 border-slate-200 p-5 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                                <span class="font-mono font-extrabold text-base text-slate-900">#${order.id}</span>
+                                <span class="px-2.5 py-1 rounded-lg text-[10px] font-extrabold uppercase ${
+                                    order.status === 'READY' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-700'
+                                }">
+                                    ${order.status === 'READY' ? 'Ready for Pickup at Store' : 'En Route to Customer'}
+                                </span>
+                            </div>
+
+                            <div class="my-4 space-y-2 text-xs">
+                                <div class="flex items-center justify-between">
+                                    <span class="font-extrabold text-slate-900 text-sm">${order.customer.name}</span>
+                                    <a href="tel:${order.customer.phone}" class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-bold flex items-center gap-1">
+                                        <i data-lucide="phone" class="w-3 h-3"></i> Call
+                                    </a>
+                                </div>
+                                <p class="text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-100">${order.customer.address}</p>
+                                
+                                <div class="flex items-center justify-between pt-1">
+                                    <span class="font-bold text-slate-500">
+                                        ${order.paymentStatus === 'COD_PENDING' ? `<span class="text-red-600 font-extrabold">COLLECT CASH: ₹${order.totals.total}</span>` : '<span class="text-emerald-600">PREPAID VIA UPI</span>'}
+                                    </span>
+                                    <a href="${mapsUrl}" target="_blank" class="text-blue-600 font-extrabold hover:underline flex items-center gap-1">
+                                        <i data-lucide="navigation" class="w-3.5 h-3.5"></i> Google Maps
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-t border-slate-100">
+                            ${order.status === 'READY' ? `
+                                <button onclick="updateOrderStatus('${order.id}', 'OUT_FOR_DELIVERY')" class="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition shadow-md">
+                                    <i data-lucide="package-check" class="w-4 h-4"></i> Confirm Crate Pickup & Start Trip
+                                </button>
+                            ` : `
+                                <button onclick="updateOrderStatus('${order.id}', 'DELIVERED')" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition shadow-md">
+                                    <i data-lucide="check-circle" class="w-4 h-4"></i> Mark Order Delivered
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            const order = state.orders.find(o => o.id === orderId);
+            if (!order) return;
+            order.status = newStatus;
+            saveState();
+            refreshAllUI();
+            showToast(`Order #${orderId} updated to ${newStatus.replace(/_/g, ' ')}`, 'success');
+        }
+
+        function downloadOrderPDF(orderId) {
+            const order = state.orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            showToast('Generating PDF Invoice...', 'info');
+
+            const invoiceHTML = `
+                <div style="font-family: Arial, sans-serif; padding: 32px; color: #0f172a; max-width: 680px; margin: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #15803d; padding-bottom: 16px; margin-bottom: 20px;">
+                        <div>
+                            <h1 style="margin: 0; font-size: 24px; color: #15803d;">FARM FRESH</h1>
+                            <p style="margin: 4px 0 0; font-size: 12px; color: #64748b;">Farm-to-Doorstep Fresh Fruits & Vegetables • Connaught Place</p>
+                            <p style="margin: 2px 0 0; font-size: 11px; color: #64748b;">FSSAI Lic: 10023011009842 • GSTIN: 07AABCF4521M1Z9</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 12px;">TAX INVOICE</span>
+                            <p style="margin: 8px 0 0; font-size: 13px; font-weight: bold;">Order #${order.id}</p>
+                            <p style="margin: 2px 0 0; font-size: 11px; color: #64748b;">${new Date(order.createdAt).toLocaleString()}</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px; background: #f8faf7; padding: 14px; border-radius: 10px; font-size: 12px; border: 1px solid #dcfce7;">
+                        <strong>Delivered To:</strong> ${order.customer.name} (${order.customer.phone})<br/>
+                        <span style="color: #475569;">${order.customer.address}</span><br/>
+                        <strong>Payment:</strong> ${order.paymentStatus === 'PAID_UPI' ? `Paid Online via UPI (Ref: ${order.utrNumber})` : 'Cash on Delivery'}
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px;">
+                        <thead>
+                            <tr style="background: #064e3b; color: #ffffff; text-align: left;">
+                                <th style="padding: 10px;">Produce Item</th>
+                                <th style="padding: 10px; text-align: center;">Qty</th>
+                                <th style="padding: 10px; text-align: right;">Rate</th>
+                                <th style="padding: 10px; text-align: right;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${order.items.map(item => `
+                                <tr style="border-bottom: 1px solid #e2e8f0;">
+                                    <td style="padding: 10px;">
+                                        <strong>${item.name}</strong>
+                                        ${item.customizationText ? `<br/><span style="font-size: 10px; color: #64748b;">${item.customizationText}</span>` : ''}
+                                    </td>
+                                    <td style="padding: 10px; text-align: center;">${item.qty}</td>
+                                    <td style="padding: 10px; text-align: right;">₹${item.unitPrice}</td>
+                                    <td style="padding: 10px; text-align: right; font-weight: bold;">₹${item.unitPrice * item.qty}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <div style="width: 260px; margin-left: auto; font-size: 12px;">
+                        <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                            <span>Produce Subtotal:</span>
+                            <span>₹${order.totals.subtotal}</span>
+                        </div>
+                        ${order.totals.discountAmount > 0 ? `
+                        <div style="display: flex; justify-content: space-between; padding: 4px 0; color: #15803d; font-weight: bold;">
+                            <span>Promo Discount (${order.promoApplied || 'OFFER'}):</span>
+                            <span>-₹${order.totals.discountAmount}</span>
+                        </div>` : ''}
+                        <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                            <span>Cold-Chain & Packaging (5%):</span>
+                            <span>₹${order.totals.gst}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                            <span>Delivery Fee:</span>
+                            <span>${order.totals.delivery === 0 ? 'FREE' : '₹' + order.totals.delivery}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-top: 2px solid #064e3b; font-weight: bold; font-size: 15px; color: #15803d;">
+                            <span>Grand Total:</span>
+                            <span>₹${order.totals.total}</span>
+                        </div>
+                    </div>
+
+                    <p style="margin-top: 32px; text-align: center; font-size: 11px; color: #94a3b8;">
+                        Thank you for choosing Farm Fresh! Farm-picked fruits & crisp veggies delivered fresh.
+                    </p>
+                </div>
+            `;
+
+            const container = document.getElementById('pdf-receipt-template');
+            container.innerHTML = invoiceHTML;
+            container.classList.remove('hidden');
+
+            const opt = {
+                margin: 0.3,
+                filename: `FarmFresh_Receipt_${order.id}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(container).save().then(() => {
+                container.classList.add('hidden');
+            });
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const colors = {
+                success: 'bg-slate-900 text-white border-l-4 border-emerald-500',
+                error: 'bg-red-600 text-white',
+                warning: 'bg-amber-600 text-white',
+                info: 'bg-slate-800 text-white'
+            };
+            const toast = document.createElement('div');
+            toast.className = `${colors[type] || colors.info} px-4 py-3 rounded-xl shadow-xl text-xs font-bold flex items-center gap-2 transition-all duration-300 pointer-events-auto`;
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
+```eof
